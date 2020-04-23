@@ -44,6 +44,7 @@
 "try"                                       return 'tryKW';
 "catch"                                     return 'catchKW';
 "throw"                                     return 'throwKW';
+"print"                                     return 'printKW';
 
 ","                                         return 'comma';
 ";"                                         return 'semicolon';
@@ -87,7 +88,6 @@
 %}
 
 // precedencia
-%left incOp decOp
 %left xorOp
 %left orOp
 %left andOp
@@ -96,115 +96,150 @@
 %left plusOp minusOp
 %left timesOp divOp modOp
 %left powOp
+%left incOp decOp
 %left UMINUS NOT
+%left CASTING
+%left DOT
 
 %start INIT
 
 %%
 
-INIT
-  : SCRIPT EOF
+INIT 
+  : SCRIPT
 ;
 
-SCRIPT
+SCRIPT 
   : IMPORT DECL
-  | DECL IMPORT
   | DECL IMPORT DECL
+  | DECL IMPORT
 ;
 
-IMPORT
+IMPORT 
   : importKW FILES
   | importKW FILES semicolon
 ;
 
-FILES
+FILES 
   : FILES comma fileName
   | fileName
 ;
 
-DECL
-  : DECL FUNCTION_DECL
-  | DECL VAR_DECL
-  | FUNCTION_DECL
-  | VAR_DECL 
+DECL 
+  : DECL DECL_OPT
+  | DECL_OPT
 ;
 
-FUNCTION_DECL
-  : TYPE_R id PARAMETERS BLOCK 
+DECL_OPT
+  : FUNCTION_DECL
+  | VAR_DECL
+  | VAR_DECL semicolon
+  | ARRAY_DECL
+  | ARRAY_DECL semicolon
+  | STRC_DEF
+  | STRC_DEF semicolon
+;
+
+FUNCTION_DECL 
+  : TYPE id PARAMETERS BLOCK
+  | TYPE leftS rightS id PARAMETERS BLOCK
+  | id id PARAMETERS BLOCK
+  | id leftS rightS id PARAMETERS BLOCK
   | voidType id PARAMETERS BLOCK
 ;
 
-TYPE_R
-  : TYPE leftS rightS
-  | TYPE
-;
-
-TYPE
+TYPE 
   : intType
   | doubleType
   | booleanType
-  | charType
-  | id
+  | charTypes
 ;
 
-PARAMETERS
+PARAMETERS 
   : leftP PARAMETERS_LIST rightP
   | leftP rightP
 ;
 
-PARATEMERS_LIST
+PARAMETERS_LIST 
   : PARAMETERS_LIST comma TYPE_R id
   | PARAMETERS_LIST comma varKW id
   | TYPE_R id
   | varKW id
 ;
 
-BLOCK
+BLOCK 
   : leftC SENTENCES rightC
 ;
 
 VAR_DECL 
   : VAR_T1
-  | VAR_T1 asignment semicolon
-  | VAR_T2 colonAsignment
-  | VAR_T2 semicolon
+  | VAR_T2
   | VAR_T3
-  | VAR_T3 semicolon
-  | VAR_T4
-  | VAR_T4 semicolon
+  | VAR_T4 
   | VAR_T5
-  | VAR_T5 semicolon
 ;
 
-ID_LIST
+ID_LIST 
   : ID_LIST comma id
   | id
 ;
 
-VAR_T1
-  : TYPE_R ID_LIST asignment EXPRESSION
+VAR_T1 
+  : TYPE ID_LIST asignment EXPRESSION
+  | id ID_LIST asignment EXPRESSION
 ;
 
-VAR_T2
+VAR_T2 
   : varKW id colonAsignment EXPRESSION
 ;
 
-VAR_T3
+VAR_T3 
   : constKW id colonAsignment EXPRESSION
 ;
 
-VAR_T4
-  : globalKW id colonAsignment EXPRESSION
+VAR_T4 
+  : globalKW id colonAsignment EXPRESSION  
 ;
 
-VAR_T5
-  : TYPE_R LIST
+VAR_T5 
+  : TYPE ID_LIST
+  | id ID_LIST
 ;
 
-EXPRESSION
-  : EXPRESSION incOp
-  | EXPRESSION decOp
-  | EXPRESION xorOp EXPRESSION
+ARRAY_DECL
+  : TYPE leftS rightS id asignment strcKW TYPE leftS EXPRESSION rightS
+  | id leftS rightS id asignment strcKW id leftS EXPRESSION rightS
+  | TYPE leftS rightS id asignment leftC E_LIST rightC
+  | id leftS rightS id asignment leftC E_LIST rightC
+;
+
+E_LIST 
+  : E_LIST comma EXPRESSION
+  | EXPRESSION
+;
+
+STRC_DEF
+  : defineKW id asKW leftS ATT_LIST rightS
+;
+
+ATT_LIST
+  : ATT_LIST ATTRIBUTE
+  | ATTRIBUTE
+;
+
+ATTRIBUTE 
+  : TYPE id
+  | id id
+  | TYPE leftS rightS id
+  | id left rightS id
+  | TYPE id asignment EXPRESSION
+  | id id asignment EXPRESSION
+  | TYPE leftS rightS id asignment EXPRESSION
+  | id leftS rightS asignment EXPRESSION
+;
+
+EXPRESSION 
+  : EXPRESSION xorOp EXPRESSION
   | EXPRESSION orOp EXPRESSION
   | EXPRESSION andOp EXPRESSION
   | notOp EXPRESSION %prec NOT
@@ -221,7 +256,9 @@ EXPRESSION
   | EXPRESSION divOp EXPRESSION
   | EXPRESSION modOp EXPRESSION
   | EXPRESSION powOp EXPRESSION
-  | minusOp EXPRESSION %prec UMINUS
+  | minusOp EXPRESSION %prec MINUS
+  | id incOp
+  | id decOp
   | leftP EXPRESSION rightP
   | stringValue
   | intValue
@@ -229,17 +266,32 @@ EXPRESSION
   | trueValue
   | falseValue
   | id
-  | CALL
-  | id ACCESS_LIST
+  | nullValue
+  | CAST EXPRESSION %prec CASTING
+  | strcKW id leftS EXPRESSION rightS
+  | strcKW TYPE leftS EXPRESSION rightS
+  | leftC E_LIST rightC
+  | strcKW id leftP rightS
 ;
 
-SENTENCES
+CAST 
+  : leftP intType rightP
+  | leftP doubleType rightP
+  | leftP charType rightP
+  | leftP booleanType rightP
+;
+
+SENTENCES 
   : SENTENCES SENTENCE
   | SENTENCE
 ;
 
-SENTENCE
-  : ASIGNMENT
+SENTENCE 
+  : VAR_DECL
+  | VAR_DECL semicolon
+  | ARRAY_DECL
+  | ARRAY_DECL semicolon
+  | ASIGNMENT
   | ASIGNMENT semicolon
   | IF_SENTENCE
   | SWITCH_SENTENCE
@@ -247,26 +299,52 @@ SENTENCE
   | DOWHILE_SENTENCE
   | DOWHILE_SENTENCE semicolon
   | FOR_SENTENCE
+  | PRINT_SENTENCE
+  | PRINT_SENTENCE semicolon
+  | THROW_SENTENCE
+  | THROW_SENTENCE semicolon
+  | TRY_SENTENCE
+  | breakKW
+  | breakKW semicolon
+  | continueKW
+  | continueKW semicolon
+  | return
+  | returnKW semicolon
+  | returnKW EXPRESSION
+  | returnKW EXPRESSION semicolon
 ;
 
 ASIGNMENT 
-  : id ACCESS_LIST asignment EXPRESSION
+  : id asignment EXPRESSION
+  | id dot id asignment EXPRESSION
+  | id dot id ACCESS_LIST asignment EXPRESSION
+  | id leftS EXPRESSION rightS asignment EXPRESSION
+  | id leftS EXPRESSION rightS ACCESS_LIST asignment EXPRESSION
+  | id dot CALL asignment EXPRESSION
+  | id dot CALL ACCESS_LIST asignment EXPRESSION
 ;
 
-ACCESS_LIST
+ACCESS_LIST 
   : ACCESS_LIST ACCESS
   | ACCESS
 ;
 
-ACCESS
+ACCESS 
   : dot id
   | leftS EXPRESSION rightS
   | dot CALL
 ;
 
 CALL 
-  : id leftP ID_LIST leftP
+  : id leftP EXP_LIST rightP
   | id leftP rightP
+;
+
+EXP_LIST 
+  : EXP_LIST comma EXPRESSION
+  | EXP_LIST comma id asignment EXPRESSION
+  | EXPRESSION
+  | id asignment EXPRESSION
 ;
 
 IF_SENTENCE 
@@ -288,7 +366,8 @@ SWITCH_BODY
   | CASES_LIST DEFAULT_CASE
 ;
 
-CASES_LIST : CASES_LIST SINGLE_CASE
+CASES_LIST 
+  : CASES_LIST SINGLE_CASE
   | SINGLE_CASE                           
 ;
 
@@ -320,6 +399,7 @@ FOR_BODY
   | semicolon EXPRESSION semicolon FOR_END
   | semicolon EXPRESSION semicolon
   | semicolon semicolon FOR_END
+  | semicolon semicolon
 ;
 
 FOR_START 
@@ -331,6 +411,19 @@ FOR_END
   : EXPRESSION
   | ASIGNMENT
 ;
+
+PRINT_SENTENCE
+  : printKW leftP EXPRESSION rightP
+;
+
+THROW_SENTENCE
+  : throwKW strcKW CALL
+;
+
+TRY_SENTENCE
+  : tryKW BLOCK catchKW leftP VAR_T5 rightP BLOCK
+;
+
 
 
 
