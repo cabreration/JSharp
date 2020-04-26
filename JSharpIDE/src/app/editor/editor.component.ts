@@ -3,6 +3,15 @@ import 'brace';
 import 'brace/theme/dracula';
 import 'brace/mode/csharp';
 import { AceConfigInterface } from 'ngx-ace-wrapper';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+
+const httpOptions = {
+  headers : new HttpHeaders({
+    'Content-Type': 'application/json'
+  })
+};
+
+const httpAddress = 'http://localhost:3000/';
 
 @Component({
   selector: 'app-editor',
@@ -29,7 +38,7 @@ export class EditorComponent implements OnInit {
   };
   currentText = '';
 
-  constructor() { }
+  constructor(private httpClient: HttpClient) { }
 
   ngOnInit(): void {
   }
@@ -97,6 +106,16 @@ export class EditorComponent implements OnInit {
     }
     this.tabRef.select("firstTab");
     this.currentText = this.firstTabText;
+  }
+
+  async Compile() {
+    let result = await this.httpClient.post(httpAddress + 'compile', { input: this.currentText }).toPromise();
+    if (result['state'] === true) {
+      alert(result['dot']);
+    } 
+    else {
+      alert('algo salio mal');
+    }
   }
 
 }

@@ -10,6 +10,7 @@ import { ACE_CONFIG } from 'ngx-ace-wrapper';
 import { AceConfigInterface } from 'ngx-ace-wrapper';
 import { EditorComponent } from './editor/editor.component';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 const DEFAULT_ACE_CONFIG: AceConfigInterface = {};
 
@@ -23,7 +24,8 @@ const DEFAULT_ACE_CONFIG: AceConfigInterface = {};
     AppRoutingModule,
     AceModule,
     NgbModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule
   ],
   providers: [
     { provide: ACE_CONFIG, useValue: DEFAULT_ACE_CONFIG }

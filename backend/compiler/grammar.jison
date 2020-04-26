@@ -8,13 +8,6 @@
 [/][*][^*]*[*]+([^/*][^*]*[*]+)*[/]	         // multiple line comments
 
 // terminal symbols def start
-
-([a-zA-ZñÑ0-9_]".")+".j"                    return 'fileName';
-([a-zA-ZñÑ_])[a-zA-Z0-9_]*                  return 'id';
-\"[^\"]*\"				                          { yytext = yytext.substr(1, yyleng-2); return 'stringValue'; }
-// char values missing
-[0-9]+\b                                    return 'intValue';
-[0-9]+"."[0-9]+\b                           return 'doubleValue';
 "null"                                      return 'nullValue';
 "true"                                      return 'trueValue';
 "false"                                     return 'falseValue';
@@ -74,7 +67,14 @@
 "&&"                                        return 'andOp';
 "||"                                        return 'orOp';
 "!"                                         return 'notOp';
-"^"                                         return 'xorOp';     
+"^"                                         return 'xorOp'; 
+
+[a-zA-ZñÑ0-9]+".j"                          return 'fileName';
+([a-zA-ZñÑ_])[a-zA-Z0-9_]*                  return 'id';
+\"[^\"]*\"				                          { yytext = yytext.substr(1, yyleng-2); return 'stringValue'; }
+// char values missing
+[0-9]+\b                                    return 'intValue';
+[0-9]+"."[0-9]+\b                           return 'doubleValue';
 
 <<EOF>>				                              return 'EOF';
 
@@ -85,6 +85,9 @@
 /lex
 
 %{
+  const NodeClass = require('./node').Node;
+  let node;
+  let aux;
 %}
 
 // precedencia
@@ -106,38 +109,106 @@
 %%
 
 INIT 
-  : SCRIPT
+  : SCRIPT EOF { 
+    return $1;
+  }
 ;
 
 SCRIPT 
-  : IMPORT DECL
-  | DECL IMPORT DECL
-  | DECL IMPORT
+  : IMPORT DECL {
+    node = NodeClass.createSimpleNode('ROOT');
+    node = NodeClass.addChild(node, $1);
+    node = NodeClass.addChildren(node, $2);
+    $$ = node;
+  }
+  | DECL IMPORT DECL {
+    node = NodeClass.createSimpleNode('ROOT');
+    node = NodeClass.addChildren(node, $1);
+    node = NodeClass.addChild(node, $2);
+    node = NodeClass.addChildren(node, $3);
+    $$ = node;
+  }
+  | DECL IMPORT {
+    node = NodeClass.createSimpleNode('ROOT');
+    node = NodeClass.addChildren(node, $1);
+    node = NodeClass.addChild(node, $2);
+    $$ = node;
+  }
+  | IMPORT {
+    node = NodeClass.createSimpleNode('ROOT');
+    node = NodeClass.addChild(node, $1);
+    $$ = node;
+  } 
+  | DECL {
+    node = NodeClass.createSimpleNode('ROOT');
+    node = NodeClass.addChildren(node, $1);
+    $$ = node;
+  }
 ;
 
 IMPORT 
-  : importKW FILES
-  | importKW FILES semicolon
+  : importKW FILES {
+    node = NodeClass.createSimpleNode('IMPORT');
+    node = NodeClass.addChildren(node, $2);
+    $$ = node;
+  }
+  | importKW FILES semicolon {
+    node = NodeClass.createSimpleNode('IMPORT');
+    node = NodeClass.addChildren(node, $2);
+    $$ = node;
+  }
 ;
 
 FILES 
-  : FILES comma fileName
-  | fileName
+  : FILES comma fileName {
+    node = $1;
+    aux = NodeClass.createChildrenlessNode("file", $3, @3.first_line, @3.first_column);
+    node = NodeClass.addChild(node, aux);
+    $$ = node;
+  }
+  | fileName {
+    node = NodeClass.createSimpleNode('FILES');
+    aux = NodeClass.createChildrenlessNode("file", $1, @1.first_line, @1.first_column);
+    node = NodeClass.addChild(node, aux);
+    $$ = node;
+  }
 ;
 
 DECL 
-  : DECL DECL_OPT
-  | DECL_OPT
+  : DECL DECL_OPT {
+    node = $1;
+    node = NodeClass.addChild(node, $2);
+    $$ = node;
+  }
+  | DECL_OPT {
+    node = NodeClass.createSimpleNode('DECL_LIST');
+    node = NodeClass.addChild(node, $1);
+    $$ = node;
+  }
 ;
 
 DECL_OPT
-  : FUNCTION_DECL
-  | VAR_DECL
-  | VAR_DECL semicolon
-  | ARRAY_DECL
-  | ARRAY_DECL semicolon
-  | STRC_DEF
-  | STRC_DEF semicolon
+  : FUNCTION_DECL {
+    $$ = $1;
+  }
+  | VAR_DECL {
+    $$ = $1;
+  }
+  | VAR_DECL semicolon {
+    $$ = $1;
+  }
+  | ARRAY_DECL {
+    $$ = $1;
+  }
+  | ARRAY_DECL semicolon {
+    $$ = $1;
+  }
+  | STRC_DEF {
+    $$ = $1;
+  }
+  | STRC_DEF semicolon {
+    $$ = $1;
+  }
 ;
 
 FUNCTION_DECL 
@@ -272,6 +343,8 @@ EXPRESSION
   | strcKW TYPE leftS EXPRESSION rightS
   | leftC E_LIST rightC
   | strcKW id leftP rightS
+  | id dot id
+  | id dot id ACCESS_LIST
 ;
 
 CAST 
@@ -287,7 +360,9 @@ SENTENCES
 ;
 
 SENTENCE 
-  : VAR_DECL
+  : STRC_DEF
+  | STRC_DEF semicolon
+  | VAR_DECL
   | VAR_DECL semicolon
   | ARRAY_DECL
   | ARRAY_DECL semicolon

@@ -20,7 +20,7 @@
             <input #browse type="file" hidden (change)="FileUpload($event)">
             <button class="btn btn-sm btn-outline-secondary mr-2">Save File</button>
             <button class="btn btn-sm btn-outline-secondary mr-2" (click)="DeleteTab()">Close File</button>
-            <button class="btn btn-sm btn-outline-secondary mr-2">Compile</button>
+            <button class="btn btn-sm btn-outline-secondary mr-2" (click)="Compile()">Compile</button>
             <button class="btn btn-sm btn-outline-secondary mr-2">Optimize</button>
           </div>
         </div>
