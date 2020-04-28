@@ -3,9 +3,9 @@
       <a class="navbar-brand">JSharp</a>
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav mr-auto">
-            <!--<li class="nav-item">
-              <a class="nav-link" routerLink="/profile">Perfil</a>
-            </li>-->
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/tree">AST</a>
+            </li>
         </ul>
       </div>
     </nav>
@@ -26,6 +26,8 @@
         </div>
       </div>
   
+      <div class="alert alert-danger" *ngIf="alert" role="alert">{{ alert }}</div>
+      <div class="alert alert-success" *ngIf="success" role="alert">{{ success }}</div>
       <ngb-tabset (tabChange)="ChangeCurrent($event)" #tabSet>
         <ngb-tab id="firstTab">
           <ng-template ngbTabTitle>

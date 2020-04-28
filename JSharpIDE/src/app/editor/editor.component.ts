@@ -28,6 +28,9 @@ export class EditorComponent implements OnInit {
   firstTabText = "";
   firstTabTitle = "new file";
 
+  alert = '';
+  success = '';
+
   @ViewChild('browse', {static: false}) browseRef: any;
 
   public config: AceConfigInterface = {
@@ -111,10 +114,13 @@ export class EditorComponent implements OnInit {
   async Compile() {
     let result = await this.httpClient.post(httpAddress + 'compile', { input: this.currentText }).toPromise();
     if (result['state'] === true) {
-      alert(result['dot']);
+      sessionStorage.setItem('compile', JSON.stringify({dot: result['dot']}));
+      this.success = 'La compilacion fue realizada exitosamente';
+      setTimeout(() => this.success = '', 2000);
     } 
     else {
-      alert('algo salio mal');
+      this.alert = 'Algo salio mal';
+      setTimeout(() => this.alert = '', 2000);
     }
   }
 

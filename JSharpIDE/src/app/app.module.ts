@@ -11,13 +11,15 @@ import { AceConfigInterface } from 'ngx-ace-wrapper';
 import { EditorComponent } from './editor/editor.component';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { TreeComponent } from './tree/tree.component';
 
 const DEFAULT_ACE_CONFIG: AceConfigInterface = {};
 
 @NgModule({
   declarations: [
     AppComponent,
-    EditorComponent
+    EditorComponent,
+    TreeComponent
   ],
   imports: [
     BrowserModule,

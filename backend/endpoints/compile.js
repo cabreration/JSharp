@@ -10,6 +10,7 @@ module.exports = (app) => {
       let ast = parser.parse(input);
       let treePrinter = new TreePrinter();
       let tree = treePrinter.getDot(ast);
+      //console.log(tree);
       res.send({ state: true, dot: tree });
     }
     catch (e) {

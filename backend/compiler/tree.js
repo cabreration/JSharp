@@ -18,10 +18,12 @@ class TreePrinter {
     }
 
     runTree(father, node) {
+        //console.log(node)
         node.children.forEach(element => {
             let childsName = 'Node' + this.counter.toString();
             this.graph += childsName;
-            if (element.type === 'file')
+            if (element.type === 'file' || element.type === 'identifier' || element.type === 'bool value' || element.type === 'string value'
+            || element.type === 'int value' || element.type === 'double value' || element.type === 'char value')
                 this.graph += '[label="' + element.value + '"];\n';
             else
                 this.graph += '[label="' + element.type + '"];\n';
