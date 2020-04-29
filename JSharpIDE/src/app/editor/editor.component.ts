@@ -64,7 +64,7 @@ export class EditorComponent implements OnInit {
       });
     }
 
-    this.currentTab = evt.nextId; 
+    this.currentTab = evt.nextId;
     if (this.currentTab === "firstTab") {
       this.currentText= this.firstTabText;
     }
@@ -88,14 +88,14 @@ export class EditorComponent implements OnInit {
     reader.onload = (evt) => {
       console.log(evt);
       this.CreateNewTab(reader.result.toString(), name);
-      event = { activeId: this.currentTab, nextId: 'ngb-tab-'+ this.tabsCounter } 
+      event = { activeId: this.currentTab, nextId: 'ngb-tab-'+ this.tabsCounter }
       this.ChangeCurrent(event);
     }
   }
 
   DeleteTab(): void {
     for (let i = 0; i < this.tabs.length; i++) {
-      if (this.tabs[i].id === this.currentTab) {      
+      if (this.tabs[i].id === this.currentTab) {
         this.tabs.splice(i, 1);
         break;
       }
@@ -115,9 +115,10 @@ export class EditorComponent implements OnInit {
     let result = await this.httpClient.post(httpAddress + 'compile', { input: this.currentText }).toPromise();
     if (result['state'] === true) {
       sessionStorage.setItem('compile', JSON.stringify({dot: result['dot']}));
+      sessionStorage.setItem('tabs', JSON.stringify(this.tabs));
       this.success = 'La compilacion fue realizada exitosamente';
       setTimeout(() => this.success = '', 2000);
-    } 
+    }
     else {
       this.alert = 'Algo salio mal';
       setTimeout(() => this.alert = '', 2000);

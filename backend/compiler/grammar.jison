@@ -68,6 +68,8 @@
 ")"                                         return 'rightP';
 "["                                         return 'leftS';
 "]"                                         return 'rightS';
+"{"                                         return 'leftC';
+"}"                                         return 'rightC';
 "+"                                         return 'plusOp';
 "-"                                         return 'minusOp';
 "*"                                         return 'timesOp';
@@ -76,11 +78,11 @@
 "!"                                         return 'notOp';
 "^"                                         return 'xorOp'; 
 ">"                                         return 'greaterThan';
-
-[a-zA-ZñÑ0-9]+".j"                          return 'fileName'; // este debe ser arreglado
+  
+[\x27h][\x00-\xFF][\x27h]                   { yytext = yytext.substr(1, yyleng-2); return 'charValue'; }
+([a-zA-ZñÑ0-9]|"."|"-")+".j"                return 'fileName'; // este debe ser arreglado
 ([a-zA-ZñÑ_])[a-zA-Z0-9_]*                  return 'id';
 ["]("\\"["\n\r\t\\]|[^"])*["]               { yytext = yytext.substr(1, yyleng-2); return 'stringValue'; }
-// char values missing
 [0-9]+"."[0-9]+\b                           return 'doubleValue';
 [0-9]+\b                                    return 'intValue';
 
@@ -94,6 +96,31 @@
 /lex
 
 %{
+  const Import = require('./Globals/import').Import;
+  const Root = require('./Globals/root').Root;
+  const Type = require('./Constants/Type').Type;
+  const Function = require('./Globals/function').Function;
+  const Identifier = require('./Constants/identifier').Identifier;
+  const NodeList = require('./Utilities/NodeList').NodeList;
+  const Parameter = require('./Globals/parameter').Parameter;
+  const VarT1 = require('./Instructions/vart1').VarT1;
+  const VarT2 = require('./Instructions/vart2').VarT2;
+  const VarT3 = require('./Instructions/vart3').VarT3;
+  const VarT4 = require('./Instructions/vart4').VarT4;
+  const VarT5 = require('./Instructions/vart5').VarT5;
+  const Operator = require('./Constants/operator').Operator;
+  const Binary = require('./Expressions/binary').Binary;
+  const Unary = require('./Expressions/unary').Unary;
+  const BooleanValue = require('./Constants/booleanValue').BooleanValue;
+  const CharValue = require('./Constants/charValue').CharValue;
+  const DoubleValue = require('./Constants/doubleValue').DoubleValue;
+  const IntValue = require('./Constants/intValue').IntValue;
+  const StringValue = require('./Constants/stringValue').StringValue;
+  const NullValue = require('./Constants/nullValue').NullValue;
+  const Cast = require('./Expressions/Cast').Cast;
+  const BreakSentence = require('./Instructions/breakSentence').BreakSentence;
+  const ContinueSentence = require('./Instructions/continueSentence').ContinueSentence;
+  const ReturnSentence = require('./Instructions/returnSentence').ReturnSentence;
   const NodeClass = require('./node').Node;
   let node;
   let aux;
@@ -125,74 +152,64 @@ INIT
 
 SCRIPT 
   : IMPORT DECL {
-    node = NodeClass.createSimpleNode('ROOT');
-    node = NodeClass.addChild(node, $1);
-    node = NodeClass.addChildren(node, $2);
+    node = new Root();
+    node.addGlobal($1);
+    node.addGlobals($2);
     $$ = node;
   }
   | DECL IMPORT DECL {
-    node = NodeClass.createSimpleNode('ROOT');
-    node = NodeClass.addChildren(node, $1);
-    node = NodeClass.addChild(node, $2);
-    node = NodeClass.addChildren(node, $3);
+    node = new Root();
+    node.addGlobals($1);
+    node.addGlobal($2);
+    node.addGlobals($3);
     $$ = node;
   }
   | DECL IMPORT {
-    node = NodeClass.createSimpleNode('ROOT');
-    node = NodeClass.addChildren(node, $1);
-    node = NodeClass.addChild(node, $2);
+    node = new Root();
+    node.addGlobals($1);
+    node.addGlobal($2);
     $$ = node;
   }
   | IMPORT {
-    node = NodeClass.createSimpleNode('ROOT');
-    node = NodeClass.addChild(node, $1);
+    node = new Root();
+    node.addGlobal($1);
     $$ = node;
   } 
   | DECL {
-    node = NodeClass.createSimpleNode('ROOT');
-    node = NodeClass.addChildren(node, $1);
+    node = new Root();
+    node.addGlobals($1);
     $$ = node;
   }
 ;
 
 IMPORT 
   : importKW FILES {
-    node = NodeClass.createSimpleNode('IMPORT');
-    node = NodeClass.addChildren(node, $2);
-    $$ = node;
+    $$ = new Import($2);
   }
   | importKW FILES semicolon {
-    node = NodeClass.createSimpleNode('IMPORT');
-    node = NodeClass.addChildren(node, $2);
-    $$ = node;
+    $$ = new Import($2);
   }
 ;
 
 FILES 
   : FILES comma fileName {
-    node = $1;
-    aux = NodeClass.createChildrenlessNode("file", $3, @3.first_line, @3.first_column);
-    node = NodeClass.addChild(node, aux);
-    $$ = node;
+    node = new Identifier($3, @3.first_line, @3.first_column);
+    $1.push(node);
+    $$ = $1;
   }
   | fileName {
-    node = NodeClass.createSimpleNode('FILES');
-    aux = NodeClass.createChildrenlessNode("file", $1, @1.first_line, @1.first_column);
-    node = NodeClass.addChild(node, aux);
-    $$ = node;
+    node = new Identifier($1, @1.first_line, @1.first_column);
+    $$ = [ node ];
   }
 ;
 
 DECL 
   : DECL DECL_OPT {
-    node = $1;
-    node = NodeClass.addChild(node, $2);
-    $$ = node;
+    $1.push($2);
+    $$ = $1;
   }
   | DECL_OPT {
-    node = NodeClass.createSimpleNode('DECL_LIST');
-    node = NodeClass.addChild(node, $1);
-    $$ = node;
+    $$ = [ $1 ];
   }
 ;
 
@@ -222,138 +239,91 @@ DECL_OPT
 
 FUNCTION_DECL 
   : TYPE id PARAMETERS BLOCK {
-    node = NodeClass.createSimpleNode('FUNCTION');
-    node = node.addChild($1);
-    aux = NodeClass.createChildrenlessNode('identifier', $2, @2.first_line, @2.first_column);
-    node = node.addChild(aux);
-    node = node.addChild($3);
-    node = node.addChild($4);
+    node = new Function($1, new Identifier($2, @2.first_line, @2.first_column), $3, $4);
     $$ = node;
   }
   | TYPE leftS rightS id PARAMETERS BLOCK {
-    node = NodeClass.createSimpleNode('FUNCTION');
-    $1.value += '[]';
-    node = node.addChild($1);
-    aux = NodeClass.createChildrenlessNode('identifier', $4, @4.first_line, @4.first_column);
-    node = node.addChild(aux);
-    node = node.addChild($5);
-    node = node.addChild($6);
+    $1.arrayFlag = true;
+    node = new Function($1, new Identifier($4, @4.first_line, @4.first_column), $5, $6);
     $$ = node;
   }
   | id id PARAMETERS BLOCK {
-    node = NodeClass.createSimpleNode('FUNCTION');
-    aux = NodeClass.createChildrenlessNode('type', $1, @1.first_line, @1.first_column);
-    node = node.addChild(aux);
-    aux = NodeClass.createChildrenlessNode('identifier', $2, @2.first_line, @2.first_column);
-    node = node.addChild(aux);
-    node = node.addChild($3);
-    node = node.addChild($4);
-    $$ = node;
+    $$ = new Function(new Type($1, @1.first_line, @1.first_column, false), 
+      new Identifier($2, @2.first_line, @2.first_column), $3, $4);
   }
   | id leftS rightS id PARAMETERS BLOCK {
-    node = NodeClass.createSimpleNode('FUNCTION');
-    aux = NodeClass.createChildrenlessNode('type', $1+'[]', @1.first_line, @1.first_column);
-    node = node.addChild(aux);
-    aux = NodeClass.createChildrenlessNode('identifier', $4, @4.first_line, @4.first_column);
-    node = node.addChild(aux);
-    node = node.addChild($5);
-    node = node.addChild($6);
-    $$ = node;
+    $$ = new Function(new Type($1, @1.first_line, @1.first_column, true), 
+      new Identifier($2, @2.first_line, @2.first_column), $3, $4);
   }
   | voidType id PARAMETERS BLOCK {
-    node = NodeClass.createSimpleNode('FUNCTION');
-    aux = NodeClass.createChildrenlessNode('type', 'void', @1.first_line, @1.first_column);
-    node = node.addChild(aux);
-    aux = NodeClass.createChildrenlessNode('identifier', $2, @2.first_line, @2.first_column);
-    node = node.addChild(aux);
-    node = node.addChild($3);
-    node = node.addChild($4);
-    $$ = node;
+    $$ = new Function(new Type('void', @1.first_line, @1.first_column, false), 
+      new Identifier($2, @2.first_line, @2.first_column), $3, $4);
   }
 ;
 
 TYPE 
   : intType {
-    $$ = NodeClass.createChildrenlessNode('type', 'integer', @1.first_line, @1.first_column);
+    $$ = new Type('integer', @1.first_line, @1.first_column, false);
   }
   | doubleType {
-    $$ = NodeClass.createChildrenlessNode('type', 'double', @1.first_line, @1.first_column);
+    $$ = new Type('double', @1.first_line, @1.first_column, false);
   }
   | booleanType {
-    $$ = NodeClass.createChildrenlessNode('type', 'boolean', @1.first_line, @1.first_column);
+    $$ = new Type('boolean', @1.first_line, @1.first_column, false);
   }
   | charTypes {
-    $$ = NodeClass.createChildrenlessNode('type', 'char', @1.first_line, @1.first_column);
+    $$ = new Type('integer', @1.first_line, @1.first_column, false);
   }
 ;
 
 PARAMETERS 
   : leftP PARAMETERS_LIST rightP {
-    $$ = $2;
+    $$ = new NodeList($2, 'PARAMETERS');
   }
   | leftP rightP {
-    $$ = NodeClass.createSimpleNode('PARAMETERS');
+    $$ = new NodeList([], 'PARAMETERS')
   }
 ;
 
 PARAMETERS_LIST 
   : PARAMETERS_LIST comma PARAMS_VALUE {
     node = $1;
-    node = NodeClass.addChild(node, $3);
+    node.push($3);
     $$ = node;
   }
   | PARAMS_VALUE {
-    node = NodeClass.createSimpleNode('PARAMETERS');
-    node = NodeClass.addChild(node, $1);
-    $$ = node;
+    $$ = [ $1 ];
   }
 ;
 
 PARAMS_VALUE
   : TYPE id {
-    node = NodeClass.createSimpleNode('PARAMETER');
-    node = NodeClass.addChild(node, $1);
-    aux = NodeClass.createChildrenlessNode('identifier', $2, @2.first_line, @2.first_column);
-    node = NodeClass.addChild(node, aux);
-    $$ = node;
+    $$ = new Parameter($1, new Identifier($2, @2.first_line, @2.first_column));
   }
   | TYPE leftS rightS id {
-    node = NodeClass.createSimpleNode('PARAMETER');
-    $1.value += '[]';
-    node = NodeClass.addChild(node, $1);
-    aux = NodeClass.createChildrenlessNode('identifier', $2, @2.first_line, @2.first_column);
-    node = NodeClass.addChild(node, aux);
-    $$ = node;
+    $1.arrayFlag = true;
+    $$ = new Parameter($1, new Identifier($2, @2.first_line, @2.first_column));
   }
   | id id {
-    node = NodeClass.createSimpleNode('PARAMETER');
-    aux = NodeClass.createChildrenlessNode('type', $1, @1.first_line, @1.first_column);
-    node = NodeClass.addChild(node, aux);
-    aux = NodeClass.createChildrenlessNode('identifier', $2, @2.first_line, @2.first_column);
-    node = NodeClass.addChild(node, aux);
-    $$ = node;
+    $$ = new Parameter(new Type($1, @1.first_line, @1.first_column, false),
+     new Identifier($2, @2.first_line, @2.first_column));
   }
   | id leftS rightS id {
-    node = NodeClass.createSimpleNode('PARAMETER');
-    aux = NodeClass.createChildrenlessNode('type', $1+'[]', @1.first_line, @1.first_column);
-    node = NodeClass.addChild(node, aux);
-    aux = NodeClass.createChildrenlessNode('identifier', $2, @2.first_line, @2.first_column);
-    node = NodeClass.addChild(node, aux);
-    $$ = node;
+    $$ = new Parameter(new Type($1, @1.first_line, @1.first_column, true),
+     new Identifier($2, @2.first_line, @2.first_column));
   }
   | varKW id {
-    node = NodeClass.createSimpleNode('PARAMETER');
-    aux = NodeClass.createChildrenlessNode('type', 'var', @1.first_line, @1.first_column);
-    node = NodeClass.addChild(node, aux);
-    aux = NodeClass.createChildrenlessNode('identifier', $2, @2.first_line, @2.first_column);
-    node = NodeClass.addChild(node, aux);
-    $$ = node;
+    $$ = new Parameter(new Type('var', @1.first_line, @1.first_column, false),
+     new Identifier($2, @2.first_line, @2.first_column));
   }
 ;
 
 BLOCK 
   : leftC SENTENCES rightC {
-    $$ = $2;
+    $$ = new NodeList($2, 'SENTENCES');
+  }
+  | leftC rightC {
+    $$ = new NodeList([], 'SENTENCES');
   }
 ;
 
@@ -377,79 +347,48 @@ VAR_DECL
 
 ID_LIST 
   : ID_LIST comma id {
-    node = $1;
-    aux = NodeClass.createChildrenlessNode('identifier', $1, @1.first_line, @1.first_column);
-    node = NodeClass.addChild(node, aux);
-    $$ = node;
+    $1.push( new Identifier($3, @3.first_line, @3.first_column) );
+    $$ = $1;
   }
   | id {
-    node = NodeClass.createSimpleNode('ID_LIST');
-    aux = NodeClass.createChildrenlessNode('identifier', $1, @1.first_line, @1.first_column);
-    node = NodeClass.addChild(node, aux);
-    $$ = node;
+    $$ = [ new Identifier($1, @1.first_line, @1.first_column) ];
   }
 ;
 
 VAR_T1 
   : TYPE ID_LIST asignment EXPRESSION {
-    node = NodeClass.createSimpleNode('VAR_T1');
-    node = NodeClass.addChild(node, $1);
-    node = NodeClass.addChild(node, $2);
-    node = NodeClass.addChild(node, $4);
-    $$ = node;
+    $$ = new VarT1($1, new NodeList($2, 'IDENTIFIERS LIST'), $4);
   }
   | id ID_LIST asignment EXPRESSION {
-    node = NodeClass.createSimpleNode('VAR_T1');
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('type', $1, @1.first_line, @1.first_column));
-    node = NodeClass.addChild(node, $2);
-    node = NodeClass.addChild(node, $4);
-    $$ = node;
+    $$ = new VarT1(new Type($1, @1.first_line, @1.first_column, false),
+      new NodeList($2, 'IDENTIFIERS LIST'), $4);
   }
 ;
 
 VAR_T2 
   : varKW id colonAsignment EXPRESSION {
-    node = NodeClass.createSimpleNode('VAR_T2');
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('type', 'var', @1.first_line, @1.first_column));
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('identifier', $2, @2.first_line, @2.first_column));
-    node = NodeClass.addChild(node, $4);
-    $$ = node;
+    $$ = new VarT2(new Identifier($2, @2.first_line, @2.first_column), $4);
   }
 ;
 
 VAR_T3 
   : constKW id colonAsignment EXPRESSION {
-    node = NodeClass.createSimpleNode('VAR_T3');
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('type', 'const', @1.first_line, @1.first_column));
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('identifier', $2, @2.first_line, @2.first_column));
-    node = NodeClass.addChild(node, $4);
-    $$ = node;
+    $$ = new VarT3(new Identifier($2, @2.first_line, @2.first_column), $4);
   }
 ;
 
 VAR_T4 
   : globalKW id colonAsignment EXPRESSION {
-    node = NodeClass.createSimpleNode('VAR_T4');
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('type', 'global', @1.first_line, @1.first_column));
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('identifier', $2, @2.first_line, @2.first_column));
-    node = NodeClass.addChild(node, $4);
-    $$ = node;
+    $$ = new VarT4(new Identifier($2, @2.first_line, @2.first_column), $4);
   }
 ;
 
 VAR_T5 
   : TYPE ID_LIST {
-    node = NodeClass.createSimpleNode('VAR_T5');
-    node = NodeClass.addChild(node, $1);
-    node = NodeClass.addChild(node, $2);
-    $$ = node;
+    $$ = new VarT5($1, new NodeList($2, 'IDENTIFIERS LIST'));
   }
   | id ID_LIST {
-    node = NodeClass.createSimpleNode('VAR_T5');
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('type', $1, @1.first_line, @1.first_column));
-    node = NodeClass.addChild(node, $2);
-    node = NodeClass.addChild(node, $4);
-    $$ = node;
+    $$ = new VarT5(new Type($1, @1.first_line, @1.first_column, false), new NodeList($2, 'IDENTIFIERS LIST'));
   }
 ;
 
@@ -580,149 +519,96 @@ ATTRIBUTE
 
 EXPRESSION 
   : EXPRESSION xorOp EXPRESSION {
-    node = NodeClass.createChildrenlessNode('BINARY OPERATION', $2, @2.first_line, @2.first_column);
-    node = NodeClass.addChild(node, $1);
-    node = NodeClass.addChild(node, $3);
-    $$ = node;
+    $$ = new Binary(new Operator('xor', $2, @2.first_line, @2.first_column), $1, $3);
   }
   | EXPRESSION orOp EXPRESSION {
-    node = NodeClass.createChildrenlessNode('BINARY OPERATION', $2, @2.first_line, @2.first_column);
-    node = NodeClass.addChild(node, $1);
-    node = NodeClass.addChild(node, $3);
-    $$ = node;
+    $$ = new Binary(new Operator('or', $2, @2.first_line, @2.first_column), $1, $3);
   }
   | EXPRESSION andOp EXPRESSION {
-    node = NodeClass.createChildrenlessNode('BINARY OPERATION', $2, @2.first_line, @2.first_column);
-    node = NodeClass.addChild(node, $1);
-    node = NodeClass.addChild(node, $3);
-    $$ = node;
+    $$ = new Binary(new Operator('and', $2, @2.first_line, @2.first_column), $1, $3);
   }
   | notOp EXPRESSION %prec NOT {
-    node = NodeClass.createChildrenlessNode('UNARY OPERATION', $1, @1.first_line, @1.first_column);
-    node = NodeClass.addChild(node, $2);
-    $$ = node;
+    $$ = new Unary(new Operator('not', $1, @1.first_line, @1.first_column), $2);
   }
   | EXPRESSION notEquals EXPRESSION {
-    node = NodeClass.createChildrenlessNode('BINARY OPERATION', $2, @2.first_line, @2.first_column);
-    node = NodeClass.addChild(node, $1);
-    node = NodeClass.addChild(node, $3);
-    $$ = node;
+    $$ = new Binary(new Operator('not equal', $2, @2.first_line, @2.first_column), $1, $3);
   }
   | EXPRESSION equalsValue EXPRESSION {
-    node = NodeClass.createChildrenlessNode('BINARY OPERATION', $2, @2.first_line, @2.first_column);
-    node = NodeClass.addChild(node, $1);
-    node = NodeClass.addChild(node, $3);
-    $$ = node;
+    $$ = new Binary(new Operator('equal value', $2, @2.first_line, @2.first_column), $1, $3);
   }
   | EXPRESSION equalsReference EXPRESSION {
-    node = NodeClass.createChildrenlessNode('BINARY OPERATION', $2, @2.first_line, @2.first_column);
-    node = NodeClass.addChild(node, $1);
-    node = NodeClass.addChild(node, $3);
-    $$ = node;
+    $$ = new Binary(new Operator('equal reference', $2, @2.first_line, @2.first_column), $1, $3);
   }
   | EXPRESSION lessThan EXPRESSION {
-    node = NodeClass.createChildrenlessNode('BINARY OPERATION', $2, @2.first_line, @2.first_column);
-    node = NodeClass.addChild(node, $1);
-    node = NodeClass.addChild(node, $3);
-    $$ = node;
+    $$ = new Binary(new Operator('less than', $2, @2.first_line, @2.first_column), $1, $3);
   }
   | EXPRESSION lessEquals EXPRESSION {
-    node = NodeClass.createChildrenlessNode('BINARY OPERATION', $2, @2.first_line, @2.first_column);
-    node = NodeClass.addChild(node, $1);
-    node = NodeClass.addChild(node, $3);
-    $$ = node;
+    $$ = new Binary(new Operator('less or equal to', $2, @2.first_line, @2.first_column), $1, $3);
   }
   | EXPRESSION greaterThan EXPRESSION {
-    node = NodeClass.createChildrenlessNode('BINARY OPERATION', $2, @2.first_line, @2.first_column);
-    node = NodeClass.addChild(node, $1);
-    node = NodeClass.addChild(node, $3);
-    $$ = node;
+    $$ = new Binary(new Operator('greater than', $2, @2.first_line, @2.first_column), $1, $3);
   }
   | EXPRESSION greaterEquals EXPRESSION {
-    node = NodeClass.createChildrenlessNode('BINARY OPERATION', $2, @2.first_line, @2.first_column);
-    node = NodeClass.addChild(node, $1);
-    node = NodeClass.addChild(node, $3);
-    $$ = node;
+    $$ = new Binary(new Operator('greater or equal to', $2, @2.first_line, @2.first_column), $1, $3);
   }
   | EXPRESSION plusOp EXPRESSION {
-    node = NodeClass.createChildrenlessNode('BINARY OPERATION', $2, @2.first_line, @2.first_column);
-    node = NodeClass.addChild(node, $1);
-    node = NodeClass.addChild(node, $3);
-    $$ = node;
+    $$ = new Binary(new Operator('plus', $2, @2.first_line, @2.first_column), $1, $3);
   }
   | EXPRESSION minusOp EXPRESSION {
-    node = NodeClass.createChildrenlessNode('BINARY OPERATION', $2, @2.first_line, @2.first_column);
-    node = NodeClass.addChild(node, $1);
-    node = NodeClass.addChild(node, $3);
-    $$ = node;
+    $$ = new Binary(new Operator('minus', $2, @2.first_line, @2.first_column), $1, $3);
   }
   | EXPRESSION timesOp EXPRESSION {
-    node = NodeClass.createChildrenlessNode('BINARY OPERATION', $2, @2.first_line, @2.first_column);
-    node = NodeClass.addChild(node, $1);
-    node = NodeClass.addChild(node, $3);
-    $$ = node;
+    $$ = new Binary(new Operator('times', $2, @2.first_line, @2.first_column), $1, $3);
   }
   | EXPRESSION divOp EXPRESSION {
-    node = NodeClass.createChildrenlessNode('BINARY OPERATION', $2, @2.first_line, @2.first_column);
-    node = NodeClass.addChild(node, $1);
-    node = NodeClass.addChild(node, $3);
-    $$ = node;
+    $$ = new Binary(new Operator('div', $2, @2.first_line, @2.first_column), $1, $3);
   }
   | EXPRESSION modOp EXPRESSION {
-    node = NodeClass.createChildrenlessNode('BINARY OPERATION', $2, @2.first_line, @2.first_column);
-    node = NodeClass.addChild(node, $1);
-    node = NodeClass.addChild(node, $3);
-    $$ = node;
+    $$ = new Binary(new Operator('mod', $2, @2.first_line, @2.first_column), $1, $3);
   }
   | EXPRESSION powOp EXPRESSION {
-    node = NodeClass.createChildrenlessNode('BINARY OPERATION', $2, @2.first_line, @2.first_column);
-    node = NodeClass.addChild(node, $1);
-    node = NodeClass.addChild(node, $3);
-    $$ = node;
+    $$ = new Binary(new Operator('power', $2, @2.first_line, @2.first_column), $1, $3);
   }
   | minusOp EXPRESSION %prec MINUS {
-    node = NodeClass.createChildrenlessNode('UNARY OPERATION', $1, @1.first_line, @1.first_column);
-    node = NodeClass.addChild(node, $2);
-    $$ = node;
+    $$ = new Unary(new Operator('minus', $1, @1.first_line, @1.first_column), $2);
   }
   | id incOp {
-    node = NodeClass.createChildrenlessNode('UNARY OPERATION', $2, @2.first_line, @2.first_column);
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('identifier', $1, @1.first_line, @1.first_column));
-    $$ = node;
+    $$ = new Unary(new Operator('increment', $2, @2.first_line, @2.first_column),
+      new Identifier($1, @1.first_line, @1.first_column));
   }
   | id decOp {
-    node = NodeClass.createChildrenlessNode('UNARY OPERATION', $2, @2.first_line, @2.first_column);
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('identifier', $1, @1.first_line, @1.first_column));
-    $$ = node;
+    $$ = new Unary(new Operator('decrement', $2, @2.first_line, @2.first_column),
+      new Identifier($1, @1.first_line, @1.first_column));
   }
   | leftP EXPRESSION rightP {
     $$ = $2;
   }
   | stringValue {
-    $$ = NodeClass.createChildrenlessNode('string value', $1, @1.first_line, @1.first_column);
+    $$ = new StringValue($1, @1.first_line, @1.first_column);
   }
   | intValue {
-    $$ = NodeClass.createChildrenlessNode('int value', Number($1), @1.first_line, @1.first_column)
+    $$ = new IntValue(Number($1), @1.first_line, @1.first_column);
   }
   | doubleValue {
-    $$ = NodeClass.createChildrenlessNode('double value', Number($1), @1.first_line, @1.first_column);
+    $$ = new DoubleValue(Number($1), @1.first_line, @1.first_column);
   }
   | trueValue {
-    $$ = NodeClass.createChildrenlessNode('bool value', true, @1.first_line, @1.first_column);
+    $$ = new BooleanValue(true, @1.first_line, @1.first_column);
   }
   | falseValue {
-    $$ = NodeClass.createChildrenlessNode('bool value', false, @1.first_line, @1.first_column);
+    $$ = new BooleanValue(false, @1.first_line, @1.first_column);
   }
   | id {
-    $$ = NodeClass.createChildrenlessNode('identifier', $1, @1.first_line, @1.first_column);
+    $$ = new Identifier($1, @1.first_line, @1.first_column);
   }
   | nullValue {
-    $$ = NodeClass.createChildrenlessNode('null value', null, @1.first_line, @1.first_column);
+    $$ = new NullValue(@1.first_line, @1.first_column);
   }
   | CAST EXPRESSION %prec CASTING {
-    node = $1;
-    node = NodeClass.addChild(node, $2);
-    $$ = node;
+    $$ = new Cast($1, $2);
+  }
+  | charValue {
+    $$ = new CharValue($1, @1.first_line, @1.first_column);
   }
   | strcKW id leftS EXPRESSION rightS
   | strcKW TYPE leftS EXPRESSION rightS
@@ -730,33 +616,35 @@ EXPRESSION
   | strcKW id leftP rightS
   | id dot id
   | id dot id ACCESS_LIST
+  | id leftS EXPRESSION rightS
+  | id leftS EXPRESSION rightS ACCESS_LIST
+  | id dot CALL
+  | id dot CALL ACCESS_LIST
+  | CALL
 ;
 
 CAST 
   : leftP intType rightP {
-    $$ = NodeClass.createChildrenlessNode('CAST', 'integer', @2.first_line, @2.first_column);
+    $$ = new Type('integer', @2.first_line, @2.first_column, false);
   }
   | leftP doubleType rightP {
-    $$ = NodeClass.createChildrenlessNode('CAST', 'double', @2.first_line, @2.first_column);
+    $$ = new Type('double', @2.first_line, @2.first_column, false);
   }
   | leftP charType rightP {
-    $$ = NodeClass.createChildrenlessNode('CAST', 'char', @2.first_line, @2.first_column);
+    $$ = new Type('char', @2.first_line, @2.first_column, false);
   } 
   | leftP booleanType rightP {
-    $$ = NodeClass.createChildrenlessNode('CAST', 'boolean', @2.first_line, @2.first_column);
+    $$ = new Type('boolean', @2.first_line, @2.first_column, false);
   }
 ;
 
 SENTENCES 
   : SENTENCES SENTENCE {
-    node = $1;
-    node = NodeClass.addChild(node, $2);
-    $$ = node;
+    $1.push($2);
+    $$ = $1;
   }
   | SENTENCE {
-    node = NodeClass.createSimpleNode('SENTENCES');
-    node = NodeClass.addChild(node, $1);
-    $$ = node;
+    $$ = [ $1 ];
   }
 ;
 
@@ -819,32 +707,25 @@ SENTENCE
     $$ = $1;
   }
   | breakKW {
-    $$ = NodeClass.createChildrenlessNode('BREAK SENTENCE', null, @1.first_line, @1.first_column);
+    $$ = new BreakSentence(@1.first_line, @1.first_column);
   }
   | breakKW semicolon {
-    $$ = NodeClass.createChildrenlessNode('BREAK SENTENCE', null, @1.first_line, @1.first_column);
+    $$ = new BreakSentence(@1.first_line, @1.first_column);
   }
   | continueKW {
-    $$ = NodeClass.createChildrenlessNode('CONTINUE SENTENCE', null, @1.first_line, @1.first_column);
+    $$ = new ContinueSentence(@1.first_line, @1.first_column);
   }
   | continueKW semicolon {
-    $$ = NodeClass.createChildrenlessNode('CONTINUE SENTENCE', null, @1.first_line, @1.first_column);
-  }
-  | 'return' {
-    $$ = NodeClass.createChildrenlessNode('RETURN SENTENCE', null, @1.first_line, @1.first_column);
+    $$ = new ContinueSentence(@1.first_line, @1.first_column);
   }
   | returnKW semicolon {
-    $$ = NodeClass.createChildrenlessNode('RETURN SENTENCE', null, @1.first_line, @1.first_column);
+    $$ = new ReturnSentence(null, @1.first_line, @1.first_column);
   }
   | returnKW EXPRESSION {
-    node = NodeClass.createChildrenlessNode('RETURN SENTENCE', null, @1.first_line, @1.first_column);
-    node = NodeClass.addChild(node, $2);
-    $$ = node;
+    $$ = new ReturnSentence($2, @1.first_line, @1.first_column);
   }
   | returnKW EXPRESSION semicolon {
-    node = NodeClass.createChildrenlessNode('RETURN SENTENCE', null, @1.first_line, @1.first_column);
-    node = NodeClass.addChild(node, $2);
-    $$ = node;
+    $$ = new ReturnSentence($2, @1.first_line, @1.first_column);
   }
 ;
 
@@ -993,28 +874,95 @@ DOWHILE_SENTENCE
 ;
 
 FOR_SENTENCE 
-  : forKW leftP FOR_BODY rightP BLOCK
+  : forKW leftP FOR_BODY rightP BLOCK {
+    node = NodeClass.createChildrenlessNode('FOR SENTENCE', null, @1.first_line, @1.first_column);
+    node = NodeClass.addChildren(node, $3);
+    node = NodeClass.addChild(node, $5);
+    $$ = node;
+  }
 ;
 
 FOR_BODY 
-  : FOR_START semicolon EXPRESSION semicolon FOR_END
-  | FOR_START semicolon semicolon FOR_END
-  | FOR_START semicolon EXPRESSION semicolon
-  | FOR_START semicolon semicolon
-  | semicolon EXPRESSION semicolon FOR_END
-  | semicolon EXPRESSION semicolon
-  | semicolon semicolon FOR_END
-  | semicolon semicolon
+  : FOR_START semicolon EXPRESSION semicolon FOR_END {
+    node = NodeClass.createSimpleNode('FOR BODY');
+    node = NodeClass.addChild(node, $1);
+    aux = NodeClass.createSimpleNode('FOR MIDDLE');
+    aux = NodeClass.addChild(aux, $3);
+    node = NodeClass.addChild(node, aux);
+    node = NodeClass.addChild(node, $5);
+    $$ = node;
+  }
+  | FOR_START semicolon semicolon FOR_END {
+    node = NodeClass.createSimpleNode('FOR BODY');
+    node = NodeClass.addChild(node, $1);
+    node = NodeClass.addChild(node, $4);
+    $$ = node;
+  }
+  | FOR_START semicolon EXPRESSION semicolon {
+    node = NodeClass.createSimpleNode('FOR BODY');
+    node = NodeClass.addChild(node, $1);
+    aux = NodeClass.createSimpleNode('FOR MIDDLE');
+    aux = NodeClass.addChild(aux, $3);
+    node = NodeClass.addChild(node, aux);
+    $$ = node;
+  }
+  | FOR_START semicolon semicolon {
+    node = NodeClass.createSimpleNode('FOR BODY');
+    node = NodeClass.addChild(node, $1);
+    $$ = node;
+  }
+  | semicolon EXPRESSION semicolon FOR_END {
+    node = NodeClass.createSimpleNode('FOR BODY');
+    aux = NodeClass.createSimpleNode('FOR MIDDLE');
+    aux = NodeClass.addChild(aux, $2);
+    node = NodeClass.addChild(node, aux);
+    node = NodeClass.addChild(node, $4);
+    $$ = node;
+  }
+  | semicolon EXPRESSION semicolon {
+    node = NodeClass.createSimpleNode('FOR BODY');
+    aux = NodeClass.createSimpleNode('FOR MIDDLE');
+    aux = NodeClass.addChild(aux, $2);
+    node = NodeClass.addChild(node, aux);
+    $$ = node;
+  }
+  | semicolon semicolon FOR_END {
+    node = NodeClass.createSimpleNode('FOR BODY');
+    node = NodeClass.addChild(node, $3);
+    $$ = node;
+  }
+  | semicolon semicolon {
+    $$ = NodeClass.createSimpleNode('FOR BODY');
+  }
 ;
 
 FOR_START 
-  : TYPE id asignment EXPRESSION
-  | ASIGNMENT
+  : TYPE id asignment EXPRESSION {
+    node = NodeClass.createSimpleNode('FOR START');
+    aux = NodeClass.createSimpleNode('VAR_T1');
+    aux = NodeClass.addChild(aux, NodeClass.createChildrenlessNode('identifier', $2, @2.first_line, @2.first_column));
+    aux = NodeClass.addChild(aux, $4);
+    node = NodeClass.addChild(node, aux);
+    $$ = node;
+  }
+  | ASIGNMENT {
+    node = NodeClass.createSimpleNode('FOR START');
+    node = NodeClass.addChild(node, $1);
+    $$ = node;
+  }
 ;
 
 FOR_END 
-  : EXPRESSION
-  | ASIGNMENT
+  : EXPRESSION {
+    node = NodeClass.createSimpleNode('FOR END');
+    node = NodeClass.addChild(node, $1);
+    $$ = node;
+  }
+  | ASIGNMENT {
+    node = NodeClass.createSimpleNode('FOR END');
+    node = NodeClass.addChild(node, $1);
+    $$ = node;
+  }
 ;
 
 PRINT_SENTENCE
@@ -1025,7 +973,7 @@ PRINT_SENTENCE
 ;
 
 THROW_SENTENCE
-  : throwKW strcKW CALL
+  : throwKW strcKW CALL 
 ;
 
 TRY_SENTENCE
