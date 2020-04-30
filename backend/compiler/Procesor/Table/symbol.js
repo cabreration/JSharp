@@ -6,6 +6,10 @@ class Symbol {
         this.position = position;
         this.envId = envId;
     }
+
+    shadow() {
+        return new Symbol(this.id, this.role, this.type, -1, this.envId);
+    }
 }
 
 module.exports.Symbol = Symbol;

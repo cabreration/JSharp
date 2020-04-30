@@ -1,6 +1,7 @@
 
 const parser = require('../compiler/grammar');
 const TreePrinter = require('../compiler/tree').TreePrinter;
+const TreeProcesor = require('../compiler/Procesor/treeProcesor').TreeProcesor;
 
 module.exports = (app) => {
 
@@ -11,6 +12,8 @@ module.exports = (app) => {
       let treePrinter = new TreePrinter();
       //console.log(JSON.stringify(ast));
       let tree = treePrinter.getDot(ast);
+      const procesor = new TreeProcesor();
+      let st = procesor.processTree(ast.getChildren());
       //console.log(tree);
       res.send({ state: true, dot: tree });
     }

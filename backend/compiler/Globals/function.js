@@ -13,6 +13,10 @@ class Function {
     getChildren() {
         return [ this.type, this.id, this.parameters, this.sentences ];
     }
+
+    getTypeOf() {
+        return 'function';
+    }
 }
 
 module.exports.Function = Function;

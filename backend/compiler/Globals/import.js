@@ -11,6 +11,10 @@ class Import {
     getChildren() {
         return this.files;
     }
+
+    getTypeOf() {
+        return 'import';
+    }
 }
 
 module.exports.Import = Import;

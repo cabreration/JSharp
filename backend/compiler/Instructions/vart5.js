@@ -12,6 +12,10 @@ class VarT5 {
     getChildren() {
         return [ this.type, this.ids ];
     }
+
+    getTypeOf() {
+        return 'vart5';
+    }
 }
 
 module.exports.VarT5 = VarT5;

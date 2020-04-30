@@ -12,6 +12,10 @@ class VarT4 {
     getChildren() {
         return [ this.identifier, this.expression ];
     }
+
+    getTypeOf() {
+        return 'vart4';
+    }
 }
 
 module.exports.VarT4 = VarT4;
