@@ -11,6 +11,10 @@ class NodeList {
     getDot() {
         return '[label="' + this.name + '"];\n';
     }
+
+    getTypeOf() {
+        return 'nodelist';
+    }
 }
 
 module.exports.NodeList = NodeList;

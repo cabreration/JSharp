@@ -121,9 +121,26 @@
   const BreakSentence = require('./Instructions/breakSentence').BreakSentence;
   const ContinueSentence = require('./Instructions/continueSentence').ContinueSentence;
   const ReturnSentence = require('./Instructions/returnSentence').ReturnSentence;
+  const IfSentence = require('./Instructions/ifSentence').IfSentence;
+  const SwitchSentence = require('./Instructions/switchSentence').SwitchSentence;
+  const WhileSentence = require('./Instructions/whileSentence').WhileSentence;
+  const DowhileSentence = require('./Instructions/dowhileSentence').DowhileSentence;
+  const ForSentence = require('./Instructions/forSentence').ForSentence;
+  const Case = require('./Instructions/case').Case;
+  const PrintSentence = require('./Instructions/printSentence');
+  const Asignment = require('./Instructions/asignment').Asignment;
+  const Call = require('./Instructions/call').Call;
+  const ThrowSentence = require('./Instructions/throwSentence').ThrowSentence;
+  const TryCatchSentence = require('./Instructions/tryCatchSentence').TryCatchSentence;
+  const Access = require('./Utilities/access').Access;
+  const Attribute = require('./Utilities/attribute').Attribute;
   const NodeClass = require('./node').Node;
+  const Strc = require('./Globals/strc').Strc;
   let node;
   let aux;
+  let global_vars = [];
+  let functions_list = [];
+  let global_strcs = [];
 %}
 
 // precedencia
@@ -146,7 +163,12 @@
 
 INIT 
   : SCRIPT EOF { 
-    return $1;
+    return { 
+      root: $1,
+      global_vars: global_vars,
+      functions_list: functions_list,
+      global_strcs: global_strcs
+    };
   }
 ;
 
@@ -215,12 +237,15 @@ DECL
 
 DECL_OPT
   : FUNCTION_DECL {
+    functions_list.push($1);
     $$ = $1;
   }
   | VAR_DECL {
+    global_vars.push($1);
     $$ = $1;
   }
   | VAR_DECL semicolon {
+    global_vars.push($1);
     $$ = $1;
   }
   | ARRAY_DECL {
@@ -230,9 +255,11 @@ DECL_OPT
     $$ = $1;
   }
   | STRC_DEF {
+    global_strcs.push($1);
     $$ = $1;
   }
   | STRC_DEF semicolon {
+    global_strcs.push($1);
     $$ = $1;
   }
 ;
@@ -440,80 +467,53 @@ E_LIST
 
 STRC_DEF
   : defineKW id asKW leftS ATT_LIST rightS {
-    node = NodeClass.createSimpleNode('STRC_DEF');
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('identifier', $2, @2.first_line, @2.first_column));
-    node = NodeClass.addChild(node, $5);
-    $$ = node;
+    $$ = new Strc(new Identifier($2, @2.first_line, @2.first_column), new NodeList($5, 'ATTRIBUTES'));
   }
 ;
 
 ATT_LIST
   : ATT_LIST comma ATTRIBUTE {
     node = $1;
-    node = NodeClass.addChild(node, $3);
+    node.push($3);
     $$ = node;
   }
   | ATTRIBUTE {
-    node = NodeClass.createSimpleNode('ATT_LIST');
-    node = NodeClass.addChild(node, $1);
-    $$ = node;
+    $$ = [ $1 ];
   }
 ;
 
 ATTRIBUTE 
   : TYPE id {
-    node = NodeClass.createSimpleNode('ATTRIBUTE');
-    node = NodeClass.addChild(node, $1);
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('identifier', $2, @2.first_line, @2.first_column));
-    $$ = node;
+    $$ = new Attribute($1, new Identifier($2, @2.first_line, @2.first_column), null);
   }
   | id id {
-    node = NodeClass.createSimpleNode('ATTRIBUTE');
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('type', $1, @1.first_line, @1.first_column));
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('identifier', $2, @2.first_line, @2.first_column));
-    $$ = node;
+    $$ = new Attribute(new Type($1, @1.first_line, @1.first_column, false), 
+      new Identifier($2, @2.first_line, @2.first_column), null);
   }
   | TYPE leftS rightS id {
-    node = NodeClass.createSimpleNode('ATTRIBUTE');
     $1.value += '[]';
-    node = NodeClass.addChild(node, $1);
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('identifier', $4, @4.first_line, @4.first_column));
-    $$ = node;
+    $1.arrayFlag = true;
+    $$ = new Attribute($1, new Identifier($4, @4.first_line, @4.first_column), null);
   }
   | id left rightS id {
-    node = NodeClass.createSimpleNode('ATTRIBUTE');
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('type', $1+'[]', @1.first_line, @1.first_column));
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('identifier', $4, @4.first_line, @4.first_column));
-    $$ = node;
+    $$ = new Attribute(new Type($1+'[]', @1.first_line, @1.first_column, true), 
+      new Identifier($4, @4.first_line, @4.first_column), null);
   }
   | TYPE id asignment EXPRESSION {
-    node = NodeClass.createSimpleNode('ATTRIBUTE');
-    node = NodeClass.addChild(node, $1);
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('identifier', $2, @2.first_line, @2.first_column));
-    node = NodeClass.addChild(node, $4);
-    $$ = node;
+    $$ = new Attribute($1, new Identifier($2, @2.first_line, @2.first_column), $4);
   }
   | id id asignment EXPRESSION {
-    node = NodeClass.createSimpleNode('ATTRIBUTE');
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('type', $1, @1.first_line, @1.first_column));
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('identifier', $2, @2.first_line, @2.first_column));
-    node = NodeClass.addChild(node, $4);
-    $$ = node;
+    $$ = new Attribute(new Type($1, @1.first_line, @1.first_column, false), 
+      new Identifier($2, @2.first_line, @2.first_column), $4);
   }
   | TYPE leftS rightS id asignment EXPRESSION {
-    node = NodeClass.createSimpleNode('ATTRIBUTE');
     $1.value += '[]';
-    node = NodeClass.addChild(node, $1);
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('identifier', $4, @4.first_line, @4.first_column));
-    node = NodeClass.addChild(node, $6);
-    $$ = node;
+    $1.arrayFlag = true;
+    $$ = new Attribute($1, new Identifier($4, @4.first_line, @4.first_column), $6);
   }
   | id leftS rightS id asignment EXPRESSION {
-    node = NodeClass.createSimpleNode('ATTRIBUTE');
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('type', $1+'[]', @1.first_line, @1.first_column));
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('identifier', $4, @4.first_line, @4.first_column));
-    node = NodeClass.addChild(node, $6);
-    $$ = node;
+    $$ = new Attribute(new Type($1+'[]', @1.first_line, @1.first_column, true), 
+      new Identifier($4, @4.first_line, @4.first_column), $6);
   }
 ;
 
@@ -620,7 +620,9 @@ EXPRESSION
   | id leftS EXPRESSION rightS ACCESS_LIST
   | id dot CALL
   | id dot CALL ACCESS_LIST
-  | CALL
+  | CALL {
+    $$ = $1;
+  }
 ;
 
 CAST 
@@ -731,10 +733,7 @@ SENTENCE
 
 ASIGNMENT 
   : id asignment EXPRESSION {
-    node = NodeClass.createSimpleNode('ASIGNMENT');
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('identifier', $1, @1.first_line, @1.first_column));
-    node = NodeClass.addChild(node, $3);
-    $$ = node;
+    $$ = new Asignment(new Identifier($1, @1.first_line, @1.first_column), [], $3, @2.first_line, @2.first_column);
   }
   | id dot id asignment EXPRESSION
   | id dot id ACCESS_LIST asignment EXPRESSION
@@ -745,239 +744,189 @@ ASIGNMENT
 ;
 
 ACCESS_LIST 
-  : ACCESS_LIST ACCESS
-  | ACCESS
+  : ACCESS_LIST ACCESS {
+    $1.push($2);
+    $$ = $1;
+  }
+  | ACCESS {
+    $$ = [ $1 ];
+  }
 ;
 
 ACCESS 
-  : dot id
-  | leftS EXPRESSION rightS
-  | dot CALL
+  : dot id {
+    $$ = new Access(1, new Identifier($2, @2.first_line, @2.first_column), @1.first_line, @1.first_column);
+  }
+  | leftS EXPRESSION rightS {
+    $$ = new Access(2, $2, @1.first_line, @1.first_column);
+  }
+  | dot CALL {
+    $$ = new Access(3, $2, @1.first_line, @1.first_column);
+  }
 ;
 
 CALL 
-  : id leftP EXP_LIST rightP
-  | id leftP rightP
+  : id leftP EXP_LIST rightP {
+    $$ = new Call(new Identifier($1, @1.first_line, @1.first_column), new NodeList($3, 'VALUES LIST'));
+  }
+  | id leftP rightP {
+    $$ = new Call(new Identifier($1, @1.first_line, @1.first_column), []);
+  }
 ;
 
 EXP_LIST 
-  : EXP_LIST comma EXPRESSION
-  | EXP_LIST comma id asignment EXPRESSION
-  | EXPRESSION
-  | id asignment EXPRESSION
+  : EXP_LIST comma EXPRESSION {
+    $1.push($3);
+    $$ = $1;
+  }
+  | EXP_LIST comma id asignment EXPRESSION {
+    $1.push(new Asignment(new Identifier($3, @3.first_line, @3.first_column), [], $5, @3.first_line, @3.first_column));
+    $$ = $1;
+  }
+  | EXPRESSION {
+    $$ = [ $1 ];
+  }
+  | id asignment EXPRESSION {
+    $$ = [ new Asignment(new Identifier($1, @1.first_line, @1.first_column), [], $3, @1.first_line, @1.first_column) ];
+  }
 ;
 
 IF_SENTENCE 
   : ifKW leftP EXPRESSION rightP BLOCK {
-    node = NodeClass.createChildrenlessNode('IF SENTENCE', null, @1.first_line, @1.first_column);
-    aux = NodeClass.createSimpleNode('CONDITION');
-    aux = NodeClass.addChild(aux, $3);
-    node = NodeClass.addChild(node, aux);
-    node = NodeClass.addChild(node, $5);
-    $$ = node;
+    $$ = new IfSentence(new NodeList($3, 'CONDITION'), $5, null, @1.first_line, @1.first_column);
   }
   | ifKW leftP EXPRESSION rightP BLOCK ELSE_SENTENCE {
-    node = NodeClass.createChildrenlessNode('IF SENTENCE', null, @1.first_line, @1.first_column);
-    aux = NodeClass.createSimpleNode('CONDITION');
-    aux = NodeClass.addChild(aux, $3);
-    node = NodeClass.addChild(node, aux);
-    node = NodeClass.addChild(node, $5);
-    node = NodeClass.addChild(node, $6);
-    $$ = node;
+    $$ = new IfSentence(new NodeList($3, 'CONDITION'), $5, $6, @1.first_line, @1.first_column);
   }
 ;
 
 ELSE_SENTENCE 
   : elseKW BLOCK {
-    node = NodeClass.createChildrenlessNode('ELSE SENTENCE', null, @1.first_line, @1.first_column);
-    node = NodeClass.addChild(node, $2);
-    $$ = node;
+    $$ = new IfSentence(null, $2, null, @1.first_line, @1.first_column);
   }
   | elseKW IF_SENTENCE {
-    node = NodeClass.createChildrenlessNode('ELSE IF SENTENCE', null, @1.first_line, @1.first_column);
-    node = NodeClass.addChildren(node, $2);
+    $$ = $2;
   }
 ;
 
 SWITCH_SENTENCE 
   : switchKW leftP EXPRESSION rightP leftC SWITCH_BODY rightC {
-    node = NodeClass.createChildrenlessNode('SWITCH SENTENCE', null, @1.first_line, @1.first_column);
-    aux = NodeClass.createSimpleNode('CONDITION');
-    aux = NodeClass.addChild(aux, $3);
-    node = NodeClass.addChild(node, $6);
+    $$ = new SwitchSentence(new NodeList($3, 'CONDITION'), $6, @1.first_line, @1.first_column);
   }
 ;
 
 SWITCH_BODY 
   : CASES_LIST {
-    $$ = $1;
+    $$ = new NodeList($1, 'CASES');
   }
   | CASES_LIST DEFAULT_CASE {
     node = $1;
-    node = NodeClass.addChild(node, $2);
-    $$ = node;
+    node.push($2);
+    $$ = new NodeList(node, 'CASES');
   }
 ;
 
 CASES_LIST 
   : CASES_LIST SINGLE_CASE {
-    node = $1;
-    node = NodeClass.addChild($2);
-    $$ = node;
+    $1.push($2);
+    $$ = $1;
   }
   | SINGLE_CASE {
-    node = NodeClass.createSimpleNode('CASES LIST');
-    node = NodeClass.addChild(node, $1);
-    $$ = node;
+    $$ = [ $1 ];
   }                           
 ;
 
 SINGLE_CASE 
   : caseKW EXPRESSION colon SENTENCES {
-    node = NodeClass.createChildrenlessNode('CASE', null, @1.first_line, @1.first_column);
-    aux = NodeClass.createSimpleNode('VALUE');
-    aux = NodeClass.addChild(aux, $1);
-    node = NodeClass.addChild(node, aux);
-    node = NodeClass.addChild(node, $4);
-    $$ = node;
+    $$ = new Case(new NodeList($2, 'VALUE'), $4, @1.first_line, @1.first_column);
   }
 ;
 
 DEFAULT_CASE 
   : defaultKW colon SENTENCES {
-    node = NodeClass.createChildrenlessNode('DEFAULT', null, @1.first_line, @1.first_column);
-    node = NodeClass.addChild(node, $3);
-    $$ = node;
+    $$ = new Case(null, $3, @1.first_line, @1.first_column);
   }
 ;
 
 WHILE_SENTENCE 
   : whileKW leftP EXPRESSION rightP BLOCK {
-    node = NodeClass.createChildrenlessNode('WHILE SENTENCE', null, @1.first_line, @1.first_column);
-    aux = NodeClass.createSimpleNode('CONDITION');
-    aux = NodeClass.addChild(aux, $3);
-    node = NodeClass.addChild(node, aux);
-    node = NodeClass.addChild(node, $5);
-    $$ = node;
+    $$ = new WhileSentence(new NodeList($3, 'CONDITION'), $5, @1.first_line, @1.first_column);
   }
 ;
 
 DOWHILE_SENTENCE 
   : doKW BLOCK whileKW leftP EXPRESSION rightP {
-    node = NodeClass.createChildrenlessNode('DOWHILE SENTENCE', null, @1.first_line, @1.first_column);
-    node = NodeClass.addChild(node, $2);
-    aux = NodeClass.createSimpleNode('CONDITION');
-    aux = NodeClass.addChild(aux, $5);
-    node = NodeClass.addChild(node, aux);
-    $$ = node;
+    $$ = new DowhileSentence($2, new NodeList($5, 'CONDITION'), @1.first_line, @1.first_column);
   }
 ;
 
 FOR_SENTENCE 
   : forKW leftP FOR_BODY rightP BLOCK {
-    node = NodeClass.createChildrenlessNode('FOR SENTENCE', null, @1.first_line, @1.first_column);
-    node = NodeClass.addChildren(node, $3);
-    node = NodeClass.addChild(node, $5);
-    $$ = node;
+    $$ = new ForSentence($3[0], $3[1], $3[2], $4, @1.first_line, @1.first_column);
   }
 ;
 
 FOR_BODY 
   : FOR_START semicolon EXPRESSION semicolon FOR_END {
-    node = NodeClass.createSimpleNode('FOR BODY');
-    node = NodeClass.addChild(node, $1);
-    aux = NodeClass.createSimpleNode('FOR MIDDLE');
-    aux = NodeClass.addChild(aux, $3);
-    node = NodeClass.addChild(node, aux);
-    node = NodeClass.addChild(node, $5);
-    $$ = node;
+    $$ = [$1, new NodeList($3, 'FOR MIDDLE'), $5];
   }
   | FOR_START semicolon semicolon FOR_END {
-    node = NodeClass.createSimpleNode('FOR BODY');
-    node = NodeClass.addChild(node, $1);
-    node = NodeClass.addChild(node, $4);
-    $$ = node;
+    $$ = [$1, new NodeList([], 'FOR MIDDLE'), $4];
   }
   | FOR_START semicolon EXPRESSION semicolon {
-    node = NodeClass.createSimpleNode('FOR BODY');
-    node = NodeClass.addChild(node, $1);
-    aux = NodeClass.createSimpleNode('FOR MIDDLE');
-    aux = NodeClass.addChild(aux, $3);
-    node = NodeClass.addChild(node, aux);
-    $$ = node;
+    $$ = [$1, new NodeList($3, 'FOR MIDDLE'), new NodeList([], 'FOR END')];
   }
   | FOR_START semicolon semicolon {
-    node = NodeClass.createSimpleNode('FOR BODY');
-    node = NodeClass.addChild(node, $1);
-    $$ = node;
+    $$ = [$1, new NodeList([], 'FOR MIDDLE'), new NodeList([], 'FOR END')];
   }
   | semicolon EXPRESSION semicolon FOR_END {
-    node = NodeClass.createSimpleNode('FOR BODY');
-    aux = NodeClass.createSimpleNode('FOR MIDDLE');
-    aux = NodeClass.addChild(aux, $2);
-    node = NodeClass.addChild(node, aux);
-    node = NodeClass.addChild(node, $4);
-    $$ = node;
+    $$ = [new NodeList([], 'FOR START'), new NodeList($2, 'FOR MIDDLE'), $4];
   }
   | semicolon EXPRESSION semicolon {
-    node = NodeClass.createSimpleNode('FOR BODY');
-    aux = NodeClass.createSimpleNode('FOR MIDDLE');
-    aux = NodeClass.addChild(aux, $2);
-    node = NodeClass.addChild(node, aux);
-    $$ = node;
+    $$ = [new NodeList([], 'FOR START'), new NodeList($2, 'FOR MIDDLE'), new NodeList([], 'FOR END')];
   }
   | semicolon semicolon FOR_END {
-    node = NodeClass.createSimpleNode('FOR BODY');
-    node = NodeClass.addChild(node, $3);
-    $$ = node;
+    $$ = [new NodeList([], 'FOR START'), new NodeList([], 'FOR MIDDLE'), new NodeList($3, 'FOR END')];
   }
   | semicolon semicolon {
-    $$ = NodeClass.createSimpleNode('FOR BODY');
+    $$ = [new NodeList([], 'FOR START'), new NodeList([], 'FOR MIDDLE'), new NodeList([], 'FOR END')];
   }
 ;
 
 FOR_START 
   : TYPE id asignment EXPRESSION {
-    node = NodeClass.createSimpleNode('FOR START');
-    aux = NodeClass.createSimpleNode('VAR_T1');
-    aux = NodeClass.addChild(aux, NodeClass.createChildrenlessNode('identifier', $2, @2.first_line, @2.first_column));
-    aux = NodeClass.addChild(aux, $4);
-    node = NodeClass.addChild(node, aux);
-    $$ = node;
+    $$ = new NodeList(new VarT1($1, new NodeList([new Identifier($2, @2.first_line, @2.first_column)], 'ID'), $4), 'FOR START');
   }
   | ASIGNMENT {
-    node = NodeClass.createSimpleNode('FOR START');
-    node = NodeClass.addChild(node, $1);
-    $$ = node;
+    $$ = new NodeList($1, 'FOR START');
   }
 ;
 
 FOR_END 
   : EXPRESSION {
-    node = NodeClass.createSimpleNode('FOR END');
-    node = NodeClass.addChild(node, $1);
-    $$ = node;
+    $$ = new NodeList($1, 'FOR END');
   }
   | ASIGNMENT {
-    node = NodeClass.createSimpleNode('FOR END');
-    node = NodeClass.addChild(node, $1);
-    $$ = node;
+    $$ = new NodeList($1, 'FOR END');
   }
 ;
 
 PRINT_SENTENCE
   : printKW leftP EXPRESSION rightP {
-    node = NodeClass.createChildrenlessNode('PRINT', null, @1.first_line, @1.first_column);
-    node = NodeClass.addChild(node, $3);
+    $$ = new PrintSentence($3, @1.first_line, @1.first_column);
   }
 ;
 
 THROW_SENTENCE
-  : throwKW strcKW CALL 
+  : throwKW strcKW CALL {
+    $$ = new ThrowSentence($3, @1.first_line, @1.first_column);
+  }
 ;
 
 TRY_SENTENCE
-  : tryKW BLOCK catchKW leftP VAR_T5 rightP BLOCK
+  : tryKW BLOCK catchKW leftP VAR_T5 rightP BLOCK {
+    $$ = new TryCatchSentence($2, $5, $7, @1.first_line, @1.first_column);
+  }
 ;
 
 

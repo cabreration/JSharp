@@ -12,6 +12,10 @@ class DoubleValue {
     getChildren() {
         return [];
     }
+
+    getTypeOf() {
+        return 'double';
+    }
 }
 
 module.exports.DoubleValue = DoubleValue;

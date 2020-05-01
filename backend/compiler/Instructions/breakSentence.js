@@ -11,6 +11,10 @@ class BreakSentence {
     getChildren() {
         return [];
     }
+
+    getTypeOf() {
+        return 'breaksentence';
+    }
 }
 
 module.exports.BreakSentence = BreakSentence;

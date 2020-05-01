@@ -5,6 +5,10 @@ class Operator {
         this.row = row; // Number
         this.column = column; // Number
     }
+
+    getTypeOf() {
+        return 'operator';
+    }
 }
 
 module.exports.Operator = Operator;

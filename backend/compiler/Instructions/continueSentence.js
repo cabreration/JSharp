@@ -11,6 +11,10 @@ class ContinueSentence {
     getChildren() {
         return [];
     }
+
+    getTypeOf() {
+        return 'continuesentence';
+    }
 }
 
 module.exports.ContinueSentence = ContinueSentence;

@@ -11,9 +11,9 @@ module.exports = (app) => {
       let ast = parser.parse(input);
       let treePrinter = new TreePrinter();
       //console.log(JSON.stringify(ast));
-      let tree = treePrinter.getDot(ast);
+      let tree = treePrinter.getDot(ast.root);
       const procesor = new TreeProcesor();
-      let st = procesor.processTree(ast.getChildren());
+      let st = procesor.firstApproach(ast);
       //console.log(tree);
       res.send({ state: true, dot: tree });
     }

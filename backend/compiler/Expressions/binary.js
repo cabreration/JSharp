@@ -12,6 +12,10 @@ class Binary {
     getChildren() {
         return [ this.arg1, this.arg2 ];
     }
+
+    getTypeOf() {
+        return 'binary';
+    }
 }
 
 module.exports.Binary =  Binary;

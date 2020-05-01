@@ -12,6 +12,10 @@ class CharValue {
     getChildren() {
         return [];
     }
+
+    getTypeOf() {
+        return 'char';
+    }
 }
 
 module.exports.CharValue = CharValue;

@@ -12,6 +12,10 @@ class Identifier {
     getDot() {
         return '[label="' + this.id + '"];\n';
     }
+
+    getTypeOf() {
+        return 'identifier';
+    }
 }
 
 module.exports.Identifier = Identifier;

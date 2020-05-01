@@ -5,15 +5,24 @@ class SymbolsTable {
     }
 
     insertEnviroment(enviroment) {
-        let flag = false;
-        this.enviroments.forEach(env => {
-            if (enviroment.id === env.id) {
-                flag = true;
+        if (enviroment.functionFlag) {
+            // it is a function
+            for (let i = 0; i < this.enviroments.length; i++) {
+                if (this.enviroments[i].functionFlag) {
+                    if (this.enviroments[i].id === enviroment.id 
+                        && this.enviroments[i].role === enviroment.role 
+                        && this.enviroments[i].paramsCount === enviroment.paramsCount) {
+                            // the function already exists
+                            return false;
+                        }
+                }
+                this.enviroments.push(enviroment);
+                return true;
             }
-        });
-
-        if (!flag) {
+        }
+        else {
             this.enviroments.push(enviroment);
+            return true;
         }
     }
 
@@ -24,6 +33,7 @@ class SymbolsTable {
             }
         }
 
+        // la funcion no existe
         return null;
     }
 }

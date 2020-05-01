@@ -11,6 +11,10 @@ class NullValue {
     getDot() {
         return '[label="null"];\n';
     }
+
+    getTypeOf() {
+        return 'null';
+    }
 }
 
 module.exports.NullValue= NullValue;

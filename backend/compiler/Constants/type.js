@@ -13,6 +13,10 @@ class Type {
     getChildren() {
         return [];
     }
+
+    getTypeOf() {
+        return 'type';
+    }
 }
 
 module.exports.Type = Type;

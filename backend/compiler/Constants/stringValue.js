@@ -12,6 +12,10 @@ class StringValue {
     getChildren() {
         return [];
     }
+
+    getTypeOf() {
+        return 'string';
+    }
 }
 
 module.exports.StringValue = StringValue;

@@ -11,6 +11,10 @@ class Cast {
     getDot() {
         return '[label="CAST"];\n';
     }
+
+    getTypeOf() {
+        return 'cast';
+    }
 }
 
 module.exports.Cast = Cast;

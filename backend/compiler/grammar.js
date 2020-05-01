@@ -150,18 +150,18 @@ case 10:
     this.$ = [ node ];
   
 break;
-case 11: case 116:
+case 11: case 116: case 151: case 169:
 
     $$[$0-1].push($$[$0]);
     this.$ = $$[$0-1];
   
 break;
-case 12: case 32: case 117:
+case 12: case 32: case 117: case 152: case 160: case 170:
 
     this.$ = [ $$[$0] ];
   
 break;
-case 13: case 14: case 16: case 18: case 40: case 41: case 42: case 43: case 44: case 118: case 120: case 122: case 124: case 126: case 127: case 128: case 129: case 131: case 132: case 134: case 136: case 167:
+case 13: case 14: case 16: case 18: case 40: case 41: case 42: case 43: case 44: case 118: case 120: case 122: case 124: case 126: case 127: case 128: case 129: case 131: case 132: case 134: case 136: case 165:
 
     this.$ = $$[$0];
   
@@ -626,254 +626,211 @@ case 115:
 break;
 case 137:
 
-    this.$ = NodeClass.createChildrenlessNode('BREAK SENTENCE', null, _$[$0].first_line, _$[$0].first_column);
+    this.$ = new BreakSentence(_$[$0].first_line, _$[$0].first_column);
   
 break;
 case 138:
 
-    this.$ = NodeClass.createChildrenlessNode('BREAK SENTENCE', null, _$[$0-1].first_line, _$[$0-1].first_column);
+    this.$ = new BreakSentence(_$[$0-1].first_line, _$[$0-1].first_column);
   
 break;
 case 139:
 
-    this.$ = NodeClass.createChildrenlessNode('CONTINUE SENTENCE', null, _$[$0].first_line, _$[$0].first_column);
+    this.$ = new ContinueSentence(_$[$0].first_line, _$[$0].first_column);
   
 break;
 case 140:
 
-    this.$ = NodeClass.createChildrenlessNode('CONTINUE SENTENCE', null, _$[$0-1].first_line, _$[$0-1].first_column);
+    this.$ = new ContinueSentence(_$[$0-1].first_line, _$[$0-1].first_column);
   
 break;
 case 141:
 
-    this.$ = NodeClass.createChildrenlessNode('RETURN SENTENCE', null, _$[$0-1].first_line, _$[$0-1].first_column);
+    this.$ = new ReturnSentence(null, _$[$0-1].first_line, _$[$0-1].first_column);
   
 break;
 case 142:
 
-    node = NodeClass.createChildrenlessNode('RETURN SENTENCE', null, _$[$0-1].first_line, _$[$0-1].first_column);
-    node = NodeClass.addChild(node, $$[$0]);
-    this.$ = node;
+    this.$ = new ReturnSentence($$[$0], _$[$0-1].first_line, _$[$0-1].first_column);
   
 break;
 case 143:
 
-    node = NodeClass.createChildrenlessNode('RETURN SENTENCE', null, _$[$0-2].first_line, _$[$0-2].first_column);
-    node = NodeClass.addChild(node, $$[$0-1]);
-    this.$ = node;
+    this.$ = new ReturnSentence($$[$0-1], _$[$0-2].first_line, _$[$0-2].first_column);
   
 break;
 case 144:
 
-    node = NodeClass.createSimpleNode('ASIGNMENT');
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('identifier', $$[$0-2], _$[$0-2].first_line, _$[$0-2].first_column));
-    node = NodeClass.addChild(node, $$[$0]);
-    this.$ = node;
+    this.$ = new Asignment(new Identifier($$[$0-2], _$[$0-2].first_line, _$[$0-2].first_column), [], $$[$0], _$[$0-1].first_line, _$[$0-1].first_column);
+  
+break;
+case 153:
+
+    this.$ = new Access(1, new Identifier($$[$0], _$[$0].first_line, _$[$0].first_column), _$[$0-1].first_line, _$[$0-1].first_column);
+  
+break;
+case 154:
+
+    this.$ = new Access(2, $$[$0-1], _$[$0-2].first_line, _$[$0-2].first_column);
+  
+break;
+case 155:
+
+    this.$ = new Access(3, $$[$0], _$[$0-1].first_line, _$[$0-1].first_column);
+  
+break;
+case 156:
+
+    this.$ = new Call(new Identifier($$[$0-3], _$[$0-3].first_line, _$[$0-3].first_column), new NodeList($$[$0-1], 'VALUES LIST'));
+  
+break;
+case 157:
+
+    this.$ = new Call(new Identifier($$[$0-2], _$[$0-2].first_line, _$[$0-2].first_column), []);
+  
+break;
+case 158:
+
+    $$[$0-2].push($$[$0]);
+    this.$ = $$[$0-2];
+  
+break;
+case 159:
+
+    $$[$0-4].push(new Asignment(new Identifier($$[$0-2], _$[$0-2].first_line, _$[$0-2].first_column), [], $$[$0], _$[$0-2].first_line, _$[$0-2].first_column));
+    this.$ = $$[$0-4];
+  
+break;
+case 161:
+
+    this.$ = [ new Asignment(new Identifier($$[$0-2], _$[$0-2].first_line, _$[$0-2].first_column), [], $$[$0], _$[$0-2].first_line, _$[$0-2].first_column) ];
   
 break;
 case 162:
 
-    node = NodeClass.createChildrenlessNode('IF SENTENCE', null, _$[$0-4].first_line, _$[$0-4].first_column);
-    aux = NodeClass.createSimpleNode('CONDITION');
-    aux = NodeClass.addChild(aux, $$[$0-2]);
-    node = NodeClass.addChild(node, aux);
-    node = NodeClass.addChild(node, $$[$0]);
-    this.$ = node;
+    this.$ = new IfSentence(new NodeList($$[$0-2], 'CONDITION'), $$[$0], null, _$[$0-4].first_line, _$[$0-4].first_column);
   
 break;
 case 163:
 
-    node = NodeClass.createChildrenlessNode('IF SENTENCE', null, _$[$0-5].first_line, _$[$0-5].first_column);
-    aux = NodeClass.createSimpleNode('CONDITION');
-    aux = NodeClass.addChild(aux, $$[$0-3]);
-    node = NodeClass.addChild(node, aux);
-    node = NodeClass.addChild(node, $$[$0-1]);
-    node = NodeClass.addChild(node, $$[$0]);
-    this.$ = node;
+    this.$ = new IfSentence(new NodeList($$[$0-3], 'CONDITION'), $$[$0-1], $$[$0], _$[$0-5].first_line, _$[$0-5].first_column);
   
 break;
 case 164:
 
-    node = NodeClass.createChildrenlessNode('ELSE SENTENCE', null, _$[$0-1].first_line, _$[$0-1].first_column);
-    node = NodeClass.addChild(node, $$[$0]);
-    this.$ = node;
-  
-break;
-case 165:
-
-    node = NodeClass.createChildrenlessNode('ELSE IF SENTENCE', null, _$[$0-1].first_line, _$[$0-1].first_column);
-    node = NodeClass.addChildren(node, $$[$0]);
+    this.$ = new IfSentence(null, $$[$0], null, _$[$0-1].first_line, _$[$0-1].first_column);
   
 break;
 case 166:
 
-    node = NodeClass.createChildrenlessNode('SWITCH SENTENCE', null, _$[$0-6].first_line, _$[$0-6].first_column);
-    aux = NodeClass.createSimpleNode('CONDITION');
-    aux = NodeClass.addChild(aux, $$[$0-4]);
-    node = NodeClass.addChild(node, $$[$0-1]);
+    this.$ = new SwitchSentence(new NodeList($$[$0-4], 'CONDITION'), $$[$0-1], _$[$0-6].first_line, _$[$0-6].first_column);
+  
+break;
+case 167:
+
+    this.$ = new NodeList($$[$0], 'CASES');
   
 break;
 case 168:
 
     node = $$[$0-1];
-    node = NodeClass.addChild(node, $$[$0]);
-    this.$ = node;
-  
-break;
-case 169:
-
-    node = $$[$0-1];
-    node = NodeClass.addChild($$[$0]);
-    this.$ = node;
-  
-break;
-case 170:
-
-    node = NodeClass.createSimpleNode('CASES LIST');
-    node = NodeClass.addChild(node, $$[$0]);
-    this.$ = node;
+    node.push($$[$0]);
+    this.$ = new NodeList(node, 'CASES');
   
 break;
 case 171:
 
-    node = NodeClass.createChildrenlessNode('CASE', null, _$[$0-3].first_line, _$[$0-3].first_column);
-    aux = NodeClass.createSimpleNode('VALUE');
-    aux = NodeClass.addChild(aux, $$[$0-3]);
-    node = NodeClass.addChild(node, aux);
-    node = NodeClass.addChild(node, $$[$0]);
-    this.$ = node;
+    this.$ = new Case(new NodeList($$[$0-2], 'VALUE'), $$[$0], _$[$0-3].first_line, _$[$0-3].first_column);
   
 break;
 case 172:
 
-    node = NodeClass.createChildrenlessNode('DEFAULT', null, _$[$0-2].first_line, _$[$0-2].first_column);
-    node = NodeClass.addChild(node, $$[$0]);
-    this.$ = node;
+    this.$ = new Case(null, $$[$0], _$[$0-2].first_line, _$[$0-2].first_column);
   
 break;
 case 173:
 
-    node = NodeClass.createChildrenlessNode('WHILE SENTENCE', null, _$[$0-4].first_line, _$[$0-4].first_column);
-    aux = NodeClass.createSimpleNode('CONDITION');
-    aux = NodeClass.addChild(aux, $$[$0-2]);
-    node = NodeClass.addChild(node, aux);
-    node = NodeClass.addChild(node, $$[$0]);
-    this.$ = node;
+    this.$ = new WhileSentence(new NodeList($$[$0-2], 'CONDITION'), $$[$0], _$[$0-4].first_line, _$[$0-4].first_column);
   
 break;
 case 174:
 
-    node = NodeClass.createChildrenlessNode('DOWHILE SENTENCE', null, _$[$0-5].first_line, _$[$0-5].first_column);
-    node = NodeClass.addChild(node, $$[$0-4]);
-    aux = NodeClass.createSimpleNode('CONDITION');
-    aux = NodeClass.addChild(aux, $$[$0-1]);
-    node = NodeClass.addChild(node, aux);
-    this.$ = node;
+    this.$ = new DowhileSentence($$[$0-4], new NodeList($$[$0-1], 'CONDITION'), _$[$0-5].first_line, _$[$0-5].first_column);
   
 break;
 case 175:
 
-    node = NodeClass.createChildrenlessNode('FOR SENTENCE', null, _$[$0-4].first_line, _$[$0-4].first_column);
-    node = NodeClass.addChildren(node, $$[$0-2]);
-    node = NodeClass.addChild(node, $$[$0]);
-    this.$ = node;
+    this.$ = new ForSentence($$[$0-2][0], $$[$0-2][1], $$[$0-2][2], $$[$0-1], _$[$0-4].first_line, _$[$0-4].first_column);
   
 break;
 case 176:
 
-    node = NodeClass.createSimpleNode('FOR BODY');
-    node = NodeClass.addChild(node, $$[$0-4]);
-    aux = NodeClass.createSimpleNode('FOR MIDDLE');
-    aux = NodeClass.addChild(aux, $$[$0-2]);
-    node = NodeClass.addChild(node, aux);
-    node = NodeClass.addChild(node, $$[$0]);
-    this.$ = node;
+    this.$ = [$$[$0-4], new NodeList($$[$0-2], 'FOR MIDDLE'), $$[$0]];
   
 break;
 case 177:
 
-    node = NodeClass.createSimpleNode('FOR BODY');
-    node = NodeClass.addChild(node, $$[$0-3]);
-    node = NodeClass.addChild(node, $$[$0]);
-    this.$ = node;
+    this.$ = [$$[$0-3], new NodeList([], 'FOR MIDDLE'), $$[$0]];
   
 break;
 case 178:
 
-    node = NodeClass.createSimpleNode('FOR BODY');
-    node = NodeClass.addChild(node, $$[$0-3]);
-    aux = NodeClass.createSimpleNode('FOR MIDDLE');
-    aux = NodeClass.addChild(aux, $$[$0-1]);
-    node = NodeClass.addChild(node, aux);
-    this.$ = node;
+    this.$ = [$$[$0-3], new NodeList($$[$0-1], 'FOR MIDDLE'), new NodeList([], 'FOR END')];
   
 break;
 case 179:
 
-    node = NodeClass.createSimpleNode('FOR BODY');
-    node = NodeClass.addChild(node, $$[$0-2]);
-    this.$ = node;
+    this.$ = [$$[$0-2], new NodeList([], 'FOR MIDDLE'), new NodeList([], 'FOR END')];
   
 break;
 case 180:
 
-    node = NodeClass.createSimpleNode('FOR BODY');
-    aux = NodeClass.createSimpleNode('FOR MIDDLE');
-    aux = NodeClass.addChild(aux, $$[$0-2]);
-    node = NodeClass.addChild(node, aux);
-    node = NodeClass.addChild(node, $$[$0]);
-    this.$ = node;
+    this.$ = [new NodeList([], 'FOR START'), new NodeList($$[$0-2], 'FOR MIDDLE'), $$[$0]];
   
 break;
 case 181:
 
-    node = NodeClass.createSimpleNode('FOR BODY');
-    aux = NodeClass.createSimpleNode('FOR MIDDLE');
-    aux = NodeClass.addChild(aux, $$[$0-1]);
-    node = NodeClass.addChild(node, aux);
-    this.$ = node;
+    this.$ = [new NodeList([], 'FOR START'), new NodeList($$[$0-1], 'FOR MIDDLE'), new NodeList([], 'FOR END')];
   
 break;
 case 182:
 
-    node = NodeClass.createSimpleNode('FOR BODY');
-    node = NodeClass.addChild(node, $$[$0]);
-    this.$ = node;
+    this.$ = [new NodeList([], 'FOR START'), new NodeList([], 'FOR MIDDLE'), new NodeList($$[$0], 'FOR END')];
   
 break;
 case 183:
 
-    this.$ = NodeClass.createSimpleNode('FOR BODY');
+    this.$ = [new NodeList([], 'FOR START'), new NodeList([], 'FOR MIDDLE'), new NodeList([], 'FOR END')];
   
 break;
 case 184:
 
-    node = NodeClass.createSimpleNode('FOR START');
-    aux = NodeClass.createSimpleNode('VAR_T1');
-    aux = NodeClass.addChild(aux, NodeClass.createChildrenlessNode('identifier', $$[$0-2], _$[$0-2].first_line, _$[$0-2].first_column));
-    aux = NodeClass.addChild(aux, $$[$0]);
-    node = NodeClass.addChild(node, aux);
-    this.$ = node;
+    this.$ = new NodeList(new VarT1($$[$0-3], new NodeList([new Identifier($$[$0-2], _$[$0-2].first_line, _$[$0-2].first_column)], 'ID'), $$[$0]), 'FOR START');
   
 break;
 case 185:
 
-    node = NodeClass.createSimpleNode('FOR START');
-    node = NodeClass.addChild(node, $$[$0]);
-    this.$ = node;
+    this.$ = new NodeList($$[$0], 'FOR START');
   
 break;
 case 186: case 187:
 
-    node = NodeClass.createSimpleNode('FOR END');
-    node = NodeClass.addChild(node, $$[$0]);
-    this.$ = node;
+    this.$ = new NodeList($$[$0], 'FOR END');
   
 break;
 case 188:
 
-    node = NodeClass.createChildrenlessNode('PRINT', null, _$[$0-3].first_line, _$[$0-3].first_column);
-    node = NodeClass.addChild(node, $$[$0-1]);
+    this.$ = new PrintSentence($$[$0-1], _$[$0-3].first_line, _$[$0-3].first_column);
+  
+break;
+case 189:
+
+    this.$ = new ThrowSentence($$[$0], _$[$0-2].first_line, _$[$0-2].first_column);
+  
+break;
+case 190:
+
+    this.$ = new TryCatchSentence($$[$0-5], $$[$0-2], $$[$0], _$[$0-6].first_line, _$[$0-6].first_column);
   
 break;
 }
@@ -1049,6 +1006,21 @@ parse: function parse(input) {
   const StringValue = require('./Constants/stringValue').StringValue;
   const NullValue = require('./Constants/nullValue').NullValue;
   const Cast = require('./Expressions/Cast').Cast;
+  const BreakSentence = require('./Instructions/breakSentence').BreakSentence;
+  const ContinueSentence = require('./Instructions/continueSentence').ContinueSentence;
+  const ReturnSentence = require('./Instructions/returnSentence').ReturnSentence;
+  const IfSentence = require('./Instructions/ifSentence').IfSentence;
+  const SwitchSentence = require('./Instructions/switchSentence').SwitchSentence;
+  const WhileSentence = require('./Instructions/whileSentence').WhileSentence;
+  const DowhileSentence = require('./Instructions/dowhileSentence').DowhileSentence;
+  const ForSentence = require('./Instructions/forSentence').ForSentence;
+  const Case = require('./Instructions/case').Case;
+  const PrintSentence = require('./Instructions/printSentence');
+  const Asignment = require('./Instructions/asignment').Asignment;
+  const Call = require('./Instructions/call').Call;
+  const ThrowSentence = require('./Instructions/throwSentence').ThrowSentence;
+  const TryCatchSentence = require('./Instructions/tryCatchSentence').TryCatchSentence;
+  const Access = require('./Utilities/access').Access;
   const NodeClass = require('./node').Node;
   let node;
   let aux;

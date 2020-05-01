@@ -12,6 +12,10 @@ class BooleanValue {
     getChildren() {
         return [];
     }
+
+    getTypeOf() {
+        return 'boolean';
+    }
 }
 
 module.exports.BooleanValue = BooleanValue;

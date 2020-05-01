@@ -12,6 +12,10 @@ class IntValue {
     getChildren() {
         return [];
     }
+
+    getTypeOf() {
+        return 'int';
+    }
 }
 
 module.exports.IntValue = IntValue;

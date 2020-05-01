@@ -21,6 +21,10 @@ class Root {
     getChildren() {
         return this.globalIns;
     }
+
+    getTypeOf() {
+        return 'root';
+    }
 }
 
 module.exports.Root = Root;

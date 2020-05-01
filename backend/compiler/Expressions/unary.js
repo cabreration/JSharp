@@ -11,6 +11,10 @@ class Unary {
     getChildren() {
         return [ this.arg ];
     }
+
+    getTypeOf() {
+        return 'unary';
+    }
 }
 
 module.exports.Unary =  Unary;

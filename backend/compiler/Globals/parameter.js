@@ -5,11 +5,15 @@ class Parameter {
     }
 
     getDot() {
-        return '[label="' + this.identifier.id + '"];\n';
+        return '[label="PARAMETER"];\n';
     }
 
     getChildren() {
-        return [];
+        return [this.identifier, this.type];
+    }
+
+    getTypeOf() {
+        return 'parameter';
     }
 }
 

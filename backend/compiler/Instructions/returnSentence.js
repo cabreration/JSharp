@@ -15,6 +15,10 @@ class ReturnSentence {
         else 
             return [];
     }
+
+    getTypeOf() {
+        return 'returnsentence';
+    }
 }
 
 module.exports.ReturnSentence = ReturnSentence;
