@@ -85,7 +85,12 @@ var $0 = $$.length - 1;
 switch (yystate) {
 case 1:
  
-    return $$[$0-1];
+    return { 
+      root: $$[$0-1],
+      global_vars: global_vars,
+      functions_list: functions_list,
+      global_strcs: global_strcs
+    };
   
 break;
 case 2:
@@ -156,18 +161,48 @@ case 11: case 116: case 151: case 169:
     this.$ = $$[$0-1];
   
 break;
-case 12: case 32: case 117: case 152: case 160: case 170:
+case 12: case 32: case 62: case 117: case 152: case 160: case 170:
 
     this.$ = [ $$[$0] ];
   
 break;
-case 13: case 14: case 16: case 18: case 40: case 41: case 42: case 43: case 44: case 118: case 120: case 122: case 124: case 126: case 127: case 128: case 129: case 131: case 132: case 134: case 136: case 165:
+case 13:
+
+    functions_list.push($$[$0]);
+    this.$ = $$[$0];
+  
+break;
+case 14:
+
+    global_vars.push($$[$0]);
+    this.$ = $$[$0];
+  
+break;
+case 15:
+
+    global_vars.push($$[$0-1]);
+    this.$ = $$[$0-1];
+  
+break;
+case 16: case 40: case 41: case 42: case 43: case 44: case 111: case 118: case 120: case 122: case 124: case 126: case 127: case 128: case 129: case 131: case 132: case 134: case 136: case 165:
 
     this.$ = $$[$0];
   
 break;
-case 15: case 17: case 19: case 91: case 119: case 121: case 123: case 125: case 130: case 133: case 135:
+case 17: case 91: case 119: case 121: case 123: case 125: case 130: case 133: case 135:
 
+    this.$ = $$[$0-1];
+  
+break;
+case 18:
+
+    global_strcs.push($$[$0]);
+    this.$ = $$[$0];
+  
+break;
+case 19:
+
+    global_strcs.push($$[$0-1]);
     this.$ = $$[$0-1];
   
 break;
@@ -227,7 +262,7 @@ case 30:
     this.$ = new NodeList([], 'PARAMETERS')
   
 break;
-case 31:
+case 31: case 61:
 
     node = $$[$0-2];
     node.push($$[$0]);
@@ -358,7 +393,7 @@ case 57:
     this.$ = node;
   
 break;
-case 58: case 61:
+case 58:
 
     node = $$[$0-2];
     node = NodeClass.addChild(node, $$[$0]);
@@ -374,87 +409,55 @@ case 59:
 break;
 case 60:
 
-    node = NodeClass.createSimpleNode('STRC_DEF');
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('identifier', $$[$0-4], _$[$0-4].first_line, _$[$0-4].first_column));
-    node = NodeClass.addChild(node, $$[$0-1]);
-    this.$ = node;
-  
-break;
-case 62:
-
-    node = NodeClass.createSimpleNode('ATT_LIST');
-    node = NodeClass.addChild(node, $$[$0]);
-    this.$ = node;
+    this.$ = new Strc(new Identifier($$[$0-4], _$[$0-4].first_line, _$[$0-4].first_column), new NodeList($$[$0-1], 'ATTRIBUTES'));
   
 break;
 case 63:
 
-    node = NodeClass.createSimpleNode('ATTRIBUTE');
-    node = NodeClass.addChild(node, $$[$0-1]);
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('identifier', $$[$0], _$[$0].first_line, _$[$0].first_column));
-    this.$ = node;
+    this.$ = new Attribute($$[$0-1], new Identifier($$[$0], _$[$0].first_line, _$[$0].first_column), null);
   
 break;
 case 64:
 
-    node = NodeClass.createSimpleNode('ATTRIBUTE');
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('type', $$[$0-1], _$[$0-1].first_line, _$[$0-1].first_column));
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('identifier', $$[$0], _$[$0].first_line, _$[$0].first_column));
-    this.$ = node;
+    this.$ = new Attribute(new Type($$[$0-1], _$[$0-1].first_line, _$[$0-1].first_column, false), 
+      new Identifier($$[$0], _$[$0].first_line, _$[$0].first_column), null);
   
 break;
 case 65:
 
-    node = NodeClass.createSimpleNode('ATTRIBUTE');
     $$[$0-3].value += '[]';
-    node = NodeClass.addChild(node, $$[$0-3]);
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('identifier', $$[$0], _$[$0].first_line, _$[$0].first_column));
-    this.$ = node;
+    $$[$0-3].arrayFlag = true;
+    this.$ = new Attribute($$[$0-3], new Identifier($$[$0], _$[$0].first_line, _$[$0].first_column), null);
   
 break;
 case 66:
 
-    node = NodeClass.createSimpleNode('ATTRIBUTE');
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('type', $$[$0-3]+'[]', _$[$0-3].first_line, _$[$0-3].first_column));
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('identifier', $$[$0], _$[$0].first_line, _$[$0].first_column));
-    this.$ = node;
+    this.$ = new Attribute(new Type($$[$0-3]+'[]', _$[$0-3].first_line, _$[$0-3].first_column, true), 
+      new Identifier($$[$0], _$[$0].first_line, _$[$0].first_column), null);
   
 break;
 case 67:
 
-    node = NodeClass.createSimpleNode('ATTRIBUTE');
-    node = NodeClass.addChild(node, $$[$0-3]);
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('identifier', $$[$0-2], _$[$0-2].first_line, _$[$0-2].first_column));
-    node = NodeClass.addChild(node, $$[$0]);
-    this.$ = node;
+    this.$ = new Attribute($$[$0-3], new Identifier($$[$0-2], _$[$0-2].first_line, _$[$0-2].first_column), $$[$0]);
   
 break;
 case 68:
 
-    node = NodeClass.createSimpleNode('ATTRIBUTE');
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('type', $$[$0-3], _$[$0-3].first_line, _$[$0-3].first_column));
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('identifier', $$[$0-2], _$[$0-2].first_line, _$[$0-2].first_column));
-    node = NodeClass.addChild(node, $$[$0]);
-    this.$ = node;
+    this.$ = new Attribute(new Type($$[$0-3], _$[$0-3].first_line, _$[$0-3].first_column, false), 
+      new Identifier($$[$0-2], _$[$0-2].first_line, _$[$0-2].first_column), $$[$0]);
   
 break;
 case 69:
 
-    node = NodeClass.createSimpleNode('ATTRIBUTE');
     $$[$0-5].value += '[]';
-    node = NodeClass.addChild(node, $$[$0-5]);
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('identifier', $$[$0-2], _$[$0-2].first_line, _$[$0-2].first_column));
-    node = NodeClass.addChild(node, $$[$0]);
-    this.$ = node;
+    $$[$0-5].arrayFlag = true;
+    this.$ = new Attribute($$[$0-5], new Identifier($$[$0-2], _$[$0-2].first_line, _$[$0-2].first_column), $$[$0]);
   
 break;
 case 70:
 
-    node = NodeClass.createSimpleNode('ATTRIBUTE');
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('type', $$[$0-5]+'[]', _$[$0-5].first_line, _$[$0-5].first_column));
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('identifier', $$[$0-2], _$[$0-2].first_line, _$[$0-2].first_column));
-    node = NodeClass.addChild(node, $$[$0]);
-    this.$ = node;
+    this.$ = new Attribute(new Type($$[$0-5]+'[]', _$[$0-5].first_line, _$[$0-5].first_column, true), 
+      new Identifier($$[$0-2], _$[$0-2].first_line, _$[$0-2].first_column), $$[$0]);
   
 break;
 case 71:
@@ -984,46 +987,48 @@ parse: function parse(input) {
     return true;
 }};
 
-  const Import = require('./Globals/import').Import;
-  const Root = require('./Globals/root').Root;
-  const Type = require('./Constants/Type').Type;
-  const Function = require('./Globals/function').Function;
-  const Identifier = require('./Constants/identifier').Identifier;
-  const NodeList = require('./Utilities/NodeList').NodeList;
-  const Parameter = require('./Globals/parameter').Parameter;
-  const VarT1 = require('./Instructions/vart1').VarT1;
-  const VarT2 = require('./Instructions/vart2').VarT2;
-  const VarT3 = require('./Instructions/vart3').VarT3;
-  const VarT4 = require('./Instructions/vart4').VarT4;
-  const VarT5 = require('./Instructions/vart5').VarT5;
-  const Operator = require('./Constants/operator').Operator;
-  const Binary = require('./Expressions/binary').Binary;
-  const Unary = require('./Expressions/unary').Unary;
-  const BooleanValue = require('./Constants/booleanValue').BooleanValue;
-  const CharValue = require('./Constants/charValue').CharValue;
-  const DoubleValue = require('./Constants/doubleValue').DoubleValue;
-  const IntValue = require('./Constants/intValue').IntValue;
-  const StringValue = require('./Constants/stringValue').StringValue;
-  const NullValue = require('./Constants/nullValue').NullValue;
-  const Cast = require('./Expressions/Cast').Cast;
-  const BreakSentence = require('./Instructions/breakSentence').BreakSentence;
-  const ContinueSentence = require('./Instructions/continueSentence').ContinueSentence;
-  const ReturnSentence = require('./Instructions/returnSentence').ReturnSentence;
-  const IfSentence = require('./Instructions/ifSentence').IfSentence;
-  const SwitchSentence = require('./Instructions/switchSentence').SwitchSentence;
-  const WhileSentence = require('./Instructions/whileSentence').WhileSentence;
-  const DowhileSentence = require('./Instructions/dowhileSentence').DowhileSentence;
-  const ForSentence = require('./Instructions/forSentence').ForSentence;
-  const Case = require('./Instructions/case').Case;
-  const PrintSentence = require('./Instructions/printSentence');
-  const Asignment = require('./Instructions/asignment').Asignment;
-  const Call = require('./Instructions/call').Call;
-  const ThrowSentence = require('./Instructions/throwSentence').ThrowSentence;
-  const TryCatchSentence = require('./Instructions/tryCatchSentence').TryCatchSentence;
-  const Access = require('./Utilities/access').Access;
-  const NodeClass = require('./node').Node;
-  let node;
-  let aux;
+  const Import = require('../Globals/import').Import;
+  const Root = require('../Globals/root').Root;
+  const Type = require('../Constants/Type').Type;
+  const Function = require('../Globals/function').Function;
+  const Identifier = require('../Constants/identifier').Identifier;
+  const NodeList = require('../Utilities/NodeList').NodeList;
+  const Parameter = require('../Globals/parameter').Parameter;
+  const VarT1 = require('../Instructions/vart1').VarT1;
+  const VarT2 = require('../Instructions/vart2').VarT2;
+  const VarT3 = require('../Instructions/vart3').VarT3;
+  const VarT4 = require('../Instructions/vart4').VarT4;
+  const VarT5 = require('../Instructions/vart5').VarT5;
+  const Operator = require('../Constants/operator').Operator;
+  const Binary = require('../Expressions/binary').Binary;
+  const Unary = require('../Expressions/unary').Unary;
+  const BooleanValue = require('../Constants/booleanValue').BooleanValue;
+  const CharValue = require('../Constants/charValue').CharValue;
+  const DoubleValue = require('../Constants/doubleValue').DoubleValue;
+  const IntValue = require('../Constants/intValue').IntValue;
+  const StringValue = require('../Constants/stringValue').StringValue;
+  const NullValue = require('../Constants/nullValue').NullValue;
+  const Cast = require('../Expressions/Cast').Cast;
+  const BreakSentence = require('../Instructions/breakSentence').BreakSentence;
+  const ContinueSentence = require('../Instructions/continueSentence').ContinueSentence;
+  const ReturnSentence = require('../Instructions/returnSentence').ReturnSentence;
+  const IfSentence = require('../Instructions/ifSentence').IfSentence;
+  const SwitchSentence = require('../Instructions/switchSentence').SwitchSentence;
+  const WhileSentence = require('../Instructions/whileSentence').WhileSentence;
+  const DowhileSentence = require('../Instructions/dowhileSentence').DowhileSentence;
+  const ForSentence = require('../Instructions/forSentence').ForSentence;
+  const Case = require('../Instructions/case').Case;
+  const PrintSentence = require('../Instructions/printSentence').PrintSentence;
+  const Asignment = require('../Instructions/asignment').Asignment;
+  const Call = require('../Instructions/call').Call;
+  const ThrowSentence = require('../Instructions/throwSentence').ThrowSentence;
+  const TryCatchSentence = require('../Instructions/tryCatchSentence').TryCatchSentence;
+  const Access = require('../Utilities/access').Access;
+  const Attribute = require('../Utilities/attribute').Attribute;
+  const Strc = require('../Globals/strc').Strc;
+  let global_vars = [];
+  let functions_list = [];
+  let global_strcs = [];
 /* generated by jison-lex 0.3.4 */
 var lexer = (function(){
 var lexer = ({

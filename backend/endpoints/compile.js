@@ -1,7 +1,8 @@
 
-const parser = require('../compiler/grammar');
-const TreePrinter = require('../compiler/tree').TreePrinter;
-const TreeProcesor = require('../compiler/Procesor/treeProcesor').TreeProcesor;
+const parser = require('../Ast/grammar');
+const TreePrinter = require('../Ast/Dot/treePrinter').TreePrinter;
+const Singleton = require('../Procesor/Singleton/singleton').Singleton;
+const Process = require('../Procesor/process').Process;
 
 module.exports = (app) => {
 
@@ -10,16 +11,15 @@ module.exports = (app) => {
     try {
       let ast = parser.parse(input);
       let treePrinter = new TreePrinter();
-      //console.log(JSON.stringify(ast));
       let tree = treePrinter.getDot(ast.root);
-      const procesor = new TreeProcesor();
-      let st = procesor.firstApproach(ast);
-      //console.log(tree);
-      res.send({ state: true, dot: tree });
+
+      let reps = Process.firstApproach(ast);
+
+      res.send({ state: true, dot: tree, errors: Singleton.sharpErrors });
     }
     catch (e) {
       console.log(e);
-      res.send({ state: false, message: 'El proceso fallo' });
+      res.send({ state: false, message: 'El proceso ha fallado' });
     }
   });
 
