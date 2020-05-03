@@ -8,6 +8,7 @@ class Updater {
         this.code = code;
         this.value = null;
         this.type = null;
+        this.ref = null;
     }
 
     addValue(temp) {
@@ -16,6 +17,10 @@ class Updater {
 
     addType(type) {
         this.type = type;
+    }
+
+    addReference(ref) {
+        this.ref = ref;
     }
 }
 

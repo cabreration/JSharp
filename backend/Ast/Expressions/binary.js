@@ -278,9 +278,12 @@ class Binary {
                 temp++;
                 break;
             case 'equal value':
-                code.push(`t${temp} = ${val1} == ${val2};`);
-                val = `t${temp}`;
-                temp++;
+                if (type1 != 'string') {
+                    code.push(`t${temp} = ${val1} == ${val2};`);
+                    val = `t${temp}`;
+                    temp++;
+                }
+                // TODO - COMPARE STRINGS
                 break;
             case 'equal reference':
                 // TODO
@@ -306,12 +309,13 @@ class Binary {
                 temp++;
                 break;
             case 'plus':
-                let plus = this.translateAdition(type1, type2, val1, val2, temp);
+                let plus = this.translateAdition(type1, type2, val1, val2, temp, label, updater1, updater2);
                 code.push(plus.code);
                 temp = plus.temp;
                 temp++;
                 val = plus.val;
                 h = plus.h;
+                label = plus.label;
                 break;
             case 'minus':
                 code.push(`t${temp} =${val1} - ${val2};`);
@@ -357,62 +361,273 @@ class Binary {
         }
     }
 
-    translateAdition(type1, type2, val1, val2, temp, h) {
+    translateAdition(type1, type2, val1, val2, temp, h, label, updater1, updater2) {
+        let code = [];
+        let firstH = h;
+        let val = `t${temp}`;
         if (type1 === 'string' && type2 != 'string') {
+            let ref = updater1.ref;
+            temp++;
+            code.push(`${val} = h;`);
+            let str = this.generateString3DC(val1, h, label, temp, ref);
+            code.push(str.code);
+            h = str.h;
+            temp = str.temp;
+            label = str.label;
             if (type2 === 'double' || type2 === 'int') {
-
+                let n = this.generateNumber3DC(val2, h, label, temp);
+                h = n.h;
+                temp = n.temp;
+                label = n.label;
+                code.push(n.code);
             }
             else if (type2 === 'boolean') {
-
+                let bool = val2 === '1';
+                let t = this.generateBool3DC(bool, h);
+                h = t.h;
+                code.push(t.code);
             }
             else if (type2 === 'char') {
-
+                code.push(`heap[h] = ${val2};`);
+                code.push(`h = h + 1;`);
+                Singleton.heap[h] = Number(val2);
+                h++;
+            }
+            code.push(`heap[h] = 0;`);
+            code.push(`h = h + 1;`);
+            Singleton.heap[h] = 0;
+            h++;
+            return {
+                code: code.join('\n'),
+                temp: temp,
+                val: val,
+                h: h, 
+                label: label,
+                ref: firstH
             }
         }
         else if (type1 != 'string' && type2 === 'string') {
-            if (type1 === 'char' || type1 === 'double' || type2 === 'int') {
-
+            temp++;
+            code.push(`${val} = h;`);
+            if (type1 === 'double' || type2 === 'int') {
+                let n = this.generateNumber3DC(val1, h, label, temp);
+                h = n.h;
+                temp = n.temp;
+                label = n.label;
+                code.push(n.code);
             }
             else if (type1 === 'boolean') {
-
+                let bool = val1 === '1';
+                let t = this.generateBool3DC(bool, h);
+                h = t.h;
+                code.push(t.code);
             }
             else if (type1 === 'char') {
-
+                code.push(`heap[h] = ${val1};`);
+                code.push(`h = h + 1;`);
+                Singleton.heap[h] = Number(val1);
+                h++;
+            }
+            let ref = updater2.ref;
+            let str = this.generateString3DC(val2, h, label, temp, ref);
+            code.push(str.code);
+            h = str.h;
+            temp = str.temp;
+            label = str.label;
+            code.push(`heap[h] = 0;`);
+            code.push(`h = h + 1;`);
+            Singleton.heap[h] = 0;
+            h++;
+            return {
+                code: code.join('\n'),
+                temp: temp,
+                val: val,
+                h: h, 
+                label: label,
+                ref: firstH
             }
         }
         else if (type1 === 'string' && type2 === 'string') {
-
+            let ref = updater1.ref;
+            let str = this.generateString3DC(val1, h, label, temp, ref);
+            code.push(str.code);
+            h = str.h;
+            temp = str.temp;
+            label = str.label;
+            ref = updater2.ref;
+            str = this.generateString3DC(val2, h, label, temp, ref);
+            code.push(str.code);
+            h = str.h;
+            temp = str.temp;
+            label = str.label;
+            code.push(`heap[h] = 0;`);
+            code.push(`h = h + 1;`);
+            Singleton.heap[h] = 0;
+            h++;
+            return {
+                code: code.join('\n'),
+                temp: temp,
+                val: val,
+                h: h, 
+                label: label,
+                ref: firstH
+            }
         }
         else if (type1 === 'char' && type2 === 'char') {
             let code = [];
             let val = `t${temp}`;
             temp++;
             code.push(`${val} = h;`);
-            code.push(`heap[${h}] = ${val1};`);
-            Singleton.heap[h] = val1;
+            code.push(`heap[h] = ${val1};`);
+            Singleton.heap[h] = Number(val1);
             h++;
             code.push('h = h + 1;');
-            code.push(`heap[${h}] = ${val2};`);
-            Singleton.heap[h] =  val2;
+            code.push(`heap[h] = ${val2};`);
+            Singleton.heap[h] = Number(val2);
             h++;
             code.push('h = h + 1;');
-            code.push(`heap[${h}] = 0;`);
+            code.push(`heap[h] = 0;`);
             Singleton.heap[h] = 0;
             h++;
             code.push('h = h + 1;');
-            
+            return {
+                code: code.join('\n'),
+                temp: temp,
+                val: val,
+                h: h, 
+                label: label,
+                ref: firstH
+            }
         }
         else if (type1 != 'string' && type2 != 'string') {
             return {
                 code: `t${temp} = ${val1} + ${val2};`,
                 temp: temp + 1,
                 val: `t${temp}`, 
-                h: h
+                h: h,
+                label: label, 
+                ref: -1
             }
         }
         else {
             console.error('ERROR EN binary.js');
             console.error(`${type1}, ${type2}`);
+        }
+    }
+
+    generateBool3DC(val, h) {
+        let code = [];
+        if (val) {
+            code.push(`heap[h] = 116;`);
+            code.push('h = h + 1;');
+            code.push(`heap[h] = 114;`);
+            code.push('h = h + 1;');
+            code.push('heap[h] = 117;');
+            code.push('h = h + 1;');
+            code.push('heap[h] = 101;');
+            code.push('h = h + 1;');
+            Singleton.heap[h]=116;
+            h++;
+            Singleton.heap[h] = 114;
+            h++;
+            Singleton.heap[h] = 117;
+            h++;
+            Singleton.heap[h] = 101;
+            h++;
+        }
+        else {
+            code.push(`heap[h] = 102;`);
+            code.push('h = h + 1;');
+            code.push(`heap[h] = 97;`);
+            code.push('h = h + 1;');
+            code.push('heap[h] = 108;');
+            code.push('h = h + 1;');
+            code.push('heap[h] = 115;');
+            code.push('h = h + 1;');
+            code.push('heap[h] = 101;');
+            code.push('h = h + 1;');
+            Singleton.heap[h] = 102;
+            h++;
+            Singleton.heap[h] = 97;
+            h++;
+            Singleton.heap[h] = 108;
+            h++;
+            Singleton.heap[h] = 115;
+            h++;
+            Singleton.heap[h] = 101;
+            h++;
+        }
+        return {
+            code: code.join('\n'),
+            h: h
+        }
+    }
+
+    generateString3DC(val, h, label, temp, ref) {
+        let code = [];
+        code.push(`t${temp} = heap[${val}];`); // first char
+        code.push(`L${label}:`);
+        code.push(`if (t${temp} == 0) goto L${label+1};`);
+        code.push(`heap[h] = t${temp};`);
+            
+        // I need to simulate the string addition here
+        while (Singleton.heap[ref] > 0) {
+            Singleton.heap[h] = Singleton.heap[ref];
+            ref++;
+            h++;
+        }
+                 
+        code.push('h = h + 1;');
+        code.push(`${val1} = ${val1} + 1;`);
+        code.push(`t${temp} = heap[${val1}];`);
+        code.push(`goto L${label};`);
+        label++;
+        code.push(`L${label}:`);
+        label++;
+        temp++;
+        return {
+            h: h,
+            temp: temp,
+            label: label,
+            code: code.join('\n')
+        }
+    }
+
+    generateNumber3DC(val, h, label, temp) {
+        let code = [];
+        code.push(`t${temp} = 0;`);
+        code.push(`L${label}:`);
+        code.push(`if (${val} == 0) goto L${label + 1};`);
+        code.push(`t${temp + 1} = ${val} % 10;`);
+        code.push(`t${temp} = t${temp} + ${temp + 1};`);
+        code.push(`${val} = ${val} / 10;`);
+        code.push(`goto L${label};`);
+        label++;
+        code.push(`L${label}:`);
+        label++;
+        code.push(`${val} = t${temp};`);
+        code.push(`L${label}:`);
+        code.push(`if (${val} < 10) goto L${label + 1};`);
+        code.push(`t${temp} = ${val} % 10;`);
+        code.push(`heap[h] = t${temp} + 48;`);
+        
+        for (let i = 0; i < val.length; i++) {
+            Singleton.heap[h] = val.charCodeAt(i);
+            h++;
+        }
+
+        code.push('h = h + 1;');
+        code.push(`${val} = ${val} / 10;`);
+        code.push(`goto L${label};`);
+        label++;
+        code.push(`L${label}:`);
+        label++;
+        temp += 2;
+        return {
+            label: label,
+            temp: temp,
+            h: h,
+            code: code.join('\n')
         }
     }
 }

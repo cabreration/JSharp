@@ -76,7 +76,7 @@ class VarT1 {
                 let role = symbol.lead.role;
                 if (role === 'global var') {
                     code.push(`heap[${pos}] = ${expValue};`);
-                    Singleton.heap[pos] = expValue;
+                    Singleton.heap[pos] = Number(expValue);
                 }
                 else if (role === 'local var') {
                     code.push(`t${temp} = p + ${pos};`);
