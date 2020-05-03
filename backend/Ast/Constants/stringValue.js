@@ -27,7 +27,7 @@ class StringValue {
     getTDC(env, label, temp, h, p) {
         let code = [];
         code.push(`t${temp} = h;`);
-        for (let i = 0; this.value.length; i++) {
+        for (let i = 0; i < this.value.length; i++) {
             let char = this.value.charCodeAt(i);
             code.push(`heap[${h}] = ${char};`);
             code.push('h = h + 1;');

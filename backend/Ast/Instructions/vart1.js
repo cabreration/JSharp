@@ -70,7 +70,7 @@ class VarT1 {
         // generate the code
         let vars = this.ids.getChildren();
         vars.forEach(id => {
-            let symbol = env.getSymbol(id);
+            let symbol = env.getSymbol(id.id);
             if (symbol.state) {
                 let pos = symbol.lead.position;
                 let role = symbol.lead.role;
@@ -93,11 +93,11 @@ class VarT1 {
             }
         });
         if (code.length === 0) {
-            return new Updater(env, label, temp, heapPtr, stackPtr, null);
+            return new Updater(env, label, temp, h, p, null);
         }
         else {
             let cod = code.join('\n');
-            return new Updater(env, label, temp, heapPtr, stackPtr, cod);
+            return new Updater(env, label, temp, h, p, cod);
         }
         
     }

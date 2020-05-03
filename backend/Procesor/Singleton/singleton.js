@@ -65,9 +65,9 @@ class Singleton {
     }
 
     static restart() {
-        Singleton.sharpErrors = null;
-        Singleton.strcDefinitions = null;
-        Singleton.symbolsTable = null;
+        Singleton.sharpErrors = [];
+        Singleton.strcDefinitions = [];
+        Singleton.symbolsTable = [];
         Singleton.heap = [];
         Singleton.stack = [];
     }

@@ -16,9 +16,22 @@ class Translator {
         this.stackPtr = updater.heapPtr;
     }
 
+    fillTemps() {
+        let tempsCode = 'var ';
+        for (let i = 1; i < this.temp - 1; i++) {
+            tempsCode += `t${i}, `;
+        }
+        tempsCode += `t${this.temp};`;
+        this.code.push(tempsCode);
+    }
+
     translate(ast) {
         this.generateHeader();
-        this.translateGlobalInstructions(ast.global_vars);
+        let glob = this.translateGlobalInstructions(ast.global_vars);
+        if (this.temps > 1)
+            this.fillTemps();
+        this.code.push(glob);
+        return this.code.join('\n');
     }
 
     generateHeader() {
@@ -29,14 +42,20 @@ class Translator {
         this.code.push('var stack[];')
     }
 
-    translateGlobalInstructions(instructions) {.
+    translateGlobalInstructions(instructions) {
         let global = Singleton.getEnviroment('global');
+        let globalCode =  [];
         for (let i = 0; i < instructions.length; i++) {
             let current = instructions[i];
-            let updater = current.getTDC(global, this.label, this.temp);
+            let updater = current.getTDC(global, this.label, this.temp, this.heapPtr, this.stackPtr);
             if (updater.code != null)
-                this.code.push(updater.code);
+                globalCode.push(updater.code);
         }
+
+        if (globalCode.length > 0)
+            return globalCode.join('\n');
+        else 
+            return null;
     }
 }
 

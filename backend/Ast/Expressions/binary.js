@@ -1,4 +1,5 @@
 const SharpError = require('../../Procesor/Singleton/sharpError').SharpError;
+const Singleton = require('../../Procesor/Singleton/singleton').Singleton;
 
 class Binary {
     constructor(operator, arg1, arg2) {
@@ -273,59 +274,64 @@ class Binary {
                 break;
             case 'not equals':
                 code.push(`t${temp} = ${val1} <> ${val2};`);
-                temp++;
                 val = `t${temp}`;
+                temp++;
                 break;
             case 'equal value':
                 code.push(`t${temp} = ${val1} == ${val2};`);
-                temp++;
                 val = `t${temp}`;
+                temp++;
                 break;
             case 'equal reference':
                 // TODO
                 break;
             case 'less than':
                 code.push(`t${temp} = ${val1} < ${val2};`);
-                temp++;
                 val = `t${temp}`;
+                temp++;
                 break;
             case 'less or equal to':
                 code.push(`t${temp} = ${val1} <= ${val2};`);
-                temp++;
                 val = `t${temp}`;
+                temp++;
                 break;
             case 'greater than':
                 code.push(`t${temp} = ${val1} > ${val2};`);
-                temp++;
                 val = `t${temp}`;
+                temp++;
                 break;
             case 'greater or equal to':
                 code.push(`t${temp} = ${val1} >= ${val2};`);
-                temp++;
                 val = `t${temp}`;
+                temp++;
                 break;
             case 'plus':
-                // TODO
+                let plus = this.translateAdition(type1, type2, val1, val2, temp);
+                code.push(plus.code);
+                temp = plus.temp;
+                temp++;
+                val = plus.val;
+                h = plus.h;
                 break;
             case 'minus':
                 code.push(`t${temp} =${val1} - ${val2};`);
-                temp++;
                 val = `t${temp}`;
+                temp++;
                 break;
             case 'times':
                 code.push(`t${temp} = ${val1} * ${val2};`);
-                temp++;
                 val = `t${temp}`;
+                temp++;
                 break;
             case 'div':
                 code.push(`t${temp} = ${val1} / ${val2};`);
-                temp++;
                 val = `t${temp}`;
+                temp++;
                 break;
             case 'mod':
                 code.push(`t${temp} = ${val1} % ${val2};`);
-                temp++;
                 val = `t${temp}`;
+                temp++;
                 break;
             case 'power':
                 code.push(`t${temp} = ${val1};`);
@@ -342,11 +348,71 @@ class Binary {
                 code.push(`goto L${label - 2};`);
                 code.push(`L${label}:`);
                 val = `t${temp}`;
+                temp++;
                 break;
             default:
                 console.error(this.operator.name);
                 console.error('ERROR EN binary.js');
                 return null;
+        }
+    }
+
+    translateAdition(type1, type2, val1, val2, temp, h) {
+        if (type1 === 'string' && type2 != 'string') {
+            if (type2 === 'double' || type2 === 'int') {
+
+            }
+            else if (type2 === 'boolean') {
+
+            }
+            else if (type2 === 'char') {
+
+            }
+        }
+        else if (type1 != 'string' && type2 === 'string') {
+            if (type1 === 'char' || type1 === 'double' || type2 === 'int') {
+
+            }
+            else if (type1 === 'boolean') {
+
+            }
+            else if (type1 === 'char') {
+
+            }
+        }
+        else if (type1 === 'string' && type2 === 'string') {
+
+        }
+        else if (type1 === 'char' && type2 === 'char') {
+            let code = [];
+            let val = `t${temp}`;
+            temp++;
+            code.push(`${val} = h;`);
+            code.push(`heap[${h}] = ${val1};`);
+            Singleton.heap[h] = val1;
+            h++;
+            code.push('h = h + 1;');
+            code.push(`heap[${h}] = ${val2};`);
+            Singleton.heap[h] =  val2;
+            h++;
+            code.push('h = h + 1;');
+            code.push(`heap[${h}] = 0;`);
+            Singleton.heap[h] = 0;
+            h++;
+            code.push('h = h + 1;');
+            
+        }
+        else if (type1 != 'string' && type2 != 'string') {
+            return {
+                code: `t${temp} = ${val1} + ${val2};`,
+                temp: temp + 1,
+                val: `t${temp}`, 
+                h: h
+            }
+        }
+        else {
+            console.error('ERROR EN binary.js');
+            console.error(`${type1}, ${type2}`);
         }
     }
 }

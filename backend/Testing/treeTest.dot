@@ -1,0 +1,12 @@
+digraph G{nodo0[label="ROOT"];
+Node1[label="VARIABLE DECLARATION - T1"];
+nodo0->Node1;
+Node2[label="TYPE: string"];
+Node1->Node2;
+Node3[label="IDENTIFIERS LIST"];
+Node1->Node3;
+Node4[label="str"];
+Node3->Node4;
+Node5[label=" string: hola mundo"];
+Node1->Node5;
+}

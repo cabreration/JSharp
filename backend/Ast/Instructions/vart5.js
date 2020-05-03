@@ -9,7 +9,7 @@ class VarT5 {
     }
 
     getDot() {
-        return '[label="VARIABLE DECLARATION - T4"];\n';
+        return '[label="VARIABLE DECLARATION - T5"];\n';
     }
 
     getChildren() {
@@ -20,12 +20,12 @@ class VarT5 {
         return 'vart5';
     }
 
-    getTDC(env, label, temp, h, sp) {
+    getTDC(env, label, temp, h, p) {
         // Since its only a declaration im not gonna verify the declaration type, until it is asigned
         let code = [];
         let vars = this.ids.getChildren();
         vars.forEach(id => {
-            let symbol = env.getSymbol(id);
+            let symbol = env.getSymbol(id.id);
             if (symbol.state) {
                 let pos = symbol.lead.position;
                 let role = symbol.lead.role;

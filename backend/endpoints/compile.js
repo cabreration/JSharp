@@ -20,7 +20,7 @@ module.exports = (app) => {
       // now everything is stored in the singleton class static elements
 
       let translator = new Translator();
-      threeDCode = translator.translate(ast);
+      let threeDCode = translator.translate(ast);
 
       res.send({ state: true, dot: tree, errors: Singleton.sharpErrors });
     }
