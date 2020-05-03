@@ -16,6 +16,18 @@ class CharValue {
     getTypeOf() {
         return 'char';
     }
+
+    checkType(envId) {
+        return 'char';
+    }
+
+    getTDC(env, label, temp, h, p) {
+        let val = val.charCodeAt(0);
+        let updater = new Updater(env, label, temp, h, p, null);
+        updater.addValue(`${val}`);
+        updater.addType('char');
+        return updater;
+    }
 }
 
 module.exports.CharValue = CharValue;

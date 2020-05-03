@@ -1,8 +1,9 @@
 
-const parser = require('../Ast/grammar');
+const parser = require('../Ast/Jison/grammar');
 const TreePrinter = require('../Ast/Dot/treePrinter').TreePrinter;
 const Singleton = require('../Procesor/Singleton/singleton').Singleton;
 const Process = require('../Procesor/process').Process;
+const Translator = require('../Procesor/C3D/translator').Translator;
 
 module.exports = (app) => {
 
@@ -13,7 +14,13 @@ module.exports = (app) => {
       let treePrinter = new TreePrinter();
       let tree = treePrinter.getDot(ast.root);
 
-      let reps = Process.firstApproach(ast);
+      Singleton.restart();
+      let process = new Process();
+      process.firstApproach(ast);
+      // now everything is stored in the singleton class static elements
+
+      let translator = new Translator();
+      threeDCode = translator.translate(ast);
 
       res.send({ state: true, dot: tree, errors: Singleton.sharpErrors });
     }

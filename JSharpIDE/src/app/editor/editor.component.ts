@@ -44,14 +44,14 @@ export class EditorComponent implements OnInit {
   constructor(private httpClient: HttpClient) { }
 
   ngOnInit(): void {
-    let t = JSON.parse(sessionStorage.getItem('tabs'));
+    /*let t = JSON.parse(sessionStorage.getItem('tabs'));
     if (t != null) {
       this.tabs = t;
-      this.currentText = this.tabs[0].length;
+      this.currentText = this.tabs[0].text;
       this.currentTab = this.tabs[0].id;
       this.previousTab = this.tabs[1].id;
-      this.tabsCounter = this.tabs.size;
-    }
+      this.tabsCounter = this.tabs.length;
+    }*/
   }
 
   CreateNewTab(text: string, name: string): void {

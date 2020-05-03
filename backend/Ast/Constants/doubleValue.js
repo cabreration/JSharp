@@ -16,6 +16,17 @@ class DoubleValue {
     getTypeOf() {
         return 'double';
     }
+
+    checkType(envId) {
+        return 'double';
+    }
+
+    getTDC(env, label, temp, h, p) {
+        let updater = new Updater(env, label, temp, h, p, null);
+        updater.addValue(`${this.value}`);
+        updater.addType('double');
+        return updater;
+    }
 }
 
 module.exports.DoubleValue = DoubleValue;

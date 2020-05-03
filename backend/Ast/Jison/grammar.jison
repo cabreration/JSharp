@@ -138,6 +138,7 @@
   let global_vars = [];
   let functions_list = [];
   let global_strcs = [];
+  let imports = [];
 %}
 
 // precedencia
@@ -214,10 +215,12 @@ FILES
   : FILES comma fileName {
     node = new Identifier($3, @3.first_line, @3.first_column);
     $1.push(node);
+    imports.push(node);
     $$ = $1;
   }
   | fileName {
     node = new Identifier($1, @1.first_line, @1.first_column);
+    imports.push(node);
     $$ = [ node ];
   }
 ;
@@ -263,25 +266,26 @@ DECL_OPT
 
 FUNCTION_DECL 
   : TYPE id PARAMETERS BLOCK {
-    node = new Function($1, new Identifier($2, @2.first_line, @2.first_column), $3, $4);
+    node = new Function($1, new Identifier($2.toLowerCase(), @2.first_line, @2.first_column), $3, $4);
     $$ = node;
   }
   | TYPE leftS rightS id PARAMETERS BLOCK {
     $1.arrayFlag = true;
-    node = new Function($1, new Identifier($4, @4.first_line, @4.first_column), $5, $6);
+    $1.name += '[]';
+    node = new Function($1, new Identifier($4.toLowerCase(), @4.first_line, @4.first_column), $5, $6);
     $$ = node;
   }
   | id id PARAMETERS BLOCK {
-    $$ = new Function(new Type($1, @1.first_line, @1.first_column, false), 
-      new Identifier($2, @2.first_line, @2.first_column), $3, $4);
+    $$ = new Function(new Type($1.toLowerCase(), @1.first_line, @1.first_column, false), 
+      new Identifier($2.toLowerCase(), @2.first_line, @2.first_column), $3, $4);
   }
   | id leftS rightS id PARAMETERS BLOCK {
-    $$ = new Function(new Type($1, @1.first_line, @1.first_column, true), 
-      new Identifier($2, @2.first_line, @2.first_column), $3, $4);
+    $$ = new Function(new Type($1.toLowerCase()+'[]', @1.first_line, @1.first_column, true), 
+      new Identifier($4.toLowerCase(), @4.first_line, @4.first_column), $5, $6);
   }
   | voidType id PARAMETERS BLOCK {
     $$ = new Function(new Type('void', @1.first_line, @1.first_column, false), 
-      new Identifier($2, @2.first_line, @2.first_column), $3, $4);
+      new Identifier($2.toLowerCase(), @2.first_line, @2.first_column), $3, $4);
   }
 ;
 
@@ -322,23 +326,24 @@ PARAMETERS_LIST
 
 PARAMS_VALUE
   : TYPE id {
-    $$ = new Parameter($1, new Identifier($2, @2.first_line, @2.first_column));
+    $$ = new Parameter($1, new Identifier($2.toLowerCase(), @2.first_line, @2.first_column));
   }
   | TYPE leftS rightS id {
     $1.arrayFlag = true;
-    $$ = new Parameter($1, new Identifier($2, @2.first_line, @2.first_column));
+    $1.name += '[]';
+    $$ = new Parameter($1, new Identifier($4.toLowerCase(), @4.first_line, @4.first_column));
   }
   | id id {
-    $$ = new Parameter(new Type($1, @1.first_line, @1.first_column, false),
-     new Identifier($2, @2.first_line, @2.first_column));
+    $$ = new Parameter(new Type($1.toLowerCase(), @1.first_line, @1.first_column, false),
+     new Identifier($2.toLowerCase(), @2.first_line, @2.first_column));
   }
   | id leftS rightS id {
-    $$ = new Parameter(new Type($1, @1.first_line, @1.first_column, true),
-     new Identifier($2, @2.first_line, @2.first_column));
+    $$ = new Parameter(new Type($1.toLowerCase()+'[]', @1.first_line, @1.first_column, true),
+     new Identifier($4, @4.first_line, @4.first_column));
   }
   | varKW id {
     $$ = new Parameter(new Type('var', @1.first_line, @1.first_column, false),
-     new Identifier($2, @2.first_line, @2.first_column));
+     new Identifier($2.toLowerCase(), @2.first_line, @2.first_column));
   }
 ;
 
@@ -371,11 +376,11 @@ VAR_DECL
 
 ID_LIST 
   : ID_LIST comma id {
-    $1.push( new Identifier($3, @3.first_line, @3.first_column) );
+    $1.push( new Identifier($3.toLowerCase(), @3.first_line, @3.first_column) );
     $$ = $1;
   }
   | id {
-    $$ = [ new Identifier($1, @1.first_line, @1.first_column) ];
+    $$ = [ new Identifier($1.toLowerCase(), @1.first_line, @1.first_column) ];
   }
 ;
 
@@ -384,26 +389,26 @@ VAR_T1
     $$ = new VarT1($1, new NodeList($2, 'IDENTIFIERS LIST'), $4);
   }
   | id ID_LIST asignment EXPRESSION {
-    $$ = new VarT1(new Type($1, @1.first_line, @1.first_column, false),
+    $$ = new VarT1(new Type($1.toLowerCase(), @1.first_line, @1.first_column, false),
       new NodeList($2, 'IDENTIFIERS LIST'), $4);
   }
 ;
 
 VAR_T2 
   : varKW id colonAsignment EXPRESSION {
-    $$ = new VarT2(new Identifier($2, @2.first_line, @2.first_column), $4);
+    $$ = new VarT2(new Identifier($2.toLowerCase(), @2.first_line, @2.first_column), $4);
   }
 ;
 
 VAR_T3 
   : constKW id colonAsignment EXPRESSION {
-    $$ = new VarT3(new Identifier($2, @2.first_line, @2.first_column), $4);
+    $$ = new VarT3(new Identifier($2.toLowerCase(), @2.first_line, @2.first_column), $4);
   }
 ;
 
 VAR_T4 
   : globalKW id colonAsignment EXPRESSION {
-    $$ = new VarT4(new Identifier($2, @2.first_line, @2.first_column), $4);
+    $$ = new VarT4(new Identifier($2.toLowerCase(), @2.first_line, @2.first_column), $4);
   }
 ;
 
@@ -412,7 +417,7 @@ VAR_T5
     $$ = new VarT5($1, new NodeList($2, 'IDENTIFIERS LIST'));
   }
   | id ID_LIST {
-    $$ = new VarT5(new Type($1, @1.first_line, @1.first_column, false), new NodeList($2, 'IDENTIFIERS LIST'));
+    $$ = new VarT5(new Type($1.toLowerCase(), @1.first_line, @1.first_column, false), new NodeList($2, 'IDENTIFIERS LIST'));
   }
 ;
 
@@ -464,7 +469,7 @@ E_LIST
 
 STRC_DEF
   : defineKW id asKW leftS ATT_LIST rightS {
-    $$ = new Strc(new Identifier($2, @2.first_line, @2.first_column), new NodeList($5, 'ATTRIBUTES'));
+    $$ = new Strc(new Identifier($2.toLowerCase(), @2.first_line, @2.first_column), new NodeList($5, 'ATTRIBUTES'));
   }
 ;
 
@@ -481,36 +486,36 @@ ATT_LIST
 
 ATTRIBUTE 
   : TYPE id {
-    $$ = new Attribute($1, new Identifier($2, @2.first_line, @2.first_column), null);
+    $$ = new Attribute($1, new Identifier($2.toLowerCase(), @2.first_line, @2.first_column), null);
   }
   | id id {
-    $$ = new Attribute(new Type($1, @1.first_line, @1.first_column, false), 
-      new Identifier($2, @2.first_line, @2.first_column), null);
+    $$ = new Attribute(new Type($1.toLowerCase(), @1.first_line, @1.first_column, false), 
+      new Identifier($2.toLowerCase(), @2.first_line, @2.first_column), null);
   }
   | TYPE leftS rightS id {
     $1.value += '[]';
     $1.arrayFlag = true;
-    $$ = new Attribute($1, new Identifier($4, @4.first_line, @4.first_column), null);
+    $$ = new Attribute($1, new Identifier($4.toLowerCase(), @4.first_line, @4.first_column), null);
   }
   | id left rightS id {
-    $$ = new Attribute(new Type($1+'[]', @1.first_line, @1.first_column, true), 
-      new Identifier($4, @4.first_line, @4.first_column), null);
+    $$ = new Attribute(new Type($1.toLowerCase()+'[]', @1.first_line, @1.first_column, true), 
+      new Identifier($4.toLowerCase(), @4.first_line, @4.first_column), null);
   }
   | TYPE id asignment EXPRESSION {
-    $$ = new Attribute($1, new Identifier($2, @2.first_line, @2.first_column), $4);
+    $$ = new Attribute($1, new Identifier($2.toLowerCase(), @2.first_line, @2.first_column), $4);
   }
   | id id asignment EXPRESSION {
-    $$ = new Attribute(new Type($1, @1.first_line, @1.first_column, false), 
-      new Identifier($2, @2.first_line, @2.first_column), $4);
+    $$ = new Attribute(new Type($1.toLowerCase(), @1.first_line, @1.first_column, false), 
+      new Identifier($2.toLowerCase(), @2.first_line, @2.first_column), $4);
   }
   | TYPE leftS rightS id asignment EXPRESSION {
     $1.value += '[]';
     $1.arrayFlag = true;
-    $$ = new Attribute($1, new Identifier($4, @4.first_line, @4.first_column), $6);
+    $$ = new Attribute($1, new Identifier($4.toLowerCase(), @4.first_line, @4.first_column), $6);
   }
   | id leftS rightS id asignment EXPRESSION {
     $$ = new Attribute(new Type($1+'[]', @1.first_line, @1.first_column, true), 
-      new Identifier($4, @4.first_line, @4.first_column), $6);
+      new Identifier($4.toLowerCase(), @4.first_line, @4.first_column), $6);
   }
 ;
 
@@ -571,11 +576,11 @@ EXPRESSION
   }
   | id incOp {
     $$ = new Unary(new Operator('increment', $2, @2.first_line, @2.first_column),
-      new Identifier($1, @1.first_line, @1.first_column));
+      new Identifier($1.toLowerCase(), @1.first_line, @1.first_column));
   }
   | id decOp {
     $$ = new Unary(new Operator('decrement', $2, @2.first_line, @2.first_column),
-      new Identifier($1, @1.first_line, @1.first_column));
+      new Identifier($1.toLowerCase(), @1.first_line, @1.first_column));
   }
   | leftP EXPRESSION rightP {
     $$ = $2;
@@ -596,7 +601,7 @@ EXPRESSION
     $$ = new BooleanValue(false, @1.first_line, @1.first_column);
   }
   | id {
-    $$ = new Identifier($1, @1.first_line, @1.first_column);
+    $$ = new Identifier($1.toLowerCase(), @1.first_line, @1.first_column);
   }
   | nullValue {
     $$ = new NullValue(@1.first_line, @1.first_column);
@@ -730,7 +735,7 @@ SENTENCE
 
 ASIGNMENT 
   : id asignment EXPRESSION {
-    $$ = new Asignment(new Identifier($1, @1.first_line, @1.first_column), [], $3, @2.first_line, @2.first_column);
+    $$ = new Asignment(new Identifier($1.toLowerCase(), @1.first_line, @1.first_column), [], $3, @2.first_line, @2.first_column);
   }
   | id dot id asignment EXPRESSION
   | id dot id ACCESS_LIST asignment EXPRESSION
@@ -752,7 +757,7 @@ ACCESS_LIST
 
 ACCESS 
   : dot id {
-    $$ = new Access(1, new Identifier($2, @2.first_line, @2.first_column), @1.first_line, @1.first_column);
+    $$ = new Access(1, new Identifier($2.toLowerCase(), @2.first_line, @2.first_column), @1.first_line, @1.first_column);
   }
   | leftS EXPRESSION rightS {
     $$ = new Access(2, $2, @1.first_line, @1.first_column);
@@ -764,10 +769,10 @@ ACCESS
 
 CALL 
   : id leftP EXP_LIST rightP {
-    $$ = new Call(new Identifier($1, @1.first_line, @1.first_column), new NodeList($3, 'VALUES LIST'));
+    $$ = new Call(new Identifier($1.toLowerCase(), @1.first_line, @1.first_column), new NodeList($3, 'VALUES LIST'));
   }
   | id leftP rightP {
-    $$ = new Call(new Identifier($1, @1.first_line, @1.first_column), []);
+    $$ = new Call(new Identifier($1.toLowerCase(), @1.first_line, @1.first_column), []);
   }
 ;
 
@@ -784,7 +789,7 @@ EXP_LIST
     $$ = [ $1 ];
   }
   | id asignment EXPRESSION {
-    $$ = [ new Asignment(new Identifier($1, @1.first_line, @1.first_column), [], $3, @1.first_line, @1.first_column) ];
+    $$ = [ new Asignment(new Identifier($1.toLowerCase(), @1.first_line, @1.first_column), [], $3, @1.first_line, @1.first_column) ];
   }
 ;
 
@@ -892,7 +897,7 @@ FOR_BODY
 
 FOR_START 
   : TYPE id asignment EXPRESSION {
-    $$ = new NodeList(new VarT1($1, new NodeList([new Identifier($2, @2.first_line, @2.first_column)], 'ID'), $4), 'FOR START');
+    $$ = new NodeList(new VarT1($1, new NodeList([new Identifier($2.toLowerCase(), @2.first_line, @2.first_column)], 'ID'), $4), 'FOR START');
   }
   | ASIGNMENT {
     $$ = new NodeList($1, 'FOR START');

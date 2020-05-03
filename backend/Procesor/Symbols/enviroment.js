@@ -43,11 +43,11 @@ class Enviroment {
     getSymbol(id) {
         for (let i = 0; i < this.symbols.length; i++) {
             if (this.symbols[i].id === id) {
-                return { state: true, res :this.symbols[i] };
+                return { state: true, lead :this.symbols[i] };
             }
         }
 
-        return { state: false, res: this.parent };
+        return { state: false, lead: this.parent };
     }
 
 }

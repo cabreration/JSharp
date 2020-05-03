@@ -7,10 +7,15 @@ class Symbol {
         this.envId = envId;
         this.row = row;
         this.column = column;
+        this.constant = false;
     }
 
     shadow() {
         return new Symbol(this.id, this.role, this.type, -1, this.envId);
+    }
+
+    isConstant() {
+        this.constant = true;
     }
 }
 

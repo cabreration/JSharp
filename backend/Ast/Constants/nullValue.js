@@ -15,6 +15,16 @@ class NullValue {
     getTypeOf() {
         return 'null';
     }
+
+    checkType(envId) {
+        return 'strc';
+    }
+
+    getTDC(env, label, temp, h, p) {
+        let updater = new Updater(env, label, temp, h, p, null);
+        updater.addValue('0');
+        return updater;
+    }
 }
 
 module.exports.NullValue= NullValue;

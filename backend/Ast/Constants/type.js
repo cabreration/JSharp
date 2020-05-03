@@ -7,7 +7,7 @@ class Type {
     }
 
     getDot() {
-        return '[label="TYPE: ' + this.arrayFlag ? this.name+'[]' : this.name +  '"];\n';
+        return '[label="TYPE: ' + this.name +  '"];\n';
     }
 
     getChildren() {

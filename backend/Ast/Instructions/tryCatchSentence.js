@@ -17,7 +17,7 @@ class TryCatchSentence {
     }
 
     getTypeOf() {
-        return 'trycatch';
+        return 'trycatchsentence';
     }
 }
 

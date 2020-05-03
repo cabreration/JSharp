@@ -208,33 +208,34 @@ case 19:
 break;
 case 20:
 
-    node = new Function($$[$0-3], new Identifier($$[$0-2], _$[$0-2].first_line, _$[$0-2].first_column), $$[$0-1], $$[$0]);
+    node = new Function($$[$0-3], new Identifier($$[$0-2].toLowerCase(), _$[$0-2].first_line, _$[$0-2].first_column), $$[$0-1], $$[$0]);
     this.$ = node;
   
 break;
 case 21:
 
     $$[$0-5].arrayFlag = true;
-    node = new Function($$[$0-5], new Identifier($$[$0-2], _$[$0-2].first_line, _$[$0-2].first_column), $$[$0-1], $$[$0]);
+    $$[$0-5].name += '[]';
+    node = new Function($$[$0-5], new Identifier($$[$0-2].toLowerCase(), _$[$0-2].first_line, _$[$0-2].first_column), $$[$0-1], $$[$0]);
     this.$ = node;
   
 break;
 case 22:
 
-    this.$ = new Function(new Type($$[$0-3], _$[$0-3].first_line, _$[$0-3].first_column, false), 
-      new Identifier($$[$0-2], _$[$0-2].first_line, _$[$0-2].first_column), $$[$0-1], $$[$0]);
+    this.$ = new Function(new Type($$[$0-3].toLowerCase(), _$[$0-3].first_line, _$[$0-3].first_column, false), 
+      new Identifier($$[$0-2].toLowerCase(), _$[$0-2].first_line, _$[$0-2].first_column), $$[$0-1], $$[$0]);
   
 break;
 case 23:
 
-    this.$ = new Function(new Type($$[$0-5], _$[$0-5].first_line, _$[$0-5].first_column, true), 
-      new Identifier($$[$0-4], _$[$0-4].first_line, _$[$0-4].first_column), $$[$0-3], $$[$0-2]);
+    this.$ = new Function(new Type($$[$0-5].toLowerCase()+'[]', _$[$0-5].first_line, _$[$0-5].first_column, true), 
+      new Identifier($$[$0-2].toLowerCase(), _$[$0-2].first_line, _$[$0-2].first_column), $$[$0-1], $$[$0]);
   
 break;
 case 24:
 
     this.$ = new Function(new Type('void', _$[$0-3].first_line, _$[$0-3].first_column, false), 
-      new Identifier($$[$0-2], _$[$0-2].first_line, _$[$0-2].first_column), $$[$0-1], $$[$0]);
+      new Identifier($$[$0-2].toLowerCase(), _$[$0-2].first_line, _$[$0-2].first_column), $$[$0-1], $$[$0]);
   
 break;
 case 25: case 28:
@@ -271,31 +272,32 @@ case 31: case 61:
 break;
 case 33:
 
-    this.$ = new Parameter($$[$0-1], new Identifier($$[$0], _$[$0].first_line, _$[$0].first_column));
+    this.$ = new Parameter($$[$0-1], new Identifier($$[$0].toLowerCase(), _$[$0].first_line, _$[$0].first_column));
   
 break;
 case 34:
 
     $$[$0-3].arrayFlag = true;
-    this.$ = new Parameter($$[$0-3], new Identifier($$[$0-2], _$[$0-2].first_line, _$[$0-2].first_column));
+    $$[$0-3].name += '[]';
+    this.$ = new Parameter($$[$0-3], new Identifier($$[$0].toLowerCase(), _$[$0].first_line, _$[$0].first_column));
   
 break;
 case 35:
 
-    this.$ = new Parameter(new Type($$[$0-1], _$[$0-1].first_line, _$[$0-1].first_column, false),
-     new Identifier($$[$0], _$[$0].first_line, _$[$0].first_column));
+    this.$ = new Parameter(new Type($$[$0-1].toLowerCase(), _$[$0-1].first_line, _$[$0-1].first_column, false),
+     new Identifier($$[$0].toLowerCase(), _$[$0].first_line, _$[$0].first_column));
   
 break;
 case 36:
 
-    this.$ = new Parameter(new Type($$[$0-3], _$[$0-3].first_line, _$[$0-3].first_column, true),
-     new Identifier($$[$0-2], _$[$0-2].first_line, _$[$0-2].first_column));
+    this.$ = new Parameter(new Type($$[$0-3].toLowerCase()+'[]', _$[$0-3].first_line, _$[$0-3].first_column, true),
+     new Identifier($$[$0], _$[$0].first_line, _$[$0].first_column));
   
 break;
 case 37:
 
     this.$ = new Parameter(new Type('var', _$[$0-1].first_line, _$[$0-1].first_column, false),
-     new Identifier($$[$0], _$[$0].first_line, _$[$0].first_column));
+     new Identifier($$[$0].toLowerCase(), _$[$0].first_line, _$[$0].first_column));
   
 break;
 case 38:
@@ -310,13 +312,13 @@ case 39:
 break;
 case 45:
 
-    $$[$0-2].push( new Identifier($$[$0], _$[$0].first_line, _$[$0].first_column) );
+    $$[$0-2].push( new Identifier($$[$0].toLowerCase(), _$[$0].first_line, _$[$0].first_column) );
     this.$ = $$[$0-2];
   
 break;
 case 46:
 
-    this.$ = [ new Identifier($$[$0], _$[$0].first_line, _$[$0].first_column) ];
+    this.$ = [ new Identifier($$[$0].toLowerCase(), _$[$0].first_line, _$[$0].first_column) ];
   
 break;
 case 47:
@@ -326,23 +328,23 @@ case 47:
 break;
 case 48:
 
-    this.$ = new VarT1(new Type($$[$0-3], _$[$0-3].first_line, _$[$0-3].first_column, false),
+    this.$ = new VarT1(new Type($$[$0-3].toLowerCase(), _$[$0-3].first_line, _$[$0-3].first_column, false),
       new NodeList($$[$0-2], 'IDENTIFIERS LIST'), $$[$0]);
   
 break;
 case 49:
 
-    this.$ = new VarT2(new Identifier($$[$0-2], _$[$0-2].first_line, _$[$0-2].first_column), $$[$0]);
+    this.$ = new VarT2(new Identifier($$[$0-2].toLowerCase(), _$[$0-2].first_line, _$[$0-2].first_column), $$[$0]);
   
 break;
 case 50:
 
-    this.$ = new VarT3(new Identifier($$[$0-2], _$[$0-2].first_line, _$[$0-2].first_column), $$[$0]);
+    this.$ = new VarT3(new Identifier($$[$0-2].toLowerCase(), _$[$0-2].first_line, _$[$0-2].first_column), $$[$0]);
   
 break;
 case 51:
 
-    this.$ = new VarT4(new Identifier($$[$0-2], _$[$0-2].first_line, _$[$0-2].first_column), $$[$0]);
+    this.$ = new VarT4(new Identifier($$[$0-2].toLowerCase(), _$[$0-2].first_line, _$[$0-2].first_column), $$[$0]);
   
 break;
 case 52:
@@ -352,7 +354,7 @@ case 52:
 break;
 case 53:
 
-    this.$ = new VarT5(new Type($$[$0-1], _$[$0-1].first_line, _$[$0-1].first_column, false), new NodeList($$[$0], 'IDENTIFIERS LIST'));
+    this.$ = new VarT5(new Type($$[$0-1].toLowerCase(), _$[$0-1].first_line, _$[$0-1].first_column, false), new NodeList($$[$0], 'IDENTIFIERS LIST'));
   
 break;
 case 54:
@@ -409,55 +411,55 @@ case 59:
 break;
 case 60:
 
-    this.$ = new Strc(new Identifier($$[$0-4], _$[$0-4].first_line, _$[$0-4].first_column), new NodeList($$[$0-1], 'ATTRIBUTES'));
+    this.$ = new Strc(new Identifier($$[$0-4].toLowerCase(), _$[$0-4].first_line, _$[$0-4].first_column), new NodeList($$[$0-1], 'ATTRIBUTES'));
   
 break;
 case 63:
 
-    this.$ = new Attribute($$[$0-1], new Identifier($$[$0], _$[$0].first_line, _$[$0].first_column), null);
+    this.$ = new Attribute($$[$0-1], new Identifier($$[$0].toLowerCase(), _$[$0].first_line, _$[$0].first_column), null);
   
 break;
 case 64:
 
-    this.$ = new Attribute(new Type($$[$0-1], _$[$0-1].first_line, _$[$0-1].first_column, false), 
-      new Identifier($$[$0], _$[$0].first_line, _$[$0].first_column), null);
+    this.$ = new Attribute(new Type($$[$0-1].toLowerCase(), _$[$0-1].first_line, _$[$0-1].first_column, false), 
+      new Identifier($$[$0].toLowerCase(), _$[$0].first_line, _$[$0].first_column), null);
   
 break;
 case 65:
 
     $$[$0-3].value += '[]';
     $$[$0-3].arrayFlag = true;
-    this.$ = new Attribute($$[$0-3], new Identifier($$[$0], _$[$0].first_line, _$[$0].first_column), null);
+    this.$ = new Attribute($$[$0-3], new Identifier($$[$0].toLowerCase(), _$[$0].first_line, _$[$0].first_column), null);
   
 break;
 case 66:
 
-    this.$ = new Attribute(new Type($$[$0-3]+'[]', _$[$0-3].first_line, _$[$0-3].first_column, true), 
-      new Identifier($$[$0], _$[$0].first_line, _$[$0].first_column), null);
+    this.$ = new Attribute(new Type($$[$0-3].toLowerCase()+'[]', _$[$0-3].first_line, _$[$0-3].first_column, true), 
+      new Identifier($$[$0].toLowerCase(), _$[$0].first_line, _$[$0].first_column), null);
   
 break;
 case 67:
 
-    this.$ = new Attribute($$[$0-3], new Identifier($$[$0-2], _$[$0-2].first_line, _$[$0-2].first_column), $$[$0]);
+    this.$ = new Attribute($$[$0-3], new Identifier($$[$0-2].toLowerCase(), _$[$0-2].first_line, _$[$0-2].first_column), $$[$0]);
   
 break;
 case 68:
 
-    this.$ = new Attribute(new Type($$[$0-3], _$[$0-3].first_line, _$[$0-3].first_column, false), 
-      new Identifier($$[$0-2], _$[$0-2].first_line, _$[$0-2].first_column), $$[$0]);
+    this.$ = new Attribute(new Type($$[$0-3].toLowerCase(), _$[$0-3].first_line, _$[$0-3].first_column, false), 
+      new Identifier($$[$0-2].toLowerCase(), _$[$0-2].first_line, _$[$0-2].first_column), $$[$0]);
   
 break;
 case 69:
 
     $$[$0-5].value += '[]';
     $$[$0-5].arrayFlag = true;
-    this.$ = new Attribute($$[$0-5], new Identifier($$[$0-2], _$[$0-2].first_line, _$[$0-2].first_column), $$[$0]);
+    this.$ = new Attribute($$[$0-5], new Identifier($$[$0-2].toLowerCase(), _$[$0-2].first_line, _$[$0-2].first_column), $$[$0]);
   
 break;
 case 70:
 
     this.$ = new Attribute(new Type($$[$0-5]+'[]', _$[$0-5].first_line, _$[$0-5].first_column, true), 
-      new Identifier($$[$0-2], _$[$0-2].first_line, _$[$0-2].first_column), $$[$0]);
+      new Identifier($$[$0-2].toLowerCase(), _$[$0-2].first_line, _$[$0-2].first_column), $$[$0]);
   
 break;
 case 71:
@@ -553,13 +555,13 @@ break;
 case 89:
 
     this.$ = new Unary(new Operator('increment', $$[$0], _$[$0].first_line, _$[$0].first_column),
-      new Identifier($$[$0-1], _$[$0-1].first_line, _$[$0-1].first_column));
+      new Identifier($$[$0-1].toLowerCase(), _$[$0-1].first_line, _$[$0-1].first_column));
   
 break;
 case 90:
 
     this.$ = new Unary(new Operator('decrement', $$[$0], _$[$0].first_line, _$[$0].first_column),
-      new Identifier($$[$0-1], _$[$0-1].first_line, _$[$0-1].first_column));
+      new Identifier($$[$0-1].toLowerCase(), _$[$0-1].first_line, _$[$0-1].first_column));
   
 break;
 case 92:
@@ -589,7 +591,7 @@ case 96:
 break;
 case 97:
 
-    this.$ = new Identifier($$[$0], _$[$0].first_line, _$[$0].first_column);
+    this.$ = new Identifier($$[$0].toLowerCase(), _$[$0].first_line, _$[$0].first_column);
   
 break;
 case 98:
@@ -664,12 +666,12 @@ case 143:
 break;
 case 144:
 
-    this.$ = new Asignment(new Identifier($$[$0-2], _$[$0-2].first_line, _$[$0-2].first_column), [], $$[$0], _$[$0-1].first_line, _$[$0-1].first_column);
+    this.$ = new Asignment(new Identifier($$[$0-2].toLowerCase(), _$[$0-2].first_line, _$[$0-2].first_column), [], $$[$0], _$[$0-1].first_line, _$[$0-1].first_column);
   
 break;
 case 153:
 
-    this.$ = new Access(1, new Identifier($$[$0], _$[$0].first_line, _$[$0].first_column), _$[$0-1].first_line, _$[$0-1].first_column);
+    this.$ = new Access(1, new Identifier($$[$0].toLowerCase(), _$[$0].first_line, _$[$0].first_column), _$[$0-1].first_line, _$[$0-1].first_column);
   
 break;
 case 154:
@@ -684,12 +686,12 @@ case 155:
 break;
 case 156:
 
-    this.$ = new Call(new Identifier($$[$0-3], _$[$0-3].first_line, _$[$0-3].first_column), new NodeList($$[$0-1], 'VALUES LIST'));
+    this.$ = new Call(new Identifier($$[$0-3].toLowerCase(), _$[$0-3].first_line, _$[$0-3].first_column), new NodeList($$[$0-1], 'VALUES LIST'));
   
 break;
 case 157:
 
-    this.$ = new Call(new Identifier($$[$0-2], _$[$0-2].first_line, _$[$0-2].first_column), []);
+    this.$ = new Call(new Identifier($$[$0-2].toLowerCase(), _$[$0-2].first_line, _$[$0-2].first_column), []);
   
 break;
 case 158:
@@ -706,7 +708,7 @@ case 159:
 break;
 case 161:
 
-    this.$ = [ new Asignment(new Identifier($$[$0-2], _$[$0-2].first_line, _$[$0-2].first_column), [], $$[$0], _$[$0-2].first_line, _$[$0-2].first_column) ];
+    this.$ = [ new Asignment(new Identifier($$[$0-2].toLowerCase(), _$[$0-2].first_line, _$[$0-2].first_column), [], $$[$0], _$[$0-2].first_line, _$[$0-2].first_column) ];
   
 break;
 case 162:
@@ -808,7 +810,7 @@ case 183:
 break;
 case 184:
 
-    this.$ = new NodeList(new VarT1($$[$0-3], new NodeList([new Identifier($$[$0-2], _$[$0-2].first_line, _$[$0-2].first_column)], 'ID'), $$[$0]), 'FOR START');
+    this.$ = new NodeList(new VarT1($$[$0-3], new NodeList([new Identifier($$[$0-2].toLowerCase(), _$[$0-2].first_line, _$[$0-2].first_column)], 'ID'), $$[$0]), 'FOR START');
   
 break;
 case 185:
