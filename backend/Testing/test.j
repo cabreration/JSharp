@@ -1,10 +1,14 @@
 void principal() {
-    print("prueba int " + 12345);
+    print(45 + " prueba int " + 12345);
     print('\n');
-    print("prueba int 2 - " + 10000);
+    print(100002 + " prueba int 2 - " + 100002);
     print('\n');
-    print("prueba " + true);
+    print(true + " prueba " + true);
     print('\n');
-    print("prueba " + false);
+    print(false + " prueba " + false);
     print('\n');
+
+    print(0.005 + " prueba double - " + 1234.4321);
+    print('\n');
+    print('a' + " pretexto " + 'h' + 'o' + 'l' + 'a');
 }

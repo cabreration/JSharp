@@ -386,7 +386,10 @@ class Binary {
                 code.push(n.code);
             }
             else if (type2 === 'double') {
-                // TODO
+                let d = this.generateDouble3DC(val2, label, temp);
+                temp = d.temp;
+                label = d.label;
+                code.push(d.code);
             }
             else if (type2 === 'boolean') {
                 let bool = val2 === '1';
@@ -409,15 +412,21 @@ class Binary {
         else if (type1 != 'string' && type2 === 'string') {
             temp++;
             code.push(`${val} = h;`);
-            if (type1 === 'double' || type2 === 'int') {
+            if (type1 === 'int') {
                 let n = this.generateNumber3DC(val1, label, temp);
                 temp = n.temp;
                 label = n.label;
                 code.push(n.code);
             }
+            else if (type1 === 'double') {
+                let d = this.generateDouble3DC(val1, label, temp);
+                temp = d.temp;
+                label = d.label;
+                code.push(d.code);
+            }
             else if (type1 === 'boolean') {
                 let bool = val1 === '1';
-                let t = this.generateBool3DC(bool, h);
+                let t = this.generateBool3DC(bool);
                 code.push(t.code);
             }
             else if (type1 === 'char') {
@@ -530,6 +539,42 @@ class Binary {
         code.push(`L${label}:`);
         label++;
         temp++;
+        return {
+            temp: temp,
+            label: label,
+            code: code.join('\n')
+        }
+    }
+
+    generateDouble3DC(val, label, temp) {
+        let code = [];
+        let temp1 = temp++;
+        let temp2 = temp++;
+        let temp3 = temp++;
+        let temp4 = temp++;
+        let label1 = label++;
+        let label2 = label++;
+
+        code.push(`t${temp1} = ${val}; # original`);
+        code.push(`t${temp2} = t${temp1} % 1; #parte decimal`);
+        code.push(`t${temp3} = t${temp1} - t${temp2}; # parte entera`);
+        code.push(`t${temp4} = 0;`);
+        code.push(`L${label1}:`);
+        code.push(`if (t${temp4} == 4) goto L${label2};`);
+        code.push(`t${temp2} = t${temp2} * 10;`);
+        code.push(`t${temp4} = t${temp4} + 1;`);
+        code.push(`goto L${label1};`);
+        code.push(`L${label2}: # agregamos la parte entera`);
+        let up = this.generateNumber3DC(`t${temp3}`, label, temp);
+        temp = up.temp;
+        label = up.label;
+        code.push(up.code);
+        code.push(`heap[h] = 46;`);
+        code.push('h = h + 1;');
+        up = this.generateNumber3DC(`t${temp2}`, label, temp);
+        temp = up.temp;
+        label = up.label;
+        code.push(up.code);
         return {
             temp: temp,
             label: label,
