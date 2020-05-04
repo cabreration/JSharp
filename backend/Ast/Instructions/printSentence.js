@@ -46,7 +46,7 @@ class PrintSentence {
                 code.push(`if (t${temp} == 0) goto L${label};`);
                 code.push(`print("%c", t${temp});`);
                 code.push(`t${temp - 1} = t${temp - 1} + 1;`);
-                code.push(`goto `)
+                code.push(`goto L${label-1};`);
                 code.push(`L${label}:`);
                 label++;
                 temp++;
@@ -72,7 +72,7 @@ class PrintSentence {
                 label++;
                 code.push('print("%c", 116);');
                 code.push('print("%c", 114);');
-                code.push('print("%c", 117)');
+                code.push('print("%c", 117);');
                 code.push('print("%c", 101);');
                 code.push(`L${label}:`);
                 label++;
@@ -81,6 +81,7 @@ class PrintSentence {
                 // TODO - arrays or strcs
                 break;
         }
+        return new Updater(env, label, temp, code.join('\n'));
     }
 }
 

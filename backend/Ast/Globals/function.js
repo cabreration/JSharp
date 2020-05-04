@@ -36,8 +36,8 @@ class Function {
                 code.push(updater.code);
         }
 
-        code.push('end\n');
-        return new Updater(env, label, temp, code.join('\n\n'));
+        code.push('end\n\n');
+        return new Updater(env, label, temp, code.join('\n'));
     }
 }
 

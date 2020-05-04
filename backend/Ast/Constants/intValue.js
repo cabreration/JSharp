@@ -1,3 +1,5 @@
+const Updater = require('../Utilities/updater').Updater;
+
 class IntValue {
     constructor(value, row, column) {
         this.value = value; // number
@@ -22,6 +24,7 @@ class IntValue {
     }
 
     getTDC(env, label, temp) {
+        let val = this.value;
         let updater = new Updater(env, label, temp, null);
         updater.addValue(`${val}`);
         updater.addType('int');

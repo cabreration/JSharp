@@ -79,7 +79,7 @@
 "^"                                         return 'xorOp'; 
 ">"                                         return 'greaterThan';
   
-[\x27h][\x00-\xFF][\x27h]                   { yytext = yytext.substr(1, yyleng-2); return 'charValue'; }
+[\x27h]([\x00-\xFF]|"\\n"|"\\"["]|"\\\\"|"\\r"|"\\t")[\x27h]   { yytext = yytext.substr(1, yyleng-2); return 'charValue'; }
 ([a-zA-ZñÑ0-9]|"."|"-")+".j"                return 'fileName'; // este debe ser arreglado
 ([a-zA-ZñÑ])[a-zA-Z0-9ñÑ_]*                 return 'id';
 ["]("\\"["\n\r\t\\]|[^"])*["]               { yytext = yytext.substr(1, yyleng-2); return 'stringValue'; }
@@ -299,8 +299,8 @@ TYPE
   | booleanType {
     $$ = new Type('boolean', @1.first_line, @1.first_column, false);
   }
-  | charTypes {
-    $$ = new Type('integer', @1.first_line, @1.first_column, false);
+  | charType {
+    $$ = new Type('char', @1.first_line, @1.first_column, false);
   }
 ;
 

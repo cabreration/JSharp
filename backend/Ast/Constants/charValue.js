@@ -1,3 +1,5 @@
+const Updater = require('../Utilities/updater').Updater;
+
 class CharValue {
     constructor(value, row, column) {
         this.value = value; // char or number
@@ -21,8 +23,29 @@ class CharValue {
         return 'char';
     }
 
+    scapeChar() {
+        switch (this.value) {
+            case '\\n':
+                this.value = '\n';
+                break;
+            case '\\r':
+                this.value = '\r';
+                break;
+            case '\\\\':
+                this.value = '\\';
+                break;
+            case '\\t':
+                this.value = '\t';
+                break;
+            case '\\"':
+                this.value = "\"";
+                break;
+        }
+    }
+
     getTDC(env, label, temp) {
-        let val = val.charCodeAt(0);
+        this.scapeChar();
+        let val = this.value.charCodeAt(0);
         let updater = new Updater(env, label, temp, null);
         updater.addValue(`${val}`);
         updater.addType('char');

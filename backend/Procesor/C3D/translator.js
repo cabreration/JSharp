@@ -14,35 +14,57 @@ class Translator {
 
     fillTemps() {
         let tempsCode = 'var ';
-        for (let i = 1; i < this.temp - 1; i++) {
-            tempsCode += `t${i}, `;
+        let counter = 1;
+        while (counter < this.temp) {
+            tempsCode += `t${counter}, `;
+            counter++;
         }
         tempsCode += `t${this.temp};`;
         this.code.push(tempsCode);
     }
 
     translate(ast) {
-        this.generateHeader();
+        // create the header
+        let head = this.generateHeader();
+
+        // translate the global instructions
         let glob = this.translateGlobalInstructions(ast.global_vars);
-        if (this.temps > 1)
-            this.fillTemps();
+        
+        // translate the functions
+        let proc = this.translateProcedures(ast.functions_list);
+
+        // add the temporals
+        this.fillTemps();
+
+        // add the header
+        this.code.push(head);
+
+        // add the generated 3DC for the global instructions
         this.code.push(glob);
 
-        // TODO - call main
-        this.code.push(`call principal;`)
-        
-        this.code.push('\n\n');
-        let proc = this.translateProcedures(ast.functions_list);
+        // call main
+        this.code.push(`call principal_void_0;`)
+        this.code.push(`goto L${this.label};\n`);
+
+        // add the generated 3DC for the functions
         this.code.push(proc);
+
+        // end
+        this.code.push(`L${this.label}:\n`);
+        this.label++;
+
+        // return all of the code
         return this.code.join('\n');
     }
 
     generateHeader() {
-        this.code.push('var p, h;');
-        this.code.push('p = 0;');
-        this.code.push(`h = ${Singleton.symbolsTable[0].last};`);
-        this.code.push('var heap[];');
-        this.code.push('var stack[];')
+        let header = [];
+        header.push('var p, h;');
+        header.push('p = 0;');
+        header.push(`h = ${Singleton.symbolsTable[0].last};`);
+        header.push('var heap[];');
+        header.push('var stack[];');
+        return header.join('\n');
     }
 
     translateGlobalInstructions(instructions) {

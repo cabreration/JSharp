@@ -1,3 +1,5 @@
+const Updater = require('../Utilities/updater').Updater;
+
 class DoubleValue {
     constructor(value, row, column) {
         this.value = value; // number

@@ -1,29 +1,257 @@
+var t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19, t20, t21, t22, t23, t24, t25, t26, t27;
 var p, h;
 p = 0;
-h = 1;
+h = 0;
 var heap[];
 var stack[];
+
+call principal_void_0;
+goto L23;
+
+proc principal_void_0 begin
 t1 = h;
-heap[1] = 104;
+heap[h] = 112;
 h = h + 1;
-heap[2] = 111;
+heap[h] = 114;
 h = h + 1;
-heap[3] = 108;
+heap[h] = 117;
 h = h + 1;
-heap[4] = 97;
+heap[h] = 101;
 h = h + 1;
-heap[5] = 32;
+heap[h] = 98;
 h = h + 1;
-heap[6] = 109;
+heap[h] = 97;
 h = h + 1;
-heap[7] = 117;
+heap[h] = 32;
 h = h + 1;
-heap[8] = 110;
+heap[h] = 105;
 h = h + 1;
-heap[9] = 100;
+heap[h] = 110;
 h = h + 1;
-heap[10] = 111;
+heap[h] = 116;
 h = h + 1;
-heap[11] = 0;
+heap[h] = 32;
 h = h + 1;
-heap[0] = t1;
+heap[h] = 0;
+h = h + 1;
+
+t2 = h;
+t3 = heap[t1];
+L1:
+if (t3 == 0) goto L2;
+heap[h] = t3;
+h = h + 1;
+t1 = t1 + 1;
+t3 = heap[t1];
+goto L1;
+L2:
+t4 = 12345; #original
+t5 = 0; #acumulador
+L3:
+if (t4 == 0) goto L4;
+t6 = t4 % 10;
+t4 = t4 - t6;
+t4 = t4 / 10;
+t5 = t5 * 10;
+t5 = t5 + t6;
+goto L3;
+L4:
+if (t5 == 0) goto L5;
+t6 = t5 % 10;
+t5 = t5 - t6;
+t5 = t5 / 10;
+t6 = t6 + 48;
+heap[h] = t6;
+h = h + 1;
+goto L4;
+L5:
+heap[h] = 0;
+h = h + 1;
+t7 = t2;
+L6:
+t8 = heap[t7];
+if (t8 == 0) goto L7;
+print("%c", t8);
+t7 = t7 + 1;
+goto L6;
+L7:
+
+print("%c", 10);
+t9 = h;
+heap[h] = 112;
+h = h + 1;
+heap[h] = 114;
+h = h + 1;
+heap[h] = 117;
+h = h + 1;
+heap[h] = 101;
+h = h + 1;
+heap[h] = 98;
+h = h + 1;
+heap[h] = 97;
+h = h + 1;
+heap[h] = 32;
+h = h + 1;
+heap[h] = 105;
+h = h + 1;
+heap[h] = 110;
+h = h + 1;
+heap[h] = 116;
+h = h + 1;
+heap[h] = 32;
+h = h + 1;
+heap[h] = 50;
+h = h + 1;
+heap[h] = 32;
+h = h + 1;
+heap[h] = 45;
+h = h + 1;
+heap[h] = 32;
+h = h + 1;
+heap[h] = 0;
+h = h + 1;
+
+t10 = h;
+t11 = heap[t9];
+L8:
+if (t11 == 0) goto L9;
+heap[h] = t11;
+h = h + 1;
+t9 = t9 + 1;
+t11 = heap[t9];
+goto L8;
+L9:
+t12 = 10000; #original
+t13 = 0; #acumulador
+L10:
+if (t12 == 0) goto L11;
+t14 = t12 % 10;
+t12 = t12 - t14;
+t12 = t12 / 10;
+t13 = t13 * 10;
+t13 = t13 + t14;
+goto L10;
+L11:
+if (t13 == 0) goto L12;
+t14 = t13 % 10;
+t13 = t13 - t14;
+t13 = t13 / 10;
+t14 = t14 + 48;
+heap[h] = t14;
+h = h + 1;
+goto L11;
+L12:
+heap[h] = 0;
+h = h + 1;
+t15 = t10;
+L13:
+t16 = heap[t15];
+if (t16 == 0) goto L14;
+print("%c", t16);
+t15 = t15 + 1;
+goto L13;
+L14:
+
+print("%c", 10);
+t17 = h;
+heap[h] = 112;
+h = h + 1;
+heap[h] = 114;
+h = h + 1;
+heap[h] = 117;
+h = h + 1;
+heap[h] = 101;
+h = h + 1;
+heap[h] = 98;
+h = h + 1;
+heap[h] = 97;
+h = h + 1;
+heap[h] = 32;
+h = h + 1;
+heap[h] = 0;
+h = h + 1;
+
+t18 = h;
+t19 = heap[t17];
+L15:
+if (t19 == 0) goto L16;
+heap[h] = t19;
+h = h + 1;
+t17 = t17 + 1;
+t19 = heap[t17];
+goto L15;
+L16:
+heap[h] = 116;
+h = h + 1;
+heap[h] = 114;
+h = h + 1;
+heap[h] = 117;
+h = h + 1;
+heap[h] = 101;
+h = h + 1;
+heap[h] = 0;
+h = h + 1;
+t20 = t18;
+L17:
+t21 = heap[t20];
+if (t21 == 0) goto L18;
+print("%c", t21);
+t20 = t20 + 1;
+goto L17;
+L18:
+
+print("%c", 10);
+t22 = h;
+heap[h] = 112;
+h = h + 1;
+heap[h] = 114;
+h = h + 1;
+heap[h] = 117;
+h = h + 1;
+heap[h] = 101;
+h = h + 1;
+heap[h] = 98;
+h = h + 1;
+heap[h] = 97;
+h = h + 1;
+heap[h] = 32;
+h = h + 1;
+heap[h] = 0;
+h = h + 1;
+
+t23 = h;
+t24 = heap[t22];
+L19:
+if (t24 == 0) goto L20;
+heap[h] = t24;
+h = h + 1;
+t22 = t22 + 1;
+t24 = heap[t22];
+goto L19;
+L20:
+heap[h] = 102;
+h = h + 1;
+heap[h] = 97;
+h = h + 1;
+heap[h] = 108;
+h = h + 1;
+heap[h] = 115;
+h = h + 1;
+heap[h] = 101;
+h = h + 1;
+heap[h] = 0;
+h = h + 1;
+t25 = t23;
+L21:
+t26 = heap[t25];
+if (t26 == 0) goto L22;
+print("%c", t26);
+t25 = t25 + 1;
+goto L21;
+L22:
+
+print("%c", 10);
+end
+
+
+L23:

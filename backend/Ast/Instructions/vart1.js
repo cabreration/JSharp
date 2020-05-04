@@ -59,6 +59,7 @@ class VarT1 {
         let code = [];
         let fUpdater = this.expression.getTDC(env, label, temp);
         let expValue = fUpdater.value;
+        let upType = fUpdater.type;
         env = fUpdater.env;
         label = fUpdater.label;
         temp = fUpdater.temp;
@@ -73,7 +74,10 @@ class VarT1 {
                 let pos = symbol.lead.position;
                 let role = symbol.lead.role;
                 if (role === 'global var') {
+                    //if (upType === 'int' || upType === 'double'
+                    //|| upType === 'char' || upType === 'boolean') {
                     code.push(`heap[${pos}] = ${expValue};`);
+                    //}
                 }
                 else if (role === 'local var') {
                     code.push(`t${temp} = p + ${pos};`);

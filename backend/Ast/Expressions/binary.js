@@ -46,7 +46,7 @@ class Binary {
                 return this.validateRelational(type1, type2);
             }
             else if (this.operator.name === 'plus') {
-                this.validateConcatenation(type1, type2);
+                return this.validateConcatenation(type1, type2);
             }
             else if (this.operator.name === 'minus' || this.operator.name === 'times' || this.operator.name === 'div') {
                 return this.validateArithmetic(type1, type2);
@@ -122,18 +122,22 @@ class Binary {
     }
 
     validateEqualReference(type1, type2) {
-        if (type1 === 'string' && type2 === 'string') {
-            return 'boolean';
-        } 
-        else if (type1 === 'array' || type2 === 'array') {
-            return 'boolean';
+        switch(type1) {
+            case "int":
+            case "double":
+            case "boolean":
+            case "char":
+                return new SharpError('Semantico', 'Operacion invalida: No es posible aplicar el operador === entre valores de tipo ' + type1 + ' y ' + type2, this.operator.row, this.operator.column);
         }
-        else if (type1 === 'strc' && type2 === 'strc') {
-            return 'boolean';
+        switch(type2) {
+            case "int":
+            case "double":
+            case "boolean":
+            case "char":
+                return new SharpError('Semantico', 'Operacion invalida: No es posible aplicar el operador === entre valores de tipo ' + type1 + ' y ' + type2, this.operator.row, this.operator.column);
         }
-        else {
-            return new SharpError('Semantico', 'Operacion invalida: No es posible aplicar el operador === entre valores de tipo ' + type1 + ' y ' + type2, this.operator.row, this.operator.column);
-        }
+
+        return 'boolean';
     }
 
     validateArithmetic(type1, type2) {
@@ -236,7 +240,8 @@ class Binary {
         }
     }
 
-    getTDC(env, label, temp, h, p) {
+    getTDC(env, label, temp) {
+        let type = this.checkType(env);
         let code = [];
 
         // get 3DC from first arg
@@ -258,7 +263,7 @@ class Binary {
         code.push(updater2.code);
 
         // TODO - perform the operation
-        //let val = `t${temp}`;
+        let val; // = `t${temp}`;
         switch(this.operator.name) {
             case 'xor':
                 // TODO
@@ -270,9 +275,12 @@ class Binary {
                 // TODO
                 break;
             case 'not equals':
-                code.push(`t${temp} = ${val1} <> ${val2};`);
-                val = `t${temp}`;
-                temp++;
+                if (type1 != 'string') {
+                    code.push(`t${temp} = ${val1} <> ${val2};`);
+                    val = `t${temp}`;
+                    temp++;
+                }
+                // TODO - COMPARE STRINGS
                 break;
             case 'equal value':
                 if (type1 != 'string') {
@@ -306,7 +314,7 @@ class Binary {
                 temp++;
                 break;
             case 'plus':
-                let plus = this.translateAdition(type1, type2, val1, val2, temp, label, updater1, updater2);
+                let plus = this.translateAdition(type1, type2, val1, val2, temp, label);
                 code.push(plus.code);
                 temp = plus.temp;
                 val = plus.val;
@@ -355,29 +363,34 @@ class Binary {
                 return null;
         }
 
-        return new Updater(env, label, temp, code.join('\n'));
+        let up = new Updater(env, label, temp, code.join('\n'));
+        up.addValue(val);
+        up.addType(type);
+        return up;
     }
 
-    translateAdition(type1, type2, val1, val2, temp, label, updater1, updater2) {
+    translateAdition(type1, type2, val1, val2, temp, label) {
         let code = [];
         let val = `t${temp}`;
         if (type1 === 'string' && type2 != 'string') {
-            let ref = updater1.ref;
             temp++;
             code.push(`${val} = h;`);
             let str = this.generateString3DC(val1, label, temp);
             code.push(str.code);
             temp = str.temp;
             label = str.label;
-            if (type2 === 'double' || type2 === 'int') {
-                let n = this.generateNumber3DC(val2, h, label, temp);
+            if ( type2 === 'int') {
+                let n = this.generateNumber3DC(val2, label, temp);
                 temp = n.temp;
                 label = n.label;
                 code.push(n.code);
             }
+            else if (type2 === 'double') {
+                // TODO
+            }
             else if (type2 === 'boolean') {
                 let bool = val2 === '1';
-                let t = this.generateBool3DC(bool, h);
+                let t = this.generateBool3DC(bool);
                 code.push(t.code);
             }
             else if (type2 === 'char') {
@@ -397,7 +410,7 @@ class Binary {
             temp++;
             code.push(`${val} = h;`);
             if (type1 === 'double' || type2 === 'int') {
-                let n = this.generateNumber3DC(val1, h, label, temp);
+                let n = this.generateNumber3DC(val1, label, temp);
                 temp = n.temp;
                 label = n.label;
                 code.push(n.code);
@@ -411,7 +424,6 @@ class Binary {
                 code.push(`heap[h] = ${val1};`);
                 code.push(`h = h + 1;`);
             }
-            let ref = updater2.ref;
             let str = this.generateString3DC(val2, label, temp);
             code.push(str.code);
             temp = str.temp;
@@ -511,8 +523,8 @@ class Binary {
         code.push(`if (t${temp} == 0) goto L${label+1};`);
         code.push(`heap[h] = t${temp};`);
         code.push('h = h + 1;');
-        code.push(`${val1} = ${val1} + 1;`);
-        code.push(`t${temp} = heap[${val1}];`);
+        code.push(`${val} = ${val} + 1;`);
+        code.push(`t${temp} = heap[${val}];`);
         code.push(`goto L${label};`);
         label++;
         code.push(`L${label}:`);
@@ -525,33 +537,39 @@ class Binary {
         }
     }
 
-    generateNumber3DC(val, h, label, temp) {
+    generateNumber3DC(val, label, temp) {
         let code = [];
-        code.push(`t${temp} = 0;`);
-        code.push(`L${label}:`);
-        code.push(`if (${val} == 0) goto L${label + 1};`);
-        code.push(`t${temp + 1} = ${val} % 10;`);
-        code.push(`t${temp} = t${temp} + ${temp + 1};`);
-        code.push(`${val} = ${val} / 10;`);
-        code.push(`goto L${label};`);
-        label++;
-        code.push(`L${label}:`);
-        label++;
-        code.push(`${val} = t${temp};`);
-        code.push(`L${label}:`);
-        code.push(`if (${val} < 10) goto L${label + 1};`);
-        code.push(`t${temp} = ${val} % 10;`);
-        code.push(`heap[h] = t${temp} + 48;`);
+        let temp1 = temp;
+        let temp2 = temp + 1; // contains the accumulated number
+        let temp3 = temp + 2;
+        temp += 3;
+        let label1 = label;
+        let label2 = label + 1;
+        let label3 = label + 2;
+        label += 3;
+        code.push(`t${temp1} = ${val}; #original`);
+        code.push(`t${temp2} = 0; #acumulador`);
+        code.push(`L${label1}:`);
+        code.push(`if (t${temp1} == 0) goto L${label2};`);
+        code.push(`t${temp3} = t${temp1} % 10;`);
+        code.push(`t${temp1} = t${temp1} - t${temp3};`)
+        code.push(`t${temp1} = t${temp1} / 10;`);
+        code.push(`t${temp2} = t${temp2} * 10;`)
+        code.push(`t${temp2} = t${temp2} + t${temp3};`);
+        code.push(`goto L${label1};`);
+        code.push(`L${label2}:`);
+        code.push(`if (t${temp2} == 0) goto L${label3};`);
+        code.push(`t${temp3} = t${temp2} % 10;`);
+        code.push(`t${temp2} = t${temp2} - t${temp3};`);
+        code.push(`t${temp2} = t${temp2} / 10;`);
+        code.push(`t${temp3} = t${temp3} + 48;`);
+        code.push(`heap[h] = t${temp3};`);
         code.push('h = h + 1;');
-        code.push(`${val} = ${val} / 10;`);
-        code.push(`goto L${label};`);
-        label++;
-        code.push(`L${label}:`);
-        label++;
-        temp += 2;
+        code.push(`goto L${label2};`);
+        code.push(`L${label3}:`);
         return {
-            label: label,
             temp: temp,
+            label: label,
             code: code.join('\n')
         }
     }
