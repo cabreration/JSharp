@@ -164,7 +164,7 @@ class Process {
             let id = proc.id;
             let type = proc.type;
             let parameters = proc.parameters.getChildren();
-            let procEnv = global.generateProcEnviroment(id.id, type.name, parameters.length, id.row, id.column);
+            let procEnv = global.generateProcEnviroment(id.id+'_'+type.name+'_'+parameters.length, type.name, parameters.length, id.row, id.column);
             parameters.forEach(param => {
                 let sym = new Symbol(param.identifier.id, 'parameter', param.type.name, this.position, procEnv.id);
                 let r = procEnv.addSymbol(sym);

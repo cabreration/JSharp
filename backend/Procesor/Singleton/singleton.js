@@ -5,8 +5,6 @@ class Singleton {
     static sharpErrors = [];
     static strcDefinitions = [];
     static symbolsTable = [];
-    static heap = [];
-    static stack = [];
     
     static insertError(error) {
         Singleton.sharpErrors.push(error);
@@ -68,8 +66,6 @@ class Singleton {
         Singleton.sharpErrors = [];
         Singleton.strcDefinitions = [];
         Singleton.symbolsTable = [];
-        Singleton.heap = [];
-        Singleton.stack = [];
     }
 
     static validateType(type) {

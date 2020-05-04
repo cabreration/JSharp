@@ -81,7 +81,7 @@
   
 [\x27h][\x00-\xFF][\x27h]                   { yytext = yytext.substr(1, yyleng-2); return 'charValue'; }
 ([a-zA-ZñÑ0-9]|"."|"-")+".j"                return 'fileName'; // este debe ser arreglado
-([a-zA-ZñÑ_])[a-zA-Z0-9_]*                  return 'id';
+([a-zA-ZñÑ])[a-zA-Z0-9ñÑ_]*                 return 'id';
 ["]("\\"["\n\r\t\\]|[^"])*["]               { yytext = yytext.substr(1, yyleng-2); return 'stringValue'; }
 [0-9]+"."[0-9]+\b                           return 'doubleValue';
 [0-9]+\b                                    return 'intValue';

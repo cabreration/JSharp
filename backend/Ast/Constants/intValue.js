@@ -21,8 +21,8 @@ class IntValue {
         return 'int';
     }
 
-    getTDC(env, label, temp, h, p) {
-        let updater = new Updater(env, label, temp, h, p, null);
+    getTDC(env, label, temp) {
+        let updater = new Updater(env, label, temp, null);
         updater.addValue(`${val}`);
         updater.addType('int');
         return updater;

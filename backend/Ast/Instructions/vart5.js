@@ -20,7 +20,7 @@ class VarT5 {
         return 'vart5';
     }
 
-    getTDC(env, label, temp, h, p) {
+    getTDC(env, label, temp) {
         // Since its only a declaration im not gonna verify the declaration type, until it is asigned
         let code = [];
         let vars = this.ids.getChildren();
@@ -31,15 +31,12 @@ class VarT5 {
                 let role = symbol.lead.role;
                 if (role === 'global var') {
                     code.push(`heap[${pos}] = 0;`);
-                    Singleton.heap[pos] = 0;
                 }
                 else if (role === 'local var') {
                     code.push(`t${temp} = p + ${pos};`);
                     code.push(`stack[t${temp}] = 0;`);
                     code.push('p = p + 1;')
                     temp++;
-                    p++;
-                    Singleton.stack.push(0);
                 }
                 else {
                     console.error(role);
@@ -48,11 +45,11 @@ class VarT5 {
             }
         });
         if (code.length === 0) {
-            return new Updater(env, label, temp, h, p, null);
+            return new Updater(env, label, temp, null);
         }
         else {
             let cod = code.join('\n');
-            return new Updater(env, label, temp, h, p, cod);
+            return new Updater(env, label, temp, cod);
         }
         
     }

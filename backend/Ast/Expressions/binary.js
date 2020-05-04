@@ -1,5 +1,6 @@
 const SharpError = require('../../Procesor/Singleton/sharpError').SharpError;
 const Singleton = require('../../Procesor/Singleton/singleton').Singleton;
+const Updater = require('../Utilities/updater').Updater;
 
 class Binary {
     constructor(operator, arg1, arg2) {
@@ -239,29 +240,25 @@ class Binary {
         let code = [];
 
         // get 3DC from first arg
-        let updater1 = this.arg1.getTDC(env, label, temp, h, p);
+        let updater1 = this.arg1.getTDC(env, label, temp);
         env = updater1.env;
         label = updater1.label;
         temp = updater1.temp;
-        h = updater1.h;
-        p = updater1.p;
         let val1 = updater1.value;
         let type1 = updater1.type;
         code.push(updater1.code);
 
         // get 3DC from second arg
-        let updater2 = this.arg2.getTDC(env, label, temp, h, p);
+        let updater2 = this.arg2.getTDC(env, label, temp);
         env = updater2.env;
         label = updater2.label;
         temp = updater2.temp;
-        h = updater2.h;
-        p = updater2.p;
         let val2 = updater2.value;
         let type2 = updater2.type;
         code.push(updater2.code);
 
         // TODO - perform the operation
-        let val = `t${temp}`;
+        //let val = `t${temp}`;
         switch(this.operator.name) {
             case 'xor':
                 // TODO
@@ -312,9 +309,7 @@ class Binary {
                 let plus = this.translateAdition(type1, type2, val1, val2, temp, label, updater1, updater2);
                 code.push(plus.code);
                 temp = plus.temp;
-                temp++;
                 val = plus.val;
-                h = plus.h;
                 label = plus.label;
                 break;
             case 'minus':
@@ -359,24 +354,23 @@ class Binary {
                 console.error('ERROR EN binary.js');
                 return null;
         }
+
+        return new Updater(env, label, temp, code.join('\n'));
     }
 
-    translateAdition(type1, type2, val1, val2, temp, h, label, updater1, updater2) {
+    translateAdition(type1, type2, val1, val2, temp, label, updater1, updater2) {
         let code = [];
-        let firstH = h;
         let val = `t${temp}`;
         if (type1 === 'string' && type2 != 'string') {
             let ref = updater1.ref;
             temp++;
             code.push(`${val} = h;`);
-            let str = this.generateString3DC(val1, h, label, temp, ref);
+            let str = this.generateString3DC(val1, label, temp);
             code.push(str.code);
-            h = str.h;
             temp = str.temp;
             label = str.label;
             if (type2 === 'double' || type2 === 'int') {
                 let n = this.generateNumber3DC(val2, h, label, temp);
-                h = n.h;
                 temp = n.temp;
                 label = n.label;
                 code.push(n.code);
@@ -384,26 +378,19 @@ class Binary {
             else if (type2 === 'boolean') {
                 let bool = val2 === '1';
                 let t = this.generateBool3DC(bool, h);
-                h = t.h;
                 code.push(t.code);
             }
             else if (type2 === 'char') {
                 code.push(`heap[h] = ${val2};`);
                 code.push(`h = h + 1;`);
-                Singleton.heap[h] = Number(val2);
-                h++;
             }
             code.push(`heap[h] = 0;`);
             code.push(`h = h + 1;`);
-            Singleton.heap[h] = 0;
-            h++;
             return {
                 code: code.join('\n'),
                 temp: temp,
-                val: val,
-                h: h, 
+                val: val, 
                 label: label,
-                ref: firstH
             }
         }
         else if (type1 != 'string' && type2 === 'string') {
@@ -411,7 +398,6 @@ class Binary {
             code.push(`${val} = h;`);
             if (type1 === 'double' || type2 === 'int') {
                 let n = this.generateNumber3DC(val1, h, label, temp);
-                h = n.h;
                 temp = n.temp;
                 label = n.label;
                 code.push(n.code);
@@ -419,58 +405,42 @@ class Binary {
             else if (type1 === 'boolean') {
                 let bool = val1 === '1';
                 let t = this.generateBool3DC(bool, h);
-                h = t.h;
                 code.push(t.code);
             }
             else if (type1 === 'char') {
                 code.push(`heap[h] = ${val1};`);
                 code.push(`h = h + 1;`);
-                Singleton.heap[h] = Number(val1);
-                h++;
             }
             let ref = updater2.ref;
-            let str = this.generateString3DC(val2, h, label, temp, ref);
+            let str = this.generateString3DC(val2, label, temp);
             code.push(str.code);
-            h = str.h;
             temp = str.temp;
             label = str.label;
             code.push(`heap[h] = 0;`);
             code.push(`h = h + 1;`);
-            Singleton.heap[h] = 0;
-            h++;
             return {
                 code: code.join('\n'),
                 temp: temp,
-                val: val,
-                h: h, 
-                label: label,
-                ref: firstH
+                val: val, 
+                label: label
             }
         }
         else if (type1 === 'string' && type2 === 'string') {
-            let ref = updater1.ref;
-            let str = this.generateString3DC(val1, h, label, temp, ref);
+            let str = this.generateString3DC(val1, label, temp);
             code.push(str.code);
-            h = str.h;
             temp = str.temp;
             label = str.label;
-            ref = updater2.ref;
-            str = this.generateString3DC(val2, h, label, temp, ref);
+            str = this.generateString3DC(val2, label, temp);
             code.push(str.code);
-            h = str.h;
             temp = str.temp;
             label = str.label;
             code.push(`heap[h] = 0;`);
             code.push(`h = h + 1;`);
-            Singleton.heap[h] = 0;
-            h++;
             return {
                 code: code.join('\n'),
                 temp: temp,
                 val: val,
-                h: h, 
-                label: label,
-                ref: firstH
+                label: label
             }
         }
         else if (type1 === 'char' && type2 === 'char') {
@@ -479,34 +449,24 @@ class Binary {
             temp++;
             code.push(`${val} = h;`);
             code.push(`heap[h] = ${val1};`);
-            Singleton.heap[h] = Number(val1);
-            h++;
             code.push('h = h + 1;');
             code.push(`heap[h] = ${val2};`);
-            Singleton.heap[h] = Number(val2);
-            h++;
             code.push('h = h + 1;');
             code.push(`heap[h] = 0;`);
-            Singleton.heap[h] = 0;
-            h++;
             code.push('h = h + 1;');
             return {
                 code: code.join('\n'),
                 temp: temp,
                 val: val,
-                h: h, 
-                label: label,
-                ref: firstH
+                label: label
             }
         }
         else if (type1 != 'string' && type2 != 'string') {
             return {
                 code: `t${temp} = ${val1} + ${val2};`,
                 temp: temp + 1,
-                val: `t${temp}`, 
-                h: h,
-                label: label, 
-                ref: -1
+                val: `t${temp}`,
+                label: label
             }
         }
         else {
@@ -515,7 +475,7 @@ class Binary {
         }
     }
 
-    generateBool3DC(val, h) {
+    generateBool3DC(val) {
         let code = [];
         if (val) {
             code.push(`heap[h] = 116;`);
@@ -526,14 +486,6 @@ class Binary {
             code.push('h = h + 1;');
             code.push('heap[h] = 101;');
             code.push('h = h + 1;');
-            Singleton.heap[h]=116;
-            h++;
-            Singleton.heap[h] = 114;
-            h++;
-            Singleton.heap[h] = 117;
-            h++;
-            Singleton.heap[h] = 101;
-            h++;
         }
         else {
             code.push(`heap[h] = 102;`);
@@ -546,37 +498,18 @@ class Binary {
             code.push('h = h + 1;');
             code.push('heap[h] = 101;');
             code.push('h = h + 1;');
-            Singleton.heap[h] = 102;
-            h++;
-            Singleton.heap[h] = 97;
-            h++;
-            Singleton.heap[h] = 108;
-            h++;
-            Singleton.heap[h] = 115;
-            h++;
-            Singleton.heap[h] = 101;
-            h++;
         }
         return {
-            code: code.join('\n'),
-            h: h
+            code: code.join('\n')
         }
     }
 
-    generateString3DC(val, h, label, temp, ref) {
+    generateString3DC(val, label, temp) {
         let code = [];
         code.push(`t${temp} = heap[${val}];`); // first char
         code.push(`L${label}:`);
         code.push(`if (t${temp} == 0) goto L${label+1};`);
         code.push(`heap[h] = t${temp};`);
-            
-        // I need to simulate the string addition here
-        while (Singleton.heap[ref] > 0) {
-            Singleton.heap[h] = Singleton.heap[ref];
-            ref++;
-            h++;
-        }
-                 
         code.push('h = h + 1;');
         code.push(`${val1} = ${val1} + 1;`);
         code.push(`t${temp} = heap[${val1}];`);
@@ -586,7 +519,6 @@ class Binary {
         label++;
         temp++;
         return {
-            h: h,
             temp: temp,
             label: label,
             code: code.join('\n')
@@ -610,12 +542,6 @@ class Binary {
         code.push(`if (${val} < 10) goto L${label + 1};`);
         code.push(`t${temp} = ${val} % 10;`);
         code.push(`heap[h] = t${temp} + 48;`);
-        
-        for (let i = 0; i < val.length; i++) {
-            Singleton.heap[h] = val.charCodeAt(i);
-            h++;
-        }
-
         code.push('h = h + 1;');
         code.push(`${val} = ${val} / 10;`);
         code.push(`goto L${label};`);
@@ -626,7 +552,6 @@ class Binary {
         return {
             label: label,
             temp: temp,
-            h: h,
             code: code.join('\n')
         }
     }

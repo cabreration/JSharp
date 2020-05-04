@@ -36,7 +36,7 @@ class Identifier {
         }
     }
 
-    getTDC(env, label, temp, h, p) {
+    getTDC(env, label, temp) {
         // TODO
     }
 

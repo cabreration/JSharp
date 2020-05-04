@@ -21,9 +21,9 @@ class CharValue {
         return 'char';
     }
 
-    getTDC(env, label, temp, h, p) {
+    getTDC(env, label, temp) {
         let val = val.charCodeAt(0);
-        let updater = new Updater(env, label, temp, h, p, null);
+        let updater = new Updater(env, label, temp, null);
         updater.addValue(`${val}`);
         updater.addType('char');
         return updater;

@@ -35,6 +35,10 @@ class Strc {
         return { res: true };
     }
 
+    getTDC(env, label, temp) {
+        // TODO - validate it and store it in the Singleton list
+    }
+
 }
 
 module.exports.Strc = Strc;

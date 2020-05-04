@@ -20,8 +20,8 @@ class NullValue {
         return 'strc';
     }
 
-    getTDC(env, label, temp, h, p) {
-        let updater = new Updater(env, label, temp, h, p, null);
+    getTDC(env, label, temp) {
+        let updater = new Updater(env, label, temp, null);
         updater.addValue('0');
         return updater;
     }

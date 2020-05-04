@@ -22,18 +22,18 @@ class VarT1 {
         return 'vart1';
     }
 
-    getTDC(env, label, temp, h, p) {
+    getTDC(env, label, temp) {
         // check declaration type
         let validate1 = Singleton.validateType(this.type.name);
         if (!validate1) {
             Singleton.insertError(new SharpError('Semantico', `El tipo ${this.type.name} no ha sido definido`, this.type.row, this.type.column));
-            return new Updater(env, label, temp, h, p, null);
+            return new Updater(env, label, temp, null);
         }
         // validate expression
         let expType = this.expression.checkType(env.id); 
         if (typeof(expType) === 'object') {
             Singleton.insertError(expType);
-            return new Updater(env, label, temp, h, p, null);
+            return new Updater(env, label, temp, null);
         }
         // validate the type of expression is the same as the declaration type
         if (this.type.name != expType) {
@@ -52,18 +52,16 @@ class VarT1 {
 
             if (!flag) {
                 Singleton.insertError(new SharpError('Semantico', 'Los tipos de la declaracion y expresion no concuerdan', this.type.row, this.type.column));
-                return new Updater(env, label, temp, h, p, null);
+                return new Updater(env, label, temp, null);
             }
         } 
         // get the expression 3DC
         let code = [];
-        let fUpdater = this.expression.getTDC(env, label, temp, h, p);
+        let fUpdater = this.expression.getTDC(env, label, temp);
         let expValue = fUpdater.value;
         env = fUpdater.env;
         label = fUpdater.label;
         temp = fUpdater.temp;
-        h = fUpdater.h;
-        p = fUpdater.p;
         if (fUpdater.code != null)
             code.push(fUpdater.code);
 
@@ -76,15 +74,12 @@ class VarT1 {
                 let role = symbol.lead.role;
                 if (role === 'global var') {
                     code.push(`heap[${pos}] = ${expValue};`);
-                    Singleton.heap[pos] = Number(expValue);
                 }
                 else if (role === 'local var') {
                     code.push(`t${temp} = p + ${pos};`);
                     code.push(`stack[t${temp}] = ${expValue};`);
                     code.push('p = p + 1;');
-                    Singleton.stack.push(expValue);
                     temp++;
-                    p++;
                 }
                 else {
                     console.error(role);
@@ -93,11 +88,11 @@ class VarT1 {
             }
         });
         if (code.length === 0) {
-            return new Updater(env, label, temp, h, p, null);
+            return new Updater(env, label, temp, null);
         }
         else {
             let cod = code.join('\n');
-            return new Updater(env, label, temp, h, p, cod);
+            return new Updater(env, label, temp, cod);
         }
         
     }
