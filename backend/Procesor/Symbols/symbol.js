@@ -8,6 +8,7 @@ class Symbol {
         this.row = row;
         this.column = column;
         this.constant = false;
+        this.active = false;
     }
 
     shadow() {
@@ -16,6 +17,10 @@ class Symbol {
 
     isConstant() {
         this.constant = true;
+    }
+
+    setActive() {
+        this.active = true;
     }
 }
 

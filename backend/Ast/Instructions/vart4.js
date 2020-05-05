@@ -44,6 +44,7 @@ class VarT4 {
 
         let pos = symbol.lead.position;
         code.push(`heap[${pos}] = ${expValue};`);
+        symbol.lead.setActive();
         if (code.length === 0) {
             return new Updater(env, label, temp, null);
         }

@@ -18,6 +18,10 @@ class Call {
     getTypeOf() {
         return 'call';
     }
+
+    getTDC(env, label, temp) {
+        // TODO
+    }
 }
 
 module.exports.Call = Call;

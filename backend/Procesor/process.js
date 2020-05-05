@@ -109,7 +109,7 @@ class Process {
     }
 
     processVarT15(env, ins) {
-        let type = ins.type;
+        let type = ins.type.name;
         let ids = ins.ids.getChildren();
         ids.forEach(id =>{
             let symbol = new Symbol(id.id, env.id === 'global' ? 'global var' : 'local var', type, this.position, env.id, id.row, id.column);
@@ -165,6 +165,10 @@ class Process {
             let type = proc.type;
             let parameters = proc.parameters.getChildren();
             let procEnv = global.generateProcEnviroment(id.id+'_'+type.name+'_'+parameters.length, type.name, parameters.length, id.row, id.column);
+            // insert return at first position
+            //let ret = new Symbol('return', 'return', 'tbd', 0, procEnv.id, 0, 0);
+            // reserve the first space for the return
+            procEnv.last = 1;
             parameters.forEach(param => {
                 let sym = new Symbol(param.identifier.id, 'parameter', param.type.name, this.position, procEnv.id);
                 let r = procEnv.addSymbol(sym);

@@ -51,12 +51,13 @@ class VarT2 {
         let role = symbol.lead.role;
         if (role === 'global var') {
             code.push(`heap[${pos}] = ${expValue};`);
+            symbol.lead.setActive();
         }
         else if (role === 'local var') {
             code.push(`t${temp} = p + ${pos};`);
             code.push(`stack[t${temp}] = ${expValue};`);
-            //code.push('p = p + 1;');
             temp++;
+            symbol.lead.setActive();
         }
         else {
             console.error(role);

@@ -28,10 +28,13 @@ class Identifier {
 
     checkType(envId) {
         let thenv= envId.id;
-        while (envId != null) {
+        while (thenv != null) {
             let enviroment = Singleton.getEnviroment(thenv);
             let res = enviroment.getSymbol(this.id);
             if (res.state) {
+                if (!res.lead.active) {
+                    return new SharpError('Semantico', 'La variable "' + this.id + '" no existe en el contexto actual', this.row, this.column);
+                }
                 return res.lead.type;
             }
             else {
@@ -83,7 +86,7 @@ class Identifier {
             else {
                 code.push(`t${temp} = p + ${position};`);
                 temp++;
-                code.push(`t${temp} = stack[${temp-1}];`);
+                code.push(`t${temp} = stack[t${temp-1}];`);
                 val = `t${temp}`;
                 temp++;
             }
