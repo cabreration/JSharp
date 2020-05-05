@@ -7,6 +7,11 @@ class Binary {
         this.operator = operator; // Operator
         this.arg1 = arg1; // Expression
         this.arg2 = arg2; // Expression
+        this.byValue = false;
+    }
+
+    byValue() {
+        this.byValue = true;
     }
 
     getDot() {
@@ -51,7 +56,7 @@ class Binary {
             else if (this.operator.name === 'minus' || this.operator.name === 'times' || this.operator.name === 'div') {
                 return this.validateArithmetic(type1, type2);
             }
-            else if (this.operator.name === 'mod' || this.operator === 'power') {
+            else if (this.operator.name === 'mod' || this.operator.name === 'power') {
                 if (type1 === 'int' && type2 === 'int') {
                     return 'int'
                 }
@@ -321,7 +326,7 @@ class Binary {
                 label = plus.label;
                 break;
             case 'minus':
-                code.push(`t${temp} =${val1} - ${val2};`);
+                code.push(`t${temp} = ${val1} - ${val2};`);
                 val = `t${temp}`;
                 temp++;
                 break;
@@ -343,18 +348,21 @@ class Binary {
             case 'power':
                 code.push(`t${temp} = ${val1};`);
                 temp++;
+                code.push(`t${temp} = ${val1};`);
+                temp++
+                code.push(`t${temp} = ${val2};`);
                 code.push(`L${label}:`);
                 label++;
-                code.push(`if (${val2} > 1) goto L${label};`)
+                code.push(`if (t${temp} > 1) goto L${label};`)
                 label++;
                 code.push(`goto L${label};`);
                 label++;
+                code.push(`L${label-2}:`);
+                code.push(`t${temp-1} = t${temp-1} * t${temp - 2};`);
+                code.push(`t${temp} = t${temp} - 1;`);
+                code.push(`goto L${label - 3};`);
                 code.push(`L${label-1}:`);
-                code.push(`t${temp} = t${temp} * ${val1};`);
-                code.push(`${val2} = ${val2} - 1;`);
-                code.push(`goto L${label - 2};`);
-                code.push(`L${label}:`);
-                val = `t${temp}`;
+                val = `t${temp-1}`;
                 temp++;
                 break;
             default:
@@ -447,6 +455,8 @@ class Binary {
             }
         }
         else if (type1 === 'string' && type2 === 'string') {
+            temp++;
+            code.push(`${val} = h;`);
             let str = this.generateString3DC(val1, label, temp);
             code.push(str.code);
             temp = str.temp;

@@ -35,7 +35,7 @@ class VarT5 {
                 else if (role === 'local var') {
                     code.push(`t${temp} = p + ${pos};`);
                     code.push(`stack[t${temp}] = 0;`);
-                    code.push('p = p + 1;')
+                    //code.push('p = p + 1;')
                     temp++;
                 }
                 else {

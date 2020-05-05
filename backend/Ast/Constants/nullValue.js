@@ -2,6 +2,11 @@ class NullValue {
     constructor(row, column) {
         this.row = row; // Number
         this.column = column; // Number
+        this.byValue = false;
+    }
+
+    byValue() {
+        this.byValue = true;
     }
 
     getChildren() {

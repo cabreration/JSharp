@@ -22,7 +22,7 @@ const TreePrinter = require('./Ast/Dot/treePrinter').TreePrinter;
 const parser = require('./Ast/Jison/grammar');
 
 console.log('reading test.j');
-fs.readFile('./Testing/test.j', 'utf8', (err, text) => {
+fs.readFile('./Testing/printExpressions.j', 'utf8', (err, text) => {
     if (err) {
         console.error(err);
     }

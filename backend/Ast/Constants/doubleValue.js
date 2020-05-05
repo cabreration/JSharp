@@ -5,6 +5,11 @@ class DoubleValue {
         this.value = value; // number
         this.row = row;  // number
         this.column = column; // number
+        this.byValue = false;
+    }
+
+    byValue() {
+        this.byValue = true;
     }
 
     getDot() {

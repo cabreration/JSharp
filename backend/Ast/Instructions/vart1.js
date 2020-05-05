@@ -59,7 +59,6 @@ class VarT1 {
         let code = [];
         let fUpdater = this.expression.getTDC(env, label, temp);
         let expValue = fUpdater.value;
-        let upType = fUpdater.type;
         env = fUpdater.env;
         label = fUpdater.label;
         temp = fUpdater.temp;
@@ -82,7 +81,7 @@ class VarT1 {
                 else if (role === 'local var') {
                     code.push(`t${temp} = p + ${pos};`);
                     code.push(`stack[t${temp}] = ${expValue};`);
-                    code.push('p = p + 1;');
+                    //code.push('p = p + 1;');
                     temp++;
                 }
                 else {

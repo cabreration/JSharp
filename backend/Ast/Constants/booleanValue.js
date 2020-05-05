@@ -5,6 +5,11 @@ class BooleanValue {
         this.value = value; // bool
         this.row = row;  // number
         this.column = column; // number
+        this.byValue = false;
+    }
+
+    byValue() {
+        this.byValue = true;
     }
 
     getDot() {

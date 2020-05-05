@@ -78,6 +78,7 @@
 "!"                                         return 'notOp';
 "^"                                         return 'xorOp'; 
 ">"                                         return 'greaterThan';
+"$"                                         return 'byValue';
   
 [\x27h]([\x00-\xFF]|"\\n"|"\\"["]|"\\\\"|"\\r"|"\\t")[\x27h]   { yytext = yytext.substr(1, yyleng-2); return 'charValue'; }
 ([a-zA-ZñÑ0-9]|"."|"-")+".j"                return 'fileName'; // este debe ser arreglado
@@ -790,6 +791,14 @@ EXP_LIST
   }
   | id asignment EXPRESSION {
     $$ = [ new Asignment(new Identifier($1.toLowerCase(), @1.first_line, @1.first_column), [], $3, @1.first_line, @1.first_column) ];
+  }
+  | byValue EXPRESSION {
+    $2.byValue();
+    $$ = [ $2 ];
+  }
+  | id asignment byValue EXPRESSION {
+    $4.byValue();
+    $$ = [ new Asignment(new Identifier($1.toLowerCase(), @1.first_line, @1.first_column), [], $4, @1.first_line, @1.first_column) ];
   }
 ;
 

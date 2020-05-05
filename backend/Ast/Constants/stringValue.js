@@ -6,6 +6,11 @@ class StringValue {
         this.value = value;
         this.row = row; 
         this.column = column;
+        this.byValue = false;
+    }
+
+    byValue() {
+        this.byValue = true;
     }
 
     getDot() {
@@ -24,9 +29,18 @@ class StringValue {
         return 'string';
     }
 
+    scapeString() {
+        this.value.replace('\\n', '\n');
+        this.value.replace('\\\\', '\\');
+        this.value.replace('\\t', '\t');
+        this.value.replace('\\r', '\r');
+        this.value.replace('\\"', '\"');
+    }
+
     getTDC(env, label, temp) {
         let code = [];
         code.push(`t${temp} = h;`);
+        this.scapeString();
         for (let i = 0; i < this.value.length; i++) {
             let char = this.value.charCodeAt(i);
             code.push(`heap[h] = ${char};`);

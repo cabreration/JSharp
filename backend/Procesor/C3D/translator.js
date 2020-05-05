@@ -88,7 +88,7 @@ class Translator {
         let globalCode = [];
         for (let i = 0; i < procedures.length; i++) {
             let current = procedures[i];
-            let env = Singleton.getEnviroment(current.id.id+'-'+current.type.name+'-'+current.parameters.getChildren().length);
+            let env = Singleton.getEnviroment(current.id.id+'_'+current.type.name+'_'+current.parameters.getChildren().length);
             let updater = current.getTDC(env, this.label, this.temp, this.heapPtr, this.stackPtr);
             if (updater.code != null)
                 globalCode.push(updater.code);

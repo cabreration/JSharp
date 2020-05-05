@@ -4,6 +4,11 @@ class Unary {
     constructor(operator, arg) {
         this.operator = operator; // Operator
         this.arg = arg; // Expression
+        this.byValue = false;
+    }
+
+    byValue() {
+        this.byValue = true;
     }
 
     getDot() {
