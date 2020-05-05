@@ -38,14 +38,20 @@ class Singleton {
         else {
             if (env.functionFlag) {
                 for (let i = 0; i < Singleton.symbolsTable.length; i++) {
-                    if (Singleton.symbolsTable[i].id === env.id && Singleton.symbolsTable[i].role === env.role
-                        && Singleton.symbolsTable[i].paramsCount === env.paramsCount) {
-                            let error = new SharpError('Semantico',
-                                'Ya existe una funcion denominada "'+ env.id +'"', 
-                                env.row, 
-                                env.column);
+                    if (Singleton.symbolsTable[i].id === env.id && Singleton.symbolsTable[i].paramsCount === env.paramsCount) {
+                        // check the types of the parameters
+                        let flag = true;
+                        for (let j = 0; j < env.paramsCount; j++) {
+                            if (Singleton.symbolsTable[i].symbols[j].type != env.symbols[j].type) {
+                                flag = false;
+                            }
+                        }
+
+                        if (flag) {
+                            let error = new SharpError('Semantico', 'Ya existe una funcion denominada "'+ env.id +'" con el mismo numero de parametros y los mismos tipos', env.row, env.column);
                             Singleton.sharpErrors.push(error);
                             return null;
+                        }
                     }
                 }
             }
@@ -60,6 +66,17 @@ class Singleton {
                 return Singleton.symbolsTable[i];
             }
         }
+    }
+
+    static getFunctions(id) {
+        let ret = [];
+        for (let i = 0; i < Singleton.symbolsTable.length; i++) {
+            if (Singleton.symbolsTable[i].id.includes(id+'_') && Singleton.symbolsTable[i].functionFlag) {
+                ret.push(Singleton.symbolsTable[i]);
+            }
+        }
+
+        return ret;
     }
 
     static restart() {

@@ -5,6 +5,7 @@ class Translator {
         this.temp = 1;
         this.label = 1;
         this.code = [];
+        this.mainRow = -1;
     }
 
     update(updater) {
@@ -43,7 +44,7 @@ class Translator {
         this.code.push(glob);
 
         // call main
-        this.code.push(`call principal_void_0;`)
+        this.code.push(`call principal_0_${this.mainRow};`);
         this.code.push(`goto L${this.label};\n`);
 
         // add the generated 3DC for the functions
@@ -72,7 +73,7 @@ class Translator {
         let globalCode =  [];
         for (let i = 0; i < instructions.length; i++) {
             let current = instructions[i];
-            let updater = current.getTDC(global, this.label, this.temp, this.heapPtr, this.stackPtr);
+            let updater = current.getTDC(global, this.label, this.temp);
             if (updater.code != null)
                 globalCode.push(updater.code);
             this.update(updater);
@@ -88,7 +89,13 @@ class Translator {
         let globalCode = [];
         for (let i = 0; i < procedures.length; i++) {
             let current = procedures[i];
-            let env = Singleton.getEnviroment(current.id.id+'_'+current.type.name+'_'+current.parameters.getChildren().length);
+            let id = current.id.id;
+            let paramsCount = current.parameters.getChildren().length;
+            let row = current.id.row;
+            if (id === 'principal' && paramsCount === 0) {
+                this.mainRow = row;
+            }
+            let env = Singleton.getEnviroment(id+'_'+paramsCount+'_'+row);
             let updater = current.getTDC(env, this.label, this.temp);
             if (updater.code != null)
                 globalCode.push(updater.code);

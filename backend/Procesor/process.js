@@ -67,11 +67,11 @@ class Process {
                     this.processInstructions(ins.sentences.getChildren(), ifEnv);
                     Singleton.insertEnviroment(ifEnv);
                     break;
-                case 'elseSentence':
+                /*case 'elseSentence':
                     let elseEnv = env.generateSubEnviroment(env.id+'-else', 'else sentence');
                     this.processInstructions(ins.sentences.getChildren(), elseEnv);
                     Singleton.insertEnviroment(elseEnv);
-                    break;
+                    break;*/
                 case 'whilesentence':
                     let whileEnv = env.generateSubEnviroment(env.id+'-while', 'while sentence');
                     this.processInstructions(ins.sentences.getChildren(), whileEnv);
@@ -164,11 +164,9 @@ class Process {
             let id = proc.id;
             let type = proc.type;
             let parameters = proc.parameters.getChildren();
-            let procEnv = global.generateProcEnviroment(id.id+'_'+type.name+'_'+parameters.length, type.name, parameters.length, id.row, id.column);
+            let procEnv = global.generateProcEnviroment(id.id+'_'+parameters.length+'_'+id.row, type.name, parameters.length, id.row, id.column);
             // insert return at first position
-            //let ret = new Symbol('return', 'return', 'tbd', 0, procEnv.id, 0, 0);
-            // reserve the first space for the return
-            procEnv.last = 1;
+            let ret = new Symbol('return', 'local var', proc.type.name, 0, id.id+'_'+parameters.length+'_'+id.row, 0, 0);
             parameters.forEach(param => {
                 let sym = new Symbol(param.identifier.id, 'parameter', param.type.name, this.position, procEnv.id);
                 let r = procEnv.addSymbol(sym);

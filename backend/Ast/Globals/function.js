@@ -23,7 +23,7 @@ class Function {
 
     getTDC(env, label, temp) {
         let code = [];
-        code.push(`proc ${this.id.id}_${this.type.name}_${this.parameters.getChildren.length} begin`);
+        code.push(`proc ${this.id.id}_${this.parameters.getChildren.length}_${this.id.row} begin`);
         
         // translate all of the instructions
         let instructions = this.sentences.getChildren();

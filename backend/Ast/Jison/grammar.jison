@@ -732,6 +732,9 @@ SENTENCE
   | returnKW EXPRESSION semicolon {
     $$ = new ReturnSentence($2, @1.first_line, @1.first_column);
   }
+  | CALL {
+    $$ = $1;
+  }
 ;
 
 ASIGNMENT 
@@ -773,7 +776,7 @@ CALL
     $$ = new Call(new Identifier($1.toLowerCase(), @1.first_line, @1.first_column), new NodeList($3, 'VALUES LIST'));
   }
   | id leftP rightP {
-    $$ = new Call(new Identifier($1.toLowerCase(), @1.first_line, @1.first_column), []);
+    $$ = new Call(new Identifier($1.toLowerCase(), @1.first_line, @1.first_column), new NodeList([], 'VALUES LIST'));
   }
 ;
 
