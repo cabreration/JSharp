@@ -136,6 +136,7 @@
   const Access = require('../Utilities/access').Access;
   const Attribute = require('../Utilities/attribute').Attribute;
   const Strc = require('../Globals/strc').Strc;
+  const New = require('../Expressions/new').New;
   let global_vars = [];
   let functions_list = [];
   let global_strcs = [];
@@ -292,7 +293,7 @@ FUNCTION_DECL
 
 TYPE 
   : intType {
-    $$ = new Type('integer', @1.first_line, @1.first_column, false);
+    $$ = new Type('int', @1.first_line, @1.first_column, false);
   }
   | doubleType {
     $$ = new Type('double', @1.first_line, @1.first_column, false);
@@ -616,7 +617,9 @@ EXPRESSION
   | strcKW id leftS EXPRESSION rightS
   | strcKW TYPE leftS EXPRESSION rightS
   | leftC E_LIST rightC
-  | strcKW id leftP rightS
+  | strcKW id leftP rightP {
+    $$ = new New(new Identifier($2.toLowerCase(), @2.first_line, @2.first_column));
+  }
   | id dot id
   | id dot id ACCESS_LIST
   | id leftS EXPRESSION rightS
@@ -630,7 +633,7 @@ EXPRESSION
 
 CAST 
   : leftP intType rightP {
-    $$ = new Type('integer', @2.first_line, @2.first_column, false);
+    $$ = new Type('int', @2.first_line, @2.first_column, false);
   }
   | leftP doubleType rightP {
     $$ = new Type('double', @2.first_line, @2.first_column, false);

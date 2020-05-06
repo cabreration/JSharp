@@ -30,6 +30,15 @@ class Singleton {
         Singleton.strcDefinitions.push(strc);
     }
 
+    static getStrc(id) {
+        for (let i = 0; i < Singleton.strcDefinitions.length; i++) {
+            if (Singleton.strcDefinitions[i].identifier.id === id) {
+                return Singleton.strcDefinitions[i];
+            }
+        }
+        return null;
+    }
+
     static insertEnviroment(env) {
         if (Singleton.symbolsTable.length === 0) {
             Singleton.symbolsTable.push(env);
@@ -105,7 +114,7 @@ class Singleton {
 
         // check if the structure exists
         for (let i = 0; i < Singleton.strcDefinitions.length; i++) {
-            if (type === Singleton.strcDefinitions[i].id) {
+            if (type === Singleton.strcDefinitions[i].identifier.id) {
                 return true;
             }
         }

@@ -36,8 +36,8 @@ class Process {
         else {
             Singleton.inserError(new SharpError('Semantico',
                 'Ya existe un atributo denominado "' + ans.id +'"',
-                res.row,
-                res.col));
+                ans.row,
+                ans.col));
         }
     }
 

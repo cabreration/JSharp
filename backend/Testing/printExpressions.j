@@ -1,12 +1,10 @@
-var str := "hola mundo";
+//Define basic as [int one, double two, boolean three, char four, string five]
+Define usuario as [int edad = 24, double balance = 1000.25, boolean activo = true, char clasificacion = 'a', string nombre = "Javs"]
+
+//basic b = strc basic();
+
 
 void principal() {
-    print("principal");
-    print('\n');
-    method2()
-}
-
-void method2() {
-    print('\n');
-    print("Estoy en otro lugar");
+    //print(b);
+    print(strc Usuario())
 }
