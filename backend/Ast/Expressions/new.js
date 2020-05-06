@@ -48,11 +48,15 @@ class New {
         }
 
         // after validating each attribute we translate each attribute.
+        let val = `t${temp}`;
+        temp++;
+        let h = `t${temp}`; 
+        temp++;
         let updaters = [];
         let runnerTemp = temp;
         let runnerLabel = label;
         for (let i = 0; i < attributes.length; i++) {
-            let updater = attributes[i].getTDC(env, runnerLabel, runnerTemp);
+            let updater = attributes[i].getTDC(env, runnerLabel, runnerTemp, h);
             if (updater.code == null) {
                 return updater;
             }
@@ -61,9 +65,10 @@ class New {
             updaters.push(updater);
         }
 
-        let val = `t${temp}`;
-        temp++;
+
         code.push(`${val} = h;`);
+        code.push(`${h} = h;`);
+        code.push(`h = h + ${attributes.length};`);
         updaters.forEach(up => {
             code.push(up.code);
         });

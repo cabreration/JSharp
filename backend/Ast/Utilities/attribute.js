@@ -53,7 +53,7 @@ class Attribute {
         return true;
     }
 
-    getTDC(env, label, temp) {
+    getTDC(env, label, temp, h) {
         let code = [];
         if (this.expression != null) {
             let expType = this.expression.checkType(env);
@@ -89,15 +89,19 @@ class Attribute {
             if (expTDC.value == null) {
                 return expTDC;
             }
+            if (expTDC.code != null) {
+                code.push(expTDC.code);
+            }
             label = expTDC.label;
             temp = expTDC.temp;
             let val = expTDC.value;
-            code.push(`heap[h] = ${val};`);
-            code.push(`h = h + 1;`);
+
+            code.push(`heap[${h}] = ${val};`);
+            code.push(`${h} = ${h} + 1;`);
         }
         else {
-            code.push(`heap[h] = 0;`);
-            code.push(`h = h + 1;`);
+            code.push(`heap[${h}] = 0;`);
+            code.push(`${h} = ${h} + 1;`);
         }
 
         return new Updater(env, label, temp, code.join('\n'));

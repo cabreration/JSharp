@@ -49,7 +49,8 @@ class StringValue {
         code.push(`heap[h] = 0;`);
         code.push('h = h + 1;');
         temp++;
-        let updater = new Updater(env, label, temp, code.join('\n'));
+        let joined = code.join('\n');
+        let updater = new Updater(env, label, temp, joined);
         updater.addValue(`t${temp - 1}`);
         updater.addType('string');
         return updater;

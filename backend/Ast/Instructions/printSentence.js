@@ -100,9 +100,9 @@ class PrintSentence {
 
     printChar(value) {
         let code = [];
-        code.push('print("%c", 39);');
+        //code.push('print("%c", 39);');
         code.push(`print("%c", ${value});`);
-        code.push('print("%c", 39);');
+        //code.push('print("%c", 39);');
         return code.join('\n');
     }
 
@@ -143,8 +143,9 @@ class PrintSentence {
         code.push(`L${label}:`);
         label++;
         temp++;
+        let joined = code.join('\n')
         return {
-            code: code.join('\n'),
+            code: joined,
             label: label,
             temp: temp            
         }
@@ -207,15 +208,14 @@ class PrintSentence {
                 case 'string[]':
                     break;
                 default:
-                    if (updater.type.includes('[]')) {
+                    if (att.type.name.includes('[]')) {
                         // strc[]
                     }
                     else {
-                        let objTDC = this.printObj(updater.value, updater.type, label, temp);
+                        let objTDC = this.printObj(temp2, att.type.name, label, temp);
                         label = objTDC.label;
                         temp = objTDC.temp;
                         code.push(objTDC.code);
-                        
                     }
                     break;
             }
