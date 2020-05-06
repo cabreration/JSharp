@@ -142,6 +142,9 @@ class Binary {
                 return new SharpError('Semantico', 'Operacion invalida: No es posible aplicar el operador === entre valores de tipo ' + type1 + ' y ' + type2, this.operator.row, this.operator.column);
         }
 
+        if (type1 != type2) {
+            return new SharpError('Semantico', 'Operacion invalida: No es posible aplicar el operador === entre valores de tipo ' + type1 + ' y ' + type2, this.operator.row, this.operator.column);
+        }
         return 'boolean';
     }
 
@@ -271,13 +274,28 @@ class Binary {
         let val; // = `t${temp}`;
         switch(this.operator.name) {
             case 'xor':
-                // TODO
+                // TOTEST
+                let xor = this.generateXor3DC(val1, val2, label, temp);
+                code.push(xor.code);
+                temp = xor.temp;
+                label = xor.label;
+                val = xor.val;
                 break;
             case 'or':
-                // TODO
+                // TOTEST
+                let or = this.generateOr3DC(val1, val2, label, temp);
+                code.push(or.code);
+                temp = or.temp;
+                label = or.label;
+                val = or.val;
                 break;
             case 'and':
-                // TODO
+                // TOTEST
+                let and = this.generateAnd3DC(val1, val2, label, temp);
+                code.push(and.code);
+                temp = and.temp;
+                label = and.label;
+                val = and.val;
                 break;
             case 'not equals':
                 if (type1 != 'string') {
@@ -285,7 +303,13 @@ class Binary {
                     val = `t${temp}`;
                     temp++;
                 }
-                // TODO - COMPARE STRINGS
+                else {
+                    let ne = this.generateNEString3DC(val1, val2, label, temp);
+                    code.push(ne.code);
+                    temp = ne.temp;
+                    label = ne.label;
+                    val = ne.val;
+                }
                 break;
             case 'equal value':
                 if (type1 != 'string') {
@@ -293,7 +317,13 @@ class Binary {
                     val = `t${temp}`;
                     temp++;
                 }
-                // TODO - COMPARE STRINGS
+                else {
+                    let eq = this.generateEString3DC(val1, val2, label, temp);
+                    code.push(eq.code);
+                    temp = eq.temp;
+                    label = eq.label;
+                    val = eq.val
+                }
                 break;
             case 'equal reference':
                 // TODO
@@ -626,6 +656,210 @@ class Binary {
             temp: temp,
             label: label,
             code: code.join('\n')
+        }
+    }
+
+    generateAnd3DC(val1, val2, label, temp) {
+        let code = [];
+        let temp1 = `t${temp}`;
+        temp++;
+        let temp2 = `t${temp}`;
+        temp++;
+        let temp3 = `t${temp}`;
+        temp++;
+        let label1 = `L${label}`;
+        label++;
+        let label2 = `L${label}`;
+        label++;
+        let label3 = `L${label}`;
+        label++;
+        let label4 = `L${label}`;
+        label++;
+
+        code.push(`${temp1} = ${val1};`);
+        code.push(`${temp2} = ${val2};`);
+        code.push(`if (${temp1} == 1) goto ${label1};`);
+        code.push(`goto ${label2};# false`); 
+        code.push(`${label1}:`);
+        code.push(`if (${temp2} == 1) goto ${label3};`);
+        code.push(`${label2}:`);
+        code.push(`${temp3} = 0;`);
+        code.push(`goto ${label4};`);
+        code.push(`${label3}:`);
+        code.push(`${temp3} = 1;`);
+        code.push(`${label4}:`); 
+
+        return {
+            code: code.join('\n'),
+            label: label,
+            temp: temp,
+            val: temp3
+        }
+    }
+
+    generateOr3DC(val1, val2, label, temp) {
+        let code = [];
+        let temp1 = `t${temp}`;
+        temp++;
+        let temp2 = `t${temp}`;
+        temp++;
+        let temp3 = `t${temp}`;
+        temp++;
+        let label1 = `L${label}`;
+        label++;
+        let label2 = `L${label}`;
+        label++;
+
+        code.push(`${temp1} = ${val1};`);
+        code.push(`${temp2} = ${val2};`);
+        code.push(`if (${temp1} == 1) goto ${label1};`);
+        code.push(`if (${temp2} == 1) goto ${label1};`);
+        code.push(`${temp3} = 0;`);
+        code.push(`goto ${label2};`); 
+        code.push(`${label1}:`);
+        code.push(`${temp3} = 1;`);
+        code.push(`${label2}:`);
+
+        return {
+            code: code.join('\n'),
+            label: label,
+            temp: temp,
+            val: temp3
+        }
+    }
+
+    generateXor3DC(val1, val2, label, temp) {
+        let code = [];
+        let temp1 = `t${temp}`;
+        temp++;
+        let temp2 = `t${temp}`;
+        temp++;
+        let temp3 = `t${temp}`;
+        temp++;
+        let label1 = `L${label}`;
+        label++;
+        let label2 = `L${label}`;
+        label++;
+        let label3 = `L${label}`;
+        label++;
+        let label4 = `L${label}`;
+        label++;
+        let label5 = `L${label}`;
+        label++;
+
+        code.push(`${temp1} = ${val1};`);
+        code.push(`${temp2} = ${val2};`);
+        code.push(`if (${temp1} == 1) goto ${label1};`);
+        code.push(`goto ${label2};`);
+        code.push(`${label1}:`)
+        code.push(`if (${temp2} == 0) goto ${label3}; # true xor`);
+        code.push(`goto ${label4}; # false xor`);
+        code.push(`${label2}:`);
+        code.push(`if (${temp2} == 0) goto ${label4};`);
+        code.push(`${label3}:`);
+        code.push(`${temp3} = 1;`)
+        code.push(`goto ${label5};`);
+        code.push(`${label4}:`);
+        code.push(`${temp3} = 0;`);
+        code.push(`${label5}:`);
+
+        return {
+            code: code.join('\n'),
+            label: label,
+            temp: temp,
+            val: temp3
+        }
+    }
+
+    generateEString3DC(val1, val2, label, temp) {
+        let code = [];
+        let temp1 = `t${temp}`;
+        temp++;
+        let temp2 = `t${temp}`;
+        temp++;
+        let temp3 = `t${temp}`;
+        temp++;
+        let temp4 = `t${temp}`;
+        temp++;
+        let temp5 = `t${temp}`;
+        temp++;
+        let label1 = `L${label}`;
+        label++;
+        let label2 = `L${label}`;
+        label++;
+        let label3 = `L${label}`;
+        label++;
+        let label4 = `L${label}`;
+        label++;
+
+        code.push(`${temp1} = ${val1};`);
+        code.push(`${temp2} = ${val2};`);
+        code.push(`${label1}:`);
+        code.push(`${temp3} = heap[${temp1}];`);
+        code.push(`${temp4} = heap[${temp2}];`);
+        code.push(`if (temp3 <> temp4) goto ${label2};`);
+        code.push(`if (temp3 == 0) goto ${label3};`);
+        code.push(`${temp1} = ${temp1} + 1;`);
+        code.push(`${temp2} = ${temp2} + 1;`);
+        code.push(`goto ${label1};`);
+        code.push(`${label2}:`);
+        code.push(`${temp5} = 0;`);
+        code.push(`goto ${label4};`);
+        code.push(`${label3}:`);
+        code.push(`${temp5} = 1;`);
+        code.push(`${label4}:`);
+
+        return {
+            code: code.join('\n'),
+            temp: temp,
+            label: label,
+            val: temp5
+        }
+    }
+
+    generateNEString3DC(val1, val2, label, temp) {
+        let code = [];
+        let temp1 = `t${temp}`;
+        temp++;
+        let temp2 = `t${temp}`;
+        temp++;
+        let temp3 = `t${temp}`;
+        temp++;
+        let temp4 = `t${temp}`;
+        temp++;
+        let temp5 = `t${temp}`;
+        temp++;
+        let label1 = `L${label}`;
+        label++;
+        let label2 = `L${label}`;
+        label++;
+        let label3 = `L${label}`;
+        label++;
+        let label4 = `L${label}`;
+        label++;
+
+        code.push(`${temp1} = ${val1};`);
+        code.push(`${temp2} = ${val2};`);
+        code.push(`${label1}:`);
+        code.push(`${temp3} = heap[${temp1}];`);
+        code.push(`${temp4} = heap[${temp2}];`);
+        code.push(`if (temp3 <> temp4) goto ${label2};`);
+        code.push(`if (temp3 == 0) goto ${label3};`);
+        code.push(`${temp1} = ${temp1} + 1;`);
+        code.push(`${temp2} = ${temp2} + 1;`);
+        code.push(`goto ${label1};`);
+        code.push(`${label2}:`);
+        code.push(`${temp5} = 1;`);
+        code.push(`goto ${label4};`);
+        code.push(`${label3}:`);
+        code.push(`${temp5} = 0;`);
+        code.push(`${label4}:`);
+
+        return {
+            code: code.join('\n'),
+            temp: temp,
+            label: label,
+            val: temp5
         }
     }
 }

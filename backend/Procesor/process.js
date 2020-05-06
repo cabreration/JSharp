@@ -66,12 +66,15 @@ class Process {
                     let ifEnv = env.generateSubEnviroment(env.id+'-if', 'if sentence');
                     this.processInstructions(ins.sentences.getChildren(), ifEnv);
                     Singleton.insertEnviroment(ifEnv);
+                    let elseIns = ifEnv.elseSentence;
+                    let counter  = 1;
+                    while (elseIns != null) {
+                        let elseEnv = env.generateSubEnviroment(env.id+'-else'+counter, 'else sentence')
+                        this.processInstructions(elseIns.sentences.getChildren(), elseEnv);
+                        Singleton.insertEnviroment(elseEnv);
+                        elseIns = elseEnv.elseSentence;
+                    }
                     break;
-                /*case 'elseSentence':
-                    let elseEnv = env.generateSubEnviroment(env.id+'-else', 'else sentence');
-                    this.processInstructions(ins.sentences.getChildren(), elseEnv);
-                    Singleton.insertEnviroment(elseEnv);
-                    break;*/
                 case 'whilesentence':
                     let whileEnv = env.generateSubEnviroment(env.id+'-while', 'while sentence');
                     this.processInstructions(ins.sentences.getChildren(), whileEnv);
