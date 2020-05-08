@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { graphviz }  from 'd3-graphviz';
 
 @Component({
@@ -6,14 +6,22 @@ import { graphviz }  from 'd3-graphviz';
   templateUrl: './tree.component.html',
   styleUrls: ['./tree.component.css']
 })
-export class TreeComponent implements OnInit {
+export class TreeComponent implements OnInit, OnChanges {
 
+  @Input() dot: any;
   constructor() { }
 
   ngOnInit(): void {
-    let dot = JSON.parse(sessionStorage.getItem('compile')).dot;
-    if (dot != null)
-      graphviz('main').renderDot(dot);
+    //let dot = JSON.parse(sessionStorage.getItem('compile')).dot;
+  }
+
+  ngOnChanges() {
+    this.renderDot();
+  }
+
+  renderDot() {
+    if (this.dot != null)
+      graphviz('section').renderDot(this.dot);
   }
 
 }

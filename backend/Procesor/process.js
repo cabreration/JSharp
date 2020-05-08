@@ -2,6 +2,10 @@ const Singleton = require('./Singleton/singleton').Singleton;
 const SharpError = require('./Singleton/sharpError').SharpError;
 const Enviroment = require('./Symbols/enviroment').Enviroment;
 const Symbol = require('./Symbols/symbol').Symbol;
+const parser = require('../Ast/Jison/grammar');
+const fs = require('fs');
+let functions = [];
+let vars = [];
 
 class Process {
     constructor() {
@@ -10,16 +14,26 @@ class Process {
     }
 
     firstApproach(ast) {
+        functions = [];
+        vars = [];
         // first we process all of the strc definitions in the global enviroment
         this.processStrc(ast.global_strcs);
 
         // next we process all the global variables and arrays
         let global = new Enviroment('global', 'global', null, false, 0, -1, -1);
         global = Singleton.insertEnviroment(global);
-        this.processInstructions(ast.global_vars, global);
+        this.processInstructions(ast.global_vars, global, true);
 
         // finally we process all of the functions and methods
         this.processFunctions(ast.functions_list);
+
+        // here we should process all of the imports
+        let added = this.processImports(ast);
+
+        return {
+            functions_list: functions,
+            global_vars: vars
+        }
     }
 
     processStrc(defs) {
@@ -41,23 +55,23 @@ class Process {
         }
     }
 
-    processInstructions(instructions, env) {
+    processInstructions(instructions, env, global) {
         instructions.forEach(ins => {
             switch(ins.getTypeOf()) {
                 case 'vart1':
-                    this.processVarT15(env, ins);
+                    this.processVarT15(env, ins, global);
                     break;
                 case 'vart2':
-                    this.processVarT234(env, ins, 2);
+                    this.processVarT234(env, ins, 2, global);
                     break;
                 case 'vart3':
-                    this.processVarT234(env, ins, 3);
+                    this.processVarT234(env, ins, 3, global);
                     break;
                 case 'vart4':
-                    this.processVarT234(env, ins, 4);
+                    this.processVarT234(env, ins, 4, global);
                     break;
                 case 'vart5':
-                    this.processVarT15(env, ins);
+                    this.processVarT15(env, ins, global);
                     break;
                 case "strc":
                     this.processOneStrc(ins);
@@ -111,22 +125,29 @@ class Process {
         });
     }
 
-    processVarT15(env, ins) {
+    processVarT15(env, ins, global) {
+        let flag = false;
         let type = ins.type.name;
         let ids = ins.ids.getChildren();
         ids.forEach(id =>{
             let symbol = new Symbol(id.id, env.id === 'global' ? 'global var' : 'local var', type, this.position, env.id, id.row, id.column);
             let res = env.addSymbol(symbol);
-            if (res === true)
+            if (res === true) {
                 this.position++;
+                flag = true;
+            }
             else {
-                Singleton.inserError(new SharpError('Semantico',
+                Singleton.insertError(new SharpError('Semantico',
                     'La variable "' + id.id +'" ya ha sido definida en el contexto actual', id.row, id.column));
             }
         });
+        if (global && flag) {
+            vars.push(ins);
+        }
     }
 
-    processVarT234(env, ins, opt) {
+    processVarT234(env, ins, opt, global) {
+        let flag = false;
         let type = opt === 2 ? 'var' : opt === 3 ? 'const' : 'global';
         let id = ins.identifier;
         let role;
@@ -152,17 +173,24 @@ class Process {
             symbol.isConstant();   
         }
         let res = env.addSymbol(symbol);
-        if (res === true)
+        if (res === true) {
             this.position++;
+            flag = true;
+        }
         else {
             Singleton.insertError(new SharpError('Semantico',
                     'La variable "' + id.id + '" ya ha sido definida en el contexto actual', id.row, id.column));
+        }
+
+        if (global && flag) {
+            vars.push(ins);
         }
     }
 
     processFunctions(functions) {
         let global = Singleton.getEnviroment('global');
         functions.forEach(proc => {
+            let flag = true;
             this.position = 1;
             let id = proc.id;
             let type = proc.type;
@@ -178,16 +206,45 @@ class Process {
                 else {
                     Singleton.insertError(new SharpError('Semantico',
                     'El parametro "' + param.identifier.id + '" ya ha sido definido', param.identifier.row, param.identifier.column));
-                    return;
+                    flag = false;
                 }
             });
 
-            procEnv = Singleton.insertEnviroment(procEnv);
-            if (procEnv != null) {
-                // Gotta process the instructions of every procedure
-                let sentences = proc.sentences.getChildren();
-                this.processInstructions(sentences, procEnv);
+            if (flag) {
+                procEnv = Singleton.insertEnviroment(procEnv);
+                if (procEnv != null) {
+                    // Gotta process the instructions of every procedure
+                    let sentences = proc.sentences.getChildren();
+                    this.processInstructions(sentences, procEnv);
+
+                    functions.push(proc);
+                }
             }
+        });
+    }
+
+    processImports(ast) {
+        let imports = ast.imports.slice(0);
+        imports.forEach(file => {
+            ast.global_vars.splice(0, ast.global_vars.length);
+            ast.functions_list.splice(0, ast.functions_list.length);
+            ast.global_strcs.splice(0, ast.global_strcs.length);
+            ast.imports.splice(0, ast.imports.length);
+
+            fs.readFile(`../Imports/${file.id}`, 'utf8', (err, text) => {
+                if (err) {
+                    Singleton.insertError(new SharpError('Semantico', `El archivo ${file.id} no existe`, file.row, file.column));
+                }
+                else {
+                    try {
+                        let bst = parser.parse(text);
+                        this.processFunctions(bst.functions_list);
+                      }
+                      catch (e) {
+                        console.error(e);
+                      }
+                }
+            });
         });
     }
 }

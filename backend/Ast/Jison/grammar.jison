@@ -54,7 +54,6 @@
 "--"                                        return 'decOp';
 "^^"                                        return 'powOp';
 "!="                                        return 'notEquals';
-"<"                                         return 'lessThan';
 "<="                                        return 'lessEquals';
 "&&"                                        return 'andOp';
 "||"                                        return 'orOp';
@@ -78,6 +77,7 @@
 "!"                                         return 'notOp';
 "^"                                         return 'xorOp'; 
 ">"                                         return 'greaterThan';
+"<"                                         return 'lessThan';
 "$"                                         return 'byValue';
   
 [\x27h]([\x00-\xFF]|"\\n"|"\\"["]|"\\\\"|"\\r"|"\\t")[\x27h]   { yytext = yytext.substr(1, yyleng-2); return 'charValue'; }
@@ -167,7 +167,8 @@ INIT
       root: $1,
       global_vars: global_vars,
       functions_list: functions_list,
-      global_strcs: global_strcs
+      global_strcs: global_strcs,
+      imports: imports
     };
   }
 ;
@@ -640,9 +641,6 @@ CAST
   }
   | leftP charType rightP {
     $$ = new Type('char', @2.first_line, @2.first_column, false);
-  } 
-  | leftP booleanType rightP {
-    $$ = new Type('boolean', @2.first_line, @2.first_column, false);
   }
 ;
 
@@ -784,27 +782,29 @@ CALL
 ;
 
 EXP_LIST 
-  : EXP_LIST comma EXPRESSION {
+  : EXP_LIST comma EXP_OPT {
     $1.push($3);
     $$ = $1;
   }
-  | EXP_LIST comma id asignment EXPRESSION {
-    $1.push(new Asignment(new Identifier($3, @3.first_line, @3.first_column), [], $5, @3.first_line, @3.first_column));
-    $$ = $1;
-  }
-  | EXPRESSION {
+  | EXP_OPT {
     $$ = [ $1 ];
   }
+;
+
+EXP_OPT
+  : EXPRESSION {
+    $$ = $1;
+  }
   | id asignment EXPRESSION {
-    $$ = [ new Asignment(new Identifier($1.toLowerCase(), @1.first_line, @1.first_column), [], $3, @1.first_line, @1.first_column) ];
+    $$ = new Asignment(new Identifier($1.toLowerCase(), @1.first_line, @1.first_column), [], $3, @1.first_line, @1.first_column);
   }
   | byValue EXPRESSION {
     $2.byValue();
-    $$ = [ $2 ];
+    $$ = $2;
   }
   | id asignment byValue EXPRESSION {
     $4.byValue();
-    $$ = [ new Asignment(new Identifier($1.toLowerCase(), @1.first_line, @1.first_column), [], $4, @1.first_line, @1.first_column) ];
+    $$ = new Asignment(new Identifier($1.toLowerCase(), @1.first_line, @1.first_column), [], $4, @1.first_line, @1.first_column);
   }
 ;
 

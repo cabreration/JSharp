@@ -19,7 +19,7 @@ class Singleton {
         for (let i = 0; i < Singleton.strcDefinitions.length; i++) {
             if (Singleton.strcDefinitions[i].identifier.id === strc.identifier.id) {
                 Singleton.sharpErrors.push(new SharpError('Semantico',
-                    'Ya existe una estructura definada "' + strc.identifier.id + '"',
+                    'Ya existe una estructura definida como "' + strc.identifier.id + '"',
                     strc.identifier.row,
                     strc.identifier.column
                 ));
@@ -89,9 +89,9 @@ class Singleton {
     }
 
     static restart() {
-        Singleton.sharpErrors = [];
-        Singleton.strcDefinitions = [];
-        Singleton.symbolsTable = [];
+        Singleton.sharpErrors.splice(0, Singleton.sharpErrors.length);
+        Singleton.strcDefinitions.splice(0, Singleton.strcDefinitions.length);
+        Singleton.symbolsTable.splice(0, Singleton.symbolsTable.length);
     }
 
     static validateType(type) {

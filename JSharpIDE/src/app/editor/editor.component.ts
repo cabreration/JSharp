@@ -4,6 +4,7 @@ import 'brace/theme/dracula';
 import 'brace/mode/csharp';
 import { AceConfigInterface } from 'ngx-ace-wrapper';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { TreeComponent } from '../tree/tree.component';
 
 const httpOptions = {
   headers : new HttpHeaders({
@@ -19,6 +20,15 @@ const httpAddress = 'http://localhost:3000/';
   styleUrls: ['./editor.component.css']
 })
 export class EditorComponent implements OnInit {
+
+  dot = null;
+  dotFlag = false;
+
+  errors = [];
+  errorsFlag = false;
+
+  symbols = [];
+  symbolsFlag = false;
 
   @ViewChild('tabSet') tabRef: any;
   tabs = [];
@@ -89,15 +99,18 @@ export class EditorComponent implements OnInit {
     this.browseRef.nativeElement.click();
   }
 
-  FileUpload(event): void {
+  FileUpload(event) {
     const reader = new FileReader();
     reader.readAsText(event.srcElement.files[0]);
     let name = event.srcElement.files[0].name;
-    reader.onload = (evt) => {
+    reader.onload = async (evt) => {
       console.log(evt);
       this.CreateNewTab(reader.result.toString(), name);
       event = { activeId: this.currentTab, nextId: 'ngb-tab-'+ this.tabsCounter }
       this.ChangeCurrent(event);
+
+      let result = await this.httpClient.post(httpAddress + 'store', { input: reader.result.toString(), name: name }).toPromise();
+      console.log(result);
     }
   }
 
@@ -122,8 +135,18 @@ export class EditorComponent implements OnInit {
   async Compile() {
     let result = await this.httpClient.post(httpAddress + 'compile', { input: this.currentText }).toPromise();
     if (result['state'] === true) {
-      sessionStorage.setItem('compile', JSON.stringify({dot: result['dot']}));
-      sessionStorage.setItem('tabs', JSON.stringify(this.tabs));
+      //sessionStorage.setItem('compile', JSON.stringify({dot: result['dot']}));
+      //sessionStorage.setItem('tabs', JSON.stringify(this.tabs));
+      this.dot = result['dot'];
+      this.errors = result['errors'];
+      let table = result['table'];
+      this.symbols = [];
+      table.forEach(env => {
+        env.symbols.forEach(symbol => {
+          if (symbol.active)
+            this.symbols.push(symbol);
+        });
+      });
       this.success = 'La compilacion fue realizada exitosamente';
       setTimeout(() => this.success = '', 2000);
     }
@@ -131,6 +154,24 @@ export class EditorComponent implements OnInit {
       this.alert = 'Algo salio mal';
       setTimeout(() => this.alert = '', 2000);
     }
+  }
+
+  openDot() {
+    this.dotFlag = true;
+    this.errorsFlag = false;
+    this.symbolsFlag = false;
+  }
+
+  openTs() {
+    this.symbolsFlag = true;
+    this.dotFlag = false;
+    this.errorsFlag = false;
+  }
+
+  openErrors() {
+    this.errorsFlag = true;
+    this.dotFlag = false;
+    this.symbolsFlag = false;
   }
 
 }

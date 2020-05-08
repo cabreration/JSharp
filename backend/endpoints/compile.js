@@ -16,13 +16,19 @@ module.exports = (app) => {
 
       Singleton.restart();
       let process = new Process();
-      process.firstApproach(ast);
+      let bst = process.firstApproach(ast);
       // now everything is stored in the singleton class static elements
+      ast.global_vars = bst.global_vars;
+      ast.functions_list = bst.functions_list;
 
       let translator = new Translator();
       let threeDCode = translator.translate(ast);
 
-      res.send({ state: true, dot: tree, errors: Singleton.sharpErrors });
+      res.send({ state: true, dot: tree, errors: Singleton.sharpErrors, table: Singleton.symbolsTable, code: threeDCode });
+      ast.global_vars.splice(0, ast.global_vars.length);
+      ast.functions_list.splice(0, ast.functions_list.length);
+      ast.global_strcs.splice(0, ast.global_strcs.length);
+      ast.imports.splice(0, ast.imports.length);
     }
     catch (e) {
       console.log(e);

@@ -4,7 +4,13 @@
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-              <a class="nav-link" routerLink="/tree">AST</a>
+              <a class="nav-link" (click)="openDot()">AST</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" (click)="openErrors()">Errores</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" (click)="openTs()">Tabla de Simbolos</a>
             </li>
         </ul>
       </div>
@@ -41,8 +47,54 @@
         </ngb-tab>
       </ngb-tabset>
   
-      <ace [config]="config" class="mt-4" style="height: 450px;" class="mb-2" [(value)]="currentText"></ace>
+      <ace [config]="config" class="my-4 mb-5" style="height: 450px;" class="mb-2" [(value)]="currentText"></ace>
       <!--<textarea class="mt-4 form-control" readonly id="exampleFormControlTextarea1" rows="6"></textarea>-->
     </main>
+
+    <app-tree [dot]="dot" *ngIf="dotFlag" class="mt-4"></app-tree>
+
+    <div *ngIf="symbolsFlag">
+      <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Rol</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Posicion Relativa</th>
+            <th scope="col">Ambito</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let symbol of symbols">
+            <th>{{symbol.id}}</th>
+            <th>{{symbol.role}}</th>
+            <th>{{symbol.type}}</th>
+            <th>{{symbol.position}}</th>
+            <th>{{symbol.envId}}</th>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="errorsFlag">
+      <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Tipo</th>
+            <th scope="col">Descripcion</th>
+            <th scope="col">Fila</th>
+            <th scope="col">Columna</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let error of errors">
+            <th>{{error.type}}</th>
+            <th>{{error.description}}</th>
+            <th>{{error.row}}</th>
+            <th>{{error.column}}</th>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   
 </div>
