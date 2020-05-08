@@ -736,6 +736,9 @@ SENTENCE
   | CALL {
     $$ = $1;
   }
+  | CALL semicolon {
+    $$ = $1;
+  }
 ;
 
 ASIGNMENT 

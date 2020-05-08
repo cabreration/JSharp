@@ -4,7 +4,7 @@ const Enviroment = require('./Symbols/enviroment').Enviroment;
 const Symbol = require('./Symbols/symbol').Symbol;
 const parser = require('../Ast/Jison/grammar');
 const fs = require('fs');
-let functions = [];
+let approvedFunctions = [];
 let vars = [];
 
 class Process {
@@ -14,7 +14,7 @@ class Process {
     }
 
     firstApproach(ast) {
-        functions = [];
+        approvedFunctions = [];
         vars = [];
         // first we process all of the strc definitions in the global enviroment
         this.processStrc(ast.global_strcs);
@@ -31,7 +31,7 @@ class Process {
         let added = this.processImports(ast);
 
         return {
-            functions_list: functions,
+            functions_list: approvedFunctions,
             global_vars: vars
         }
     }
@@ -198,6 +198,7 @@ class Process {
             let procEnv = global.generateProcEnviroment(id.id+'_'+parameters.length+'_'+id.row, type.name, parameters.length, id.row, id.column);
             // insert return at first position
             let ret = new Symbol('return', 'local var', proc.type.name, 0, id.id+'_'+parameters.length+'_'+id.row, 0, 0);
+            procEnv.addSymbol(ret);
             parameters.forEach(param => {
                 let sym = new Symbol(param.identifier.id, 'parameter', param.type.name, this.position, procEnv.id);
                 let r = procEnv.addSymbol(sym);
@@ -217,7 +218,7 @@ class Process {
                     let sentences = proc.sentences.getChildren();
                     this.processInstructions(sentences, procEnv);
 
-                    functions.push(proc);
+                    approvedFunctions.push(proc);
                 }
             }
         });
@@ -231,20 +232,15 @@ class Process {
             ast.global_strcs.splice(0, ast.global_strcs.length);
             ast.imports.splice(0, ast.imports.length);
 
-            fs.readFile(`../Imports/${file.id}`, 'utf8', (err, text) => {
-                if (err) {
-                    Singleton.insertError(new SharpError('Semantico', `El archivo ${file.id} no existe`, file.row, file.column));
-                }
-                else {
-                    try {
-                        let bst = parser.parse(text);
-                        this.processFunctions(bst.functions_list);
-                      }
-                      catch (e) {
-                        console.error(e);
-                      }
-                }
-            });
+            try {
+                let fileRes = fs.readFileSync(`./Imports/${file.id}`);
+                let bst = parser.parse(fileRes.toString());
+                this.processFunctions(bst.functions_list);
+            }
+            catch (e) {
+                Singleton.insertError(new SharpError('Semantico', `El archivo ${file.id} no existe`, file.row, file.column));
+                console.log(e);
+            }
         });
     }
 }

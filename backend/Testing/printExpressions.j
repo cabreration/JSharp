@@ -15,4 +15,7 @@ void principal() {
     pal p = strc Pal();
     print(p);
     print(a);
+    //trying();
 }
+
+import file1.j

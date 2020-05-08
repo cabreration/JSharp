@@ -54,7 +54,7 @@
     <app-tree [dot]="dot" *ngIf="dotFlag" class="mt-4"></app-tree>
 
     <div *ngIf="symbolsFlag">
-      <table class="table">
+      <table class="table mb-4">
         <thead class="thead-dark">
           <tr>
             <th scope="col">Id</th>
@@ -72,6 +72,25 @@
             <th>{{symbol.position}}</th>
             <th>{{symbol.envId}}</th>
           </tr>
+        </tbody>
+      </table>
+
+      <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Tipo</th>
+            <th scope="col"># Parametros</th>
+            <th scope="col"># Espacios de Memoria</th>
+          </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let env of table">
+              <th>{{env.id}}</th>
+              <th>{{env.role}}</th>
+              <th>{{env.paramsCount}}</th>
+              <th>{{env.last}}</th>
+            </tr>
         </tbody>
       </table>
     </div>

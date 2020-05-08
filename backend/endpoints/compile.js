@@ -1,4 +1,4 @@
-
+const fs = require('fs');
 const parser = require('../Ast/Jison/grammar');
 const TreePrinter = require('../Ast/Dot/treePrinter').TreePrinter;
 const Singleton = require('../Procesor/Singleton/singleton').Singleton;
@@ -29,6 +29,12 @@ module.exports = (app) => {
       ast.functions_list.splice(0, ast.functions_list.length);
       ast.global_strcs.splice(0, ast.global_strcs.length);
       ast.imports.splice(0, ast.imports.length);
+
+      fs.writeFile(`./Testing/output.txt`, threeDCode, (err, file) => {
+        if (err) {
+            console.log(err);
+        }
+    });
     }
     catch (e) {
       console.log(e);

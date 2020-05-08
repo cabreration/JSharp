@@ -29,6 +29,7 @@ export class EditorComponent implements OnInit {
 
   symbols = [];
   symbolsFlag = false;
+  table = [];
 
   @ViewChild('tabSet') tabRef: any;
   tabs = [];
@@ -147,6 +148,7 @@ export class EditorComponent implements OnInit {
             this.symbols.push(symbol);
         });
       });
+      this.table = table.filter(env => env.functionFlag);
       this.success = 'La compilacion fue realizada exitosamente';
       setTimeout(() => this.success = '', 2000);
     }
