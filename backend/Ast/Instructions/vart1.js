@@ -50,8 +50,19 @@ class VarT1 {
                 }
             }
 
+            if (expType === 'null') {
+                flag = true;
+                switch(this.type.name) {
+                    case 'int':
+                    case 'double':
+                    case 'char':
+                    case 'boolean':
+                        flag = false;
+                }
+            }
+
             if (!flag) {
-                Singleton.insertError(new SharpError('Semantico', 'Los tipos de la declaracion y expresion no concuerdan', this.type.row, this.type.column));
+                Singleton.insertError(new SharpError('Semantico', `Los tipos de la declaracion y expresion no concuerdan: ${expType} no puede ser asignado a ${this.type.name}`, this.type.row, this.type.column));
                 return new Updater(env, label, temp, null);
             }
         } 

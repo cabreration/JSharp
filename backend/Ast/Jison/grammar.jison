@@ -137,10 +137,12 @@
   const Attribute = require('../Utilities/attribute').Attribute;
   const Strc = require('../Globals/strc').Strc;
   const New = require('../Expressions/new').New;
+  const ArrayExpression = require('../Expressions/arrayExpression').ArrayExpression;
   let global_vars = [];
   let functions_list = [];
   let global_strcs = [];
   let imports = [];
+  let node;
 %}
 
 // precedencia
@@ -252,9 +254,11 @@ DECL_OPT
     $$ = $1;
   }
   | ARRAY_DECL {
+    global_vars.push($1);
     $$ = $1;
   }
   | ARRAY_DECL semicolon {
+    global_vars.push($1);
     $$ = $1;
   }
   | STRC_DEF {
@@ -269,14 +273,12 @@ DECL_OPT
 
 FUNCTION_DECL 
   : TYPE id PARAMETERS BLOCK {
-    node = new Function($1, new Identifier($2.toLowerCase(), @2.first_line, @2.first_column), $3, $4);
-    $$ = node;
+    $$ = new Function($1, new Identifier($2.toLowerCase(), @2.first_line, @2.first_column), $3, $4);
   }
   | TYPE leftS rightS id PARAMETERS BLOCK {
     $1.arrayFlag = true;
     $1.name += '[]';
-    node = new Function($1, new Identifier($4.toLowerCase(), @4.first_line, @4.first_column), $5, $6);
-    $$ = node;
+    $$ = new Function($1, new Identifier($4.toLowerCase(), @4.first_line, @4.first_column), $5, $6);
   }
   | id id PARAMETERS BLOCK {
     $$ = new Function(new Type($1.toLowerCase(), @1.first_line, @1.first_column, false), 
@@ -426,47 +428,40 @@ VAR_T5
 
 ARRAY_DECL
   : TYPE leftS rightS ID_LIST asignment strcKW TYPE leftS EXPRESSION rightS {
-    node = NodeClass.createSimpleNode('ARRAY');
-    node = NodeClass.addChild(node, $1);
-    node = NodeClass.addChild(node, $4);
-    node = NodeClass.addChild(node, $7);
-    node = NodeClass.addChild(node, $9);
-    $$ = node;
+    $1.name += '[]';
+    $1.arrayFlag = true;
+    $7.name += '[]';
+    $7.arrayFlag = true;
+    $$ = new VarT1($1, $4, new ArrayExpression(null, $7, $9));
   }
   | id leftS rightS ID_LIST asignment strcKW id leftS EXPRESSION rightS {
-    node = NodeClass.createSimpleNode('ARRAY');
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('type', $1, @1.first_line, @1.first_column));
-    node = NodeClass.addChild(node, $4);
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('type', $7, @7.first_line, @7.first_column));
-    node = NodeClass.addChild(node, $9);
-    $$ = node;
+    $$ = new VarT1(new Type($1+'[]', @1.first_line, @1.first_column, true), $4, new ArrayExpression(null, new Type($7+'[]', @7.first_line, @7.first_column),$9));
   }
   | TYPE leftS rightS ID_LIST asignment leftC E_LIST rightC {
-    node = NodeClass.createSimpleNode('ARRAY');
-    node = NodeClass.addChild(node, $1);
-    node = NodeClass.addChild(node, $4);
-    node = NodeClass.addChild(node, $7);
-    $$ = node;
+    $1.name += '[]';
+    $1.arrayFlag = true;
+    $$ = new VarT1($1, $4, new ArrayExpression(new NodeList($7, 'ELEMENTS')));
   }
   | id leftS rightS ID_LIST asignment leftC E_LIST rightC {
-    node = NodeClass.createSimpleNode('ARRAY');
-    node = NodeClass.addChild(node, NodeClass.createChildrenlessNode('type', $1, @1.first_line, @1.first_column));
-    node = NodeClass.addChild(node, $4);
-    node = NodeClass.addChild(node, $7);
-    $$ = node;
+    $$ = new VarT1(new Type($1+'[]', @1.first_line, @1.first_column, true), $4, new ArrayExpression(new NodeList($7, 'ELEMENTS')));
+  }
+  | TYPE leftS rightS ID_LIST {
+    $1.name += '[]';
+    $1.arrayFlag = true;
+    $$ = new VarT5($1, $4);
+  }
+  | id leftS rightS ID_LIST {
+    $$ = new VarT5(new Type($1+'[]', @1.first_line, @1.first_column, true), $4);
   }
 ;
 
 E_LIST 
   : E_LIST comma EXPRESSION {
-    node = $1;
-    node = NodeClass.addChild(node, $3);
-    $$ = node;
+    $1.push($3);
+    $$ = $1;
   }
   | EXPRESSION {
-    node = NodeClass.createSimpleNode('E_LIST');
-    node = NodeClass.addChild(node, $1);
-    $$ = node;
+    $$ = [ $1 ];
   }
 ;
 

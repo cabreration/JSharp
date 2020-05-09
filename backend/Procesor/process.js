@@ -73,6 +73,9 @@ class Process {
                 case 'vart5':
                     this.processVarT15(env, ins, global);
                     break;
+                case 'sharparray':
+                    this.processVarT15(env, ins, global);
+                    break;
                 case "strc":
                     this.processOneStrc(ins);
                     break;

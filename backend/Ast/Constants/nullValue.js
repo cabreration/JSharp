@@ -22,12 +22,13 @@ class NullValue {
     }
 
     checkType(envId) {
-        return 'strc';
+        return 'null';
     }
 
     getTDC(env, label, temp) {
         let updater = new Updater(env, label, temp, null);
         updater.addValue('0');
+        updater.addType('null');
         return updater;
     }
 }

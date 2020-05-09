@@ -97,6 +97,22 @@ class Binary {
     }
 
     validateEqualsOrNot(type1, type2) {
+        if (type1 === 'null') {
+            if (type2 === 'string') {
+                return 'boolean';
+            }
+            else {
+                return new SharpError('Semantico', 'Operacion invalida: No es posible aplicar el operando ' + this.operator.op + ' entre valores de tipo ' + type1 + ' y ' + type2, this.operator.row, this.operator.column);
+            }
+        }
+        else if (type2 === 'null') {
+            if (type1 === 'string') {
+                return 'boolean';
+            }
+            else {
+                return new SharpError('Semantico', 'Operacion invalida: No es posible aplicar el operando ' + this.operator.op + ' entre valores de tipo ' + type1 + ' y ' + type2, this.operator.row, this.operator.column);
+            }
+        }
         if (type1 === 'int' || type1 === 'double' || type1 === 'char') {
             if (type2 === 'int' || type2 === 'double' || type2 === 'char') {
                 return 'boolean';
@@ -140,6 +156,10 @@ class Binary {
             case "boolean":
             case "char":
                 return new SharpError('Semantico', 'Operacion invalida: No es posible aplicar el operador === entre valores de tipo ' + type1 + ' y ' + type2, this.operator.row, this.operator.column);
+        }
+
+        if (type1 === 'null' || type2 === 'null') {
+            return 'boolean';
         }
 
         if (type1 != type2) {
@@ -326,7 +346,9 @@ class Binary {
                 }
                 break;
             case 'equal reference':
-                // TODO
+                code.push(`t${temp} = ${val1} == ${val2};`);
+                val = `t${temp}`;
+                temp++;
                 break;
             case 'less than':
                 code.push(`t${temp} = ${val1} < ${val2};`);

@@ -40,6 +40,10 @@ class PrintSentence {
             console.error('YOU LEFT AN EXPRESSION WITH OUT RETURNING TYPE');
         }
         switch(updater.type) {
+            case 'null':
+                let str = this.printNull();
+                code.push(str);
+                break;
             case 'string':
                 let str = this.printString(updater.value, label, temp);
                 code.push(str.code);
@@ -90,6 +94,16 @@ class PrintSentence {
         return new Updater(env, label, temp, code.join('\n'));
     }
 
+
+    printNull() {
+        let code = [];
+        code.push('print("%c", 110);');
+        code.push('print("%c", 117);');
+        code.push('print("%c", 108);');
+        code.push('print("%c", 108);');
+        return code.join('\n')
+    }
+
     printInt(value) {
         return `print("%i", ${value});`;
     }
@@ -133,6 +147,12 @@ class PrintSentence {
         let code = [];
         code.push(`t${temp} = ${value};`);
         temp++;
+        code.push(`if (t${temp-1} > 0) goto L${label};`);
+        code.push(`print("%c", 110);`);
+        code.push(`print("%c", 117);`);
+        code.push(`print("%c", 108);`);
+        code.push(`print("%c", 108);`);
+        code.push(`goto L${label+1};`)
         code.push(`L${label}:`);
         label++;
         code.push(`t${temp} = heap[t${temp - 1}];`);
@@ -160,8 +180,19 @@ class PrintSentence {
         temp++;
         let temp2 = `t${temp}`;
         temp++;
+        let label1 = `L${label}`;
+        label++;
+        let label2 = `L${label}`;
+        label++;
 
         code.push(`${temp1} = ${value};`);
+        code.push(`if (${temp1} > 0) goto ${label1};`)
+        code.push(`print("%c", 110);`);
+        code.push(`print("%c", 117);`);
+        code.push(`print("%c", 108);`);
+        code.push(`print("%c", 108);`);
+        code.push(`goto ${label2};`);
+        code.push(`${label1}:`);
         code.push('print("%c", 123);');
         code.push('print("%c", 32);');
         for (let i = 0; i < attributes.length; i++) {
@@ -226,6 +257,7 @@ class PrintSentence {
             code.push(`${temp1} = ${temp1} + 1;`);
         }
         code.push(`print("%c", 125);`);
+        code.push(`${label2}:`);
 
         return {
             code: code.join('\n'),
