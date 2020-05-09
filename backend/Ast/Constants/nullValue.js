@@ -1,3 +1,5 @@
+const Updater = require('../Utilities/updater').Updater;
+
 class NullValue {
     constructor(row, column) {
         this.row = row; // Number

@@ -1,3 +1,6 @@
+const Updater = require('../Utilities/updater').Updater;
+const Singleton = require('../../Procesor/Singleton/singleton').Singleton;
+
 class VarT3 {
     // const
     constructor(identifier, expression) {

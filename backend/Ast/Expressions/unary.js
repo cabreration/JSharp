@@ -1,4 +1,6 @@
 const SharpError = require('../../Procesor/Singleton/sharpError').SharpError;
+const Singleton = require('../../Procesor/Singleton/singleton').Singleton;
+const Updater = require('../Utilities/updater').Updater;
 
 class Unary {
     constructor(operator, arg) {
@@ -59,6 +61,47 @@ class Unary {
             // ERROR
             return argType;
         }
+    }
+
+    getTDC(env, label, temp) {
+        let type = this.checkType(env);
+        let code = [];
+
+        // get 3DC from first arg
+        let updater = this.arg.getTDC(env, label, temp);
+        env = updater.env;
+        label = updater.label;
+        temp = updater.temp;
+        let val = updater.value;
+        type = updater.type;
+        code.push(updater.code);
+
+        let returnVal;
+        switch(this.operator.name) {
+            case 'minus':
+                code.push(`t${temp} = - ${val};`);
+                returnVal = `t${temp}`;
+                temp++;
+                break;
+            case 'not':
+                code.push(`t${temp} = ${val};`);
+                code.push(`if (t${temp} == 1) goto L${label};`);
+                code.push(`t${temp} = 1;`);
+                code.push(`goto L${label+1};`);
+                code.push(`L${label}:`);
+                label++;
+                code.push(`t${temp} = 0;`)
+                code.push(`L${label}:`)
+                label++;
+                returnVal = `t${temp}`;
+                temp++;
+                break;
+        }
+
+        let up = new Updater(env, label, temp, code.join('\n'));
+        up.addValue(returnVal);
+        up.addType(type);
+        return up;
     }
 }
 

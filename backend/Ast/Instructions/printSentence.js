@@ -41,8 +41,8 @@ class PrintSentence {
         }
         switch(updater.type) {
             case 'null':
-                let str = this.printNull();
-                code.push(str);
+                let nstr = this.printNull();
+                code.push(nstr);
                 break;
             case 'string':
                 let str = this.printString(updater.value, label, temp);

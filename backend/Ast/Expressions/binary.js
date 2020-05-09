@@ -271,6 +271,10 @@ class Binary {
     getTDC(env, label, temp) {
         let type = this.checkType(env);
         let code = [];
+        if (typeof(type) === 'object') {
+            Singleton.insertError(type);
+            return new Updater(env, label, temp, null);
+        }
 
         // get 3DC from first arg
         let updater1 = this.arg1.getTDC(env, label, temp);

@@ -65,6 +65,7 @@ class Translator {
         header.push(`h = ${Singleton.symbolsTable[0].last};`);
         header.push('var heap[];');
         header.push('var stack[];');
+        header.push('heap[0] = 0;');
         return header.join('\n');
     }
 

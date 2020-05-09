@@ -9,7 +9,7 @@ let vars = [];
 
 class Process {
     constructor() {
-        this.position = 0;
+        this.position = 1;
         this.envCount = 1;
     }
 
@@ -21,6 +21,7 @@ class Process {
 
         // next we process all the global variables and arrays
         let global = new Enviroment('global', 'global', null, false, 0, -1, -1);
+        global.last = 1;
         global = Singleton.insertEnviroment(global);
         this.processInstructions(ast.global_vars, global, true);
 
@@ -175,15 +176,32 @@ class Process {
         if (opt === 3) {
             symbol.isConstant();   
         }
-        let res = env.addSymbol(symbol);
-        if (res === true) {
-            this.position++;
-            flag = true;
+
+        if (role === 'global var' && env.id != 'global') {
+            let global = Singleton.getEnviroment('global');
+            symbol.envId = 'global';
+            symbol.position = global.last;
+            let res = global.addSymbol(symbol);
+            if (res === true) {
+                flag = true;
+            }
+            else {
+                Singleton.insertError(new SharpError('Semantico',
+                    'La variable "' + id.id + '" ya ha sido definida en el contexto actual', id.row, id.column));
+            }
         }
         else {
-            Singleton.insertError(new SharpError('Semantico',
+            let res = env.addSymbol(symbol);
+            if (res === true) {
+                this.position++;
+                flag = true;
+            }
+            else {
+                Singleton.insertError(new SharpError('Semantico',
                     'La variable "' + id.id + '" ya ha sido definida en el contexto actual', id.row, id.column));
+            }
         }
+        
 
         if (global && flag) {
             vars.push(ins);

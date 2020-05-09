@@ -30,11 +30,11 @@ class StringValue {
     }
 
     scapeString() {
-        this.value.replace('\\n', '\n');
-        this.value.replace('\\\\', '\\');
-        this.value.replace('\\t', '\t');
-        this.value.replace('\\r', '\r');
-        this.value.replace('\\"', '\"');
+        this.value = this.value.replace(/\\n/g, '\n');
+        this.value = this.value.replace(/\\\\/g, '\\');
+        this.value = this.value.replace(/\\t/g, '\t');
+        this.value = this.value.replace(/\\r/g, '\r');
+        this.value = this.value.replace(/\\"/g, '\"');
     }
 
     getTDC(env, label, temp) {

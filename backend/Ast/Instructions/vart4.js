@@ -1,3 +1,6 @@
+const Updater = require('../Utilities/updater').Updater;
+const Singleton = require('../../Procesor/Singleton/singleton').Singleton;
+
 class VarT4 {
     // global
     constructor(identifier, expression) {
@@ -26,7 +29,8 @@ class VarT4 {
         }
 
         // change type of symbol
-        let symbol = env.getSymbol(this.identifier.id);
+        let global = Singleton.getEnviroment('global');
+        let symbol = global.getSymbol(this.identifier.id);
         if (!symbol.state) {
             return new Updater(env, label, temp, null);
         }
@@ -42,8 +46,14 @@ class VarT4 {
         if (fUpdater.code != null)
             code.push(fUpdater.code);
 
-        let pos = symbol.lead.position;
-        code.push(`heap[${pos}] = ${expValue};`);
+        if (symbol.lead.envId === 'global') {
+            let pos = symbol.lead.position;
+            code.push(`heap[${pos}] = ${expValue};`);
+        }
+        else {
+            let global = Singleton.getEnviroment('global');
+            code.push(`heap[h] = ${expValue};`);
+        }
         symbol.lead.setActive();
         if (code.length === 0) {
             return new Updater(env, label, temp, null);
