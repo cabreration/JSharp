@@ -98,10 +98,42 @@ void nivel4() {
     print(t ^ t);
 }
 
+// Nivel 5 - Relacionales
+void nivel5() {
+    print("\nNivel 5\n");
+    boolean bool = 10-15 >= 0 && 44.44 == 44.44; // false
+    print(bool);
+    print('\n');
+    string one = "hola mundo";
+    string two = "hola mundo";
+    print(one == two);
+    print('\n');
+    two = "hello world";
+    string three = one;
+    print(one == two)
+    print('\n')
+    print(two == three);
+    print('\n');
+    print(one === three);
+    print('\n');
+    print(2.90 < 2.99);
+}
+
+int global_a = 1;
+
 void principal() {
     nivel0()
     nivel1();
     nivel2();
     nivel3();
     nivel4();
+    nivel5();
+    print('\n')
+    print(global_a);
+    print('\n');
+    print(global_a++);
+    print('\n')
+    print(global_a);
+    print('\n');
+    print(global_a--);
 }

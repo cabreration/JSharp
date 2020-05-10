@@ -18,6 +18,7 @@ class TreePrinter {
 
     runTree(father, node) {
         //console.log(node)
+        //console.log(node);
         node.getChildren().forEach(element => {
             let childsName = 'Node' + this.counter.toString();
             this.graph += childsName;

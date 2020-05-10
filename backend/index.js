@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 const compile = require('./endpoints/compile')(app);
 const store = require('./endpoints/store')(app);
 
-/* This is only to maker easier the testing part of the project, ill have to erase it later */
+/* This is only to maker easier the testing part of the project, ill have to erase it later*/
 const fs = require('fs');
 const Singleton = require('./Procesor/Singleton/singleton').Singleton;
 const Process = require('./Procesor/process').Process;

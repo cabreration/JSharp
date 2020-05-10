@@ -808,10 +808,10 @@ EXP_OPT
 
 IF_SENTENCE 
   : ifKW leftP EXPRESSION rightP BLOCK {
-    $$ = new IfSentence(new NodeList($3, 'CONDITION'), $5, null, @1.first_line, @1.first_column);
+    $$ = new IfSentence(new NodeList([$3], 'CONDITION'), $5, null, @1.first_line, @1.first_column);
   }
   | ifKW leftP EXPRESSION rightP BLOCK ELSE_SENTENCE {
-    $$ = new IfSentence(new NodeList($3, 'CONDITION'), $5, $6, @1.first_line, @1.first_column);
+    $$ = new IfSentence(new NodeList([$3], 'CONDITION'), $5, $6, @1.first_line, @1.first_column);
   }
 ;
 
@@ -826,7 +826,7 @@ ELSE_SENTENCE
 
 SWITCH_SENTENCE 
   : switchKW leftP EXPRESSION rightP leftC SWITCH_BODY rightC {
-    $$ = new SwitchSentence(new NodeList($3, 'CONDITION'), $6, @1.first_line, @1.first_column);
+    $$ = new SwitchSentence(new NodeList([$3], 'CONDITION'), $6, @1.first_line, @1.first_column);
   }
 ;
 
@@ -853,7 +853,7 @@ CASES_LIST
 
 SINGLE_CASE 
   : caseKW EXPRESSION colon SENTENCES {
-    $$ = new Case(new NodeList($2, 'VALUE'), $4, @1.first_line, @1.first_column);
+    $$ = new Case(new NodeList([$2], 'VALUE'), $4, @1.first_line, @1.first_column);
   }
 ;
 
@@ -865,13 +865,13 @@ DEFAULT_CASE
 
 WHILE_SENTENCE 
   : whileKW leftP EXPRESSION rightP BLOCK {
-    $$ = new WhileSentence(new NodeList($3, 'CONDITION'), $5, @1.first_line, @1.first_column);
+    $$ = new WhileSentence(new NodeList([$3], 'CONDITION'), $5, @1.first_line, @1.first_column);
   }
 ;
 
 DOWHILE_SENTENCE 
   : doKW BLOCK whileKW leftP EXPRESSION rightP {
-    $$ = new DowhileSentence($2, new NodeList($5, 'CONDITION'), @1.first_line, @1.first_column);
+    $$ = new DowhileSentence($2, new NodeList([$5], 'CONDITION'), @1.first_line, @1.first_column);
   }
 ;
 

@@ -37,9 +37,11 @@ class IfSentence {
     getTDC(env, label, temp) {
         let code = [];
 
+        let scapeLabel = `L${label}`;
+        label++;
         if (this.condition != null) {
             // check the expression type
-            let exp = this.condition.getChildren();
+            let exp = this.condition.getChildren()[0];
             let validate = exp.checkType(env);
             if (typeof(validate) === 'object') {
                 Singleton.insertError(validate);
@@ -78,6 +80,7 @@ class IfSentence {
                     code.push(td.code);
                 }
             });
+            code.push(`goto ${scapeLabel};`); // goto to la salida
             code.push(`${label1}:`);
         }
         else {
@@ -100,6 +103,7 @@ class IfSentence {
                 label = elseTDC.label;
             }
         }
+        code.push(`${scapeLabel}:`);
 
         return new Updater(env, label, temp, code.join('\n'));
     }

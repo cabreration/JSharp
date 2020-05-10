@@ -96,12 +96,110 @@ class Unary {
                 returnVal = `t${temp}`;
                 temp++;
                 break;
+            case 'increment':
+                let inc = this.incOrDec(env, label, temp, 1);
+                label = inc.label;
+                temp = inc.temp;
+                code.push(inc.code);
+                returnVal = inc.value;
+                break;
+            case 'decrement':
+                let dec = this.incOrDec(env, label, temp, 0);
+                label = dec.label;
+                temp = dec.temp;
+                code.push(dec.code);
+                returnVal = dec.value;
+                break;
         }
 
         let up = new Updater(env, label, temp, code.join('\n'));
         up.addValue(returnVal);
         up.addType(type);
         return up;
+    }
+
+    incOrDec(env, label, temp, opt) {
+         // check that the variable that we are trying to asign exists
+         let symbol = null;
+         let counter = 0;
+         let spaces = 0;
+         let thenv= env.id;
+         while (thenv != null) {
+             let enviroment = Singleton.getEnviroment(thenv);
+             let res = enviroment.getSymbol(this.arg.id);
+             counter++;
+             if (counter > 1) {
+                 spaces += enviroment.last;
+             }
+             if (res.state) {
+                 symbol = res.lead;
+                 break;
+             }
+             else {
+                 thenv = res.lead;
+             }
+         }
+ 
+         if (symbol == null) {
+             Singleton.insertError(new SharpError('Semantico', `La variable ${this.id.id} no existe en el contexto actual`, this.id.row, this.id.column))
+         }
+
+         // check it is not a constant
+        if (symbol.constant) {
+            Singleton.insertError(new SharpError('Semantico', `"${this.arg.id}" es una constante`, this.row, this.column));
+            return new Updater(env, label, temp, null);
+        }
+
+        //
+        let code = [];
+        let pos = symbol.position;
+        let role = symbol.role;
+        let val = null;
+        if (role === 'global var') {
+            code.push(`t${temp} = heap[${pos}];`);
+            if (opt === 1) {
+                code.push(`t${temp} = t${temp} + 1;`)
+                code.push(`heap[${pos}] = t${temp};`);
+            }
+            else {
+                code.push(`t${temp} = t${temp} - 1;`)
+                code.push(`heap[${pos}] = t${temp};`);
+            }
+            temp++;
+            code.push(`t${temp} = heap[${pos}];`);
+            val = `t${temp}`;
+            temp++;
+        }
+        else if (role === 'local var') {
+            code.push(`t${temp} = p - ${spaces};`);
+            temp++;
+            code.push(`t${temp} = t${temp-1} + ${pos};`);
+            code.push(`t${temp + 1} = stack[t${temp}];`)
+            if (opt === 1) {
+                code.push(`t${temp + 1} = t${temp + 1} + 1;`);
+                code.push(`stack[t${temp}] = t${temp + 1};`);
+            }
+            else {
+                code.push(`t${temp + 1} = t${temp + 1} - 1;`);
+                code.push(`stack[t${temp}] = t${temp + 1};`);
+            }
+            temp++;
+            temp++;
+            code.push(`t${temp} = stack[${temp-2}];`);
+            val = `t${temp}`;
+            temp++;
+        }
+        else {
+            console.error('role');
+            console.error('ERROR EN asignment.js');
+        }
+        if (code.length > 0) {
+            let up = new Updater(env, label, temp, code.join('\n'));
+            up.addValue(val);
+            return up;
+        }
+        else 
+            return new Updater(env, label, temp, null);
     }
 }
 

@@ -38,7 +38,7 @@ class Asignment {
         }
 
         // check that the variable that we are trying to asign exists
-        let symbol;
+        let symbol = null;
         let counter = 0;
         let spaces = 0;
         let thenv= env.id;
@@ -56,6 +56,10 @@ class Asignment {
             else {
                 thenv = res.lead;
             }
+        }
+
+        if (symbol == null) {
+            Singleton.insertError(new SharpError('Semantico', `La variable ${this.id.id} no existe en el contexto actual`, this.id.row, this.id.column))
         }
 
         // check it is not a constant

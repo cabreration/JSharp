@@ -1,3 +1,7 @@
+const Updater = require('../Utilities/updater').Updater;
+const Singleton = require('../../Procesor/Singleton/singleton').Singleton;
+const SharpError = require('../../Procesor/Singleton/sharpError').SharpError;
+
 class ReturnSentence {
     constructor(value, row, column) {
         this.value = value;
@@ -18,6 +22,17 @@ class ReturnSentence {
 
     getTypeOf() {
         return 'returnsentence';
+    }
+
+    getTDC(env, label, temp) {
+        let code = [];
+        if (this.value == null) {
+            code.push(`goto L@@;`);
+        }
+        else {
+            // evaluate the expression
+            // code.push(`stack[p] = ${temp};`)
+        }
     }
 }
 

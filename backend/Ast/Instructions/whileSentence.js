@@ -24,7 +24,7 @@ class WhileSentence {
 
     getTDC(env, label, temp) {
         // check the expression type
-        let exp = this.condition.getChildren();
+        let exp = this.condition.getChildren()[0];
         let validate = exp.checkType(env);
         if (typeof(validate) === 'object') {
             Singleton.insertError(validate);

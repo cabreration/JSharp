@@ -323,7 +323,14 @@ class Binary {
                 break;
             case 'not equals':
                 if (type1 != 'string') {
-                    code.push(`t${temp} = ${val1} <> ${val2};`);
+                    code.push(`if (${val1} <> ${val2}) goto L${label};`);
+                    code.push(`t${temp} = 0;`);
+                    code.push(`goto L${label+1};`);
+                    code.push(`L${label}:`)
+                    label++;
+                    code.push(`t${temp} = 1;`);
+                    code.push(`L${label}:`);
+                    label++;
                     val = `t${temp}`;
                     temp++;
                 }
@@ -337,7 +344,14 @@ class Binary {
                 break;
             case 'equal value':
                 if (type1 != 'string') {
-                    code.push(`t${temp} = ${val1} == ${val2};`);
+                    code.push(`if (${val1} == ${val2}) goto L${label};`);
+                    code.push(`t${temp} = 0;`);
+                    code.push(`goto L${label+1};`);
+                    code.push(`L${label}:`)
+                    label++;
+                    code.push(`t${temp} = 1;`);
+                    code.push(`L${label}:`);
+                    label++;
                     val = `t${temp}`;
                     temp++;
                 }
@@ -350,27 +364,62 @@ class Binary {
                 }
                 break;
             case 'equal reference':
-                code.push(`t${temp} = ${val1} == ${val2};`);
+                code.push(`if (${val1} == ${val2}) goto L${label};`);
+                code.push(`t${temp} = 0;`);
+                code.push(`goto L${label+1};`);
+                code.push(`L${label}:`)
+                label++;
+                code.push(`t${temp} = 1;`);
+                code.push(`L${label}:`);
+                label++;
                 val = `t${temp}`;
                 temp++;
                 break;
             case 'less than':
-                code.push(`t${temp} = ${val1} < ${val2};`);
+                code.push(`if (${val1} < ${val2}) goto L${label};`);
+                code.push(`t${temp} = 0;`);
+                code.push(`goto L${label+1};`);
+                code.push(`L${label}:`)
+                label++;
+                code.push(`t${temp} = 1;`);
+                code.push(`L${label}:`);
+                label++;
                 val = `t${temp}`;
                 temp++;
                 break;
             case 'less or equal to':
-                code.push(`t${temp} = ${val1} <= ${val2};`);
+                code.push(`if (${val1} <= ${val2}) goto L${label};`);
+                code.push(`t${temp} = 0;`);
+                code.push(`goto L${label+1};`);
+                code.push(`L${label}:`)
+                label++;
+                code.push(`t${temp} = 1;`);
+                code.push(`L${label}:`);
+                label++;
                 val = `t${temp}`;
                 temp++;
                 break;
             case 'greater than':
-                code.push(`t${temp} = ${val1} > ${val2};`);
+                code.push(`if (${val1} > ${val2}) goto L${label};`);
+                code.push(`t${temp} = 0;`);
+                code.push(`goto L${label+1};`);
+                code.push(`L${label}:`)
+                label++;
+                code.push(`t${temp} = 1;`);
+                code.push(`L${label}:`);
+                label++;
                 val = `t${temp}`;
                 temp++;
                 break;
             case 'greater or equal to':
-                code.push(`t${temp} = ${val1} >= ${val2};`);
+                code.push(`if (${val1} >= ${val2}) goto L${label};`);
+                code.push(`t${temp} = 0;`);
+                code.push(`goto L${label+1};`);
+                code.push(`L${label}:`)
+                label++;
+                code.push(`t${temp} = 1;`);
+                code.push(`L${label}:`);
+                label++;
                 val = `t${temp}`;
                 temp++;
                 break;
@@ -823,8 +872,8 @@ class Binary {
         code.push(`${label1}:`);
         code.push(`${temp3} = heap[${temp1}];`);
         code.push(`${temp4} = heap[${temp2}];`);
-        code.push(`if (temp3 <> temp4) goto ${label2};`);
-        code.push(`if (temp3 == 0) goto ${label3};`);
+        code.push(`if (${temp3} <> ${temp4}) goto ${label2};`);
+        code.push(`if (${temp3} == 0) goto ${label3};`);
         code.push(`${temp1} = ${temp1} + 1;`);
         code.push(`${temp2} = ${temp2} + 1;`);
         code.push(`goto ${label1};`);
@@ -869,8 +918,8 @@ class Binary {
         code.push(`${label1}:`);
         code.push(`${temp3} = heap[${temp1}];`);
         code.push(`${temp4} = heap[${temp2}];`);
-        code.push(`if (temp3 <> temp4) goto ${label2};`);
-        code.push(`if (temp3 == 0) goto ${label3};`);
+        code.push(`if (${temp3} <> ${temp4}) goto ${label2};`);
+        code.push(`if (${temp3} == 0) goto ${label3};`);
         code.push(`${temp1} = ${temp1} + 1;`);
         code.push(`${temp2} = ${temp2} + 1;`);
         code.push(`goto ${label1};`);

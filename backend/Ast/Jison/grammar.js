@@ -711,12 +711,12 @@ case 166:
 break;
 case 167:
 
-    this.$ = new IfSentence(new NodeList($$[$0-2], 'CONDITION'), $$[$0], null, _$[$0-4].first_line, _$[$0-4].first_column);
+    this.$ = new IfSentence(new NodeList([$$[$0-2]], 'CONDITION'), $$[$0], null, _$[$0-4].first_line, _$[$0-4].first_column);
   
 break;
 case 168:
 
-    this.$ = new IfSentence(new NodeList($$[$0-3], 'CONDITION'), $$[$0-1], $$[$0], _$[$0-5].first_line, _$[$0-5].first_column);
+    this.$ = new IfSentence(new NodeList([$$[$0-3]], 'CONDITION'), $$[$0-1], $$[$0], _$[$0-5].first_line, _$[$0-5].first_column);
   
 break;
 case 169:
@@ -726,7 +726,7 @@ case 169:
 break;
 case 171:
 
-    this.$ = new SwitchSentence(new NodeList($$[$0-4], 'CONDITION'), $$[$0-1], _$[$0-6].first_line, _$[$0-6].first_column);
+    this.$ = new SwitchSentence(new NodeList([$$[$0-4]], 'CONDITION'), $$[$0-1], _$[$0-6].first_line, _$[$0-6].first_column);
   
 break;
 case 172:
@@ -743,7 +743,7 @@ case 173:
 break;
 case 176:
 
-    this.$ = new Case(new NodeList($$[$0-2], 'VALUE'), $$[$0], _$[$0-3].first_line, _$[$0-3].first_column);
+    this.$ = new Case(new NodeList([$$[$0-2]], 'VALUE'), $$[$0], _$[$0-3].first_line, _$[$0-3].first_column);
   
 break;
 case 177:
@@ -753,12 +753,12 @@ case 177:
 break;
 case 178:
 
-    this.$ = new WhileSentence(new NodeList($$[$0-2], 'CONDITION'), $$[$0], _$[$0-4].first_line, _$[$0-4].first_column);
+    this.$ = new WhileSentence(new NodeList([$$[$0-2]], 'CONDITION'), $$[$0], _$[$0-4].first_line, _$[$0-4].first_column);
   
 break;
 case 179:
 
-    this.$ = new DowhileSentence($$[$0-4], new NodeList($$[$0-1], 'CONDITION'), _$[$0-5].first_line, _$[$0-5].first_column);
+    this.$ = new DowhileSentence($$[$0-4], new NodeList([$$[$0-1]], 'CONDITION'), _$[$0-5].first_line, _$[$0-5].first_column);
   
 break;
 case 180:
