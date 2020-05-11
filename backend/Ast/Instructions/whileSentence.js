@@ -36,15 +36,18 @@ class WhileSentence {
             return new Updater(env, label, temp, null);
         }
 
+        let code = [];
         let label1 = `L${label}`;
         label++;
         code.push(`${label1}:`);
         // get the expression value
         let expVal = exp.getTDC(env, label, temp);
-        if (expVal.code == null) {
+        if (expVal.value == null) {
             return expVal;
         }
-        code.push(expVal.code);
+        if (expVal.code != null) {
+            code.push(expVal.code);
+        }
         label = expVal.label;
         temp = expVal.temp;
         let val = expVal.value;
@@ -58,9 +61,19 @@ class WhileSentence {
 
         code.push(`${temp1} = ${val};`);
         code.push(`if (${temp1} == 0) goto ${label2};`);
+
+        // start the break and continue flag
+        let loopFlag = true;
+        if (!Singleton.oneWords.loop) {
+            loopFlag = false;
+            Singleton.oneWords.loop = true;
+        }
+
         instructions.forEach(ins => {
             let tdc = ins.getTDC(env, label, temp);
             if (tdc.code != null) {
+                tdc.code = tdc.code.replace(/!!/g, `${label2}`);
+                tdc.code = tdc.code.replace(/{{/g, `${label1}`);
                 code.push(tdc.code);
                 temp = tdc.temp;
                 label = tdc.label;
@@ -68,6 +81,11 @@ class WhileSentence {
         });
         code.push(`goto ${label1};`);
         code.push(`${label2}:`);
+
+        // finish break and continue flag
+        if (!loopFlag) {
+            Singleton.oneWords.loop = false;
+        }
 
         return new Updater(env, label, temp, code.join('\n'));
     }

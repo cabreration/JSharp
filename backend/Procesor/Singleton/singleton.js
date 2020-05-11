@@ -5,6 +5,11 @@ class Singleton {
     static sharpErrors = [];
     static strcDefinitions = [];
     static symbolsTable = [];
+    static oneWords = {
+        loop: false,
+        choose: false, 
+        arrow: false
+    }
     
     static insertError(error) {
         Singleton.sharpErrors.push(error);
@@ -92,6 +97,9 @@ class Singleton {
         Singleton.sharpErrors.splice(0, Singleton.sharpErrors.length);
         Singleton.strcDefinitions.splice(0, Singleton.strcDefinitions.length);
         Singleton.symbolsTable.splice(0, Singleton.symbolsTable.length);
+        Singleton.oneWords.loop = false;
+        Singleton.oneWords.choose = false;
+        Singleton.oneWords.arrow = false;
     }
 
     static validateType(type) {

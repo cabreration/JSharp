@@ -1,3 +1,7 @@
+const Updater = require('../Utilities/updater').Updater;
+const Singleton = require('../../Procesor/Singleton/singleton').Singleton;
+const SharpError = require('../../Procesor/Singleton/sharpError').SharpError;
+
 class BreakSentence {
     constructor(row, column) {
         this.row = row;
@@ -14,6 +18,16 @@ class BreakSentence {
 
     getTypeOf() {
         return 'breaksentence';
+    }
+
+    getTDC(env, label, temp) {
+        if (!Singleton.oneWords.loop) {
+            Singleton.insertError(new SharpError('Semantico', 'La sentencia break unicamente puede ser incluida en un Switch o en un Ciclo', this.row, this.column));
+            return new Updater(env, label, temp, null);
+        }
+        let code = [];
+        code.push(`goto !!;`);
+        return new Updater(env, label, temp, code.join('\n'));
     }
 }
 

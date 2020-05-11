@@ -27,7 +27,8 @@ class ReturnSentence {
     getTDC(env, label, temp) {
         let code = [];
         if (this.value == null) {
-            code.push(`goto L@@;`);
+            code.push(`goto @@;`);
+            return new Updater(env, label, temp, code.join('\n'));
         }
         else {
             // evaluate the expression

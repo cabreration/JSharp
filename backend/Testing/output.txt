@@ -1,4 +1,4 @@
-var t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19, t20, t21, t22, t23, t24, t25, t26;
+var t1, t2, t3, t4;
 var p, h;
 p = 0;
 h = 1;
@@ -6,10 +6,10 @@ var heap[];
 var stack[];
 heap[0] = 0;
 
-call principal_0_21;
-goto L11;
+call principal_0_1;
+goto L4;
 
-proc nivel5_0_1 begin
+proc principal_0_1 begin
 t1 = h;
 heap[h] = 104;
 h = h + 1;
@@ -33,134 +33,22 @@ heap[h] = 111;
 h = h + 1;
 heap[h] = 0;
 h = h + 1;
-t2 = p + 1;
-stack[t2] = t1;
-t3 = h;
-heap[h] = 104;
-h = h + 1;
-heap[h] = 111;
-h = h + 1;
-heap[h] = 108;
-h = h + 1;
-heap[h] = 97;
-h = h + 1;
-heap[h] = 32;
-h = h + 1;
-heap[h] = 109;
-h = h + 1;
-heap[h] = 117;
-h = h + 1;
-heap[h] = 110;
-h = h + 1;
-heap[h] = 100;
-h = h + 1;
-heap[h] = 111;
-h = h + 1;
-heap[h] = 0;
-h = h + 1;
-t4 = p + 2;
-stack[t4] = t3;
-t5 = h;
-heap[h] = 104;
-h = h + 1;
-heap[h] = 101;
-h = h + 1;
-heap[h] = 108;
-h = h + 1;
-heap[h] = 108;
-h = h + 1;
-heap[h] = 111;
-h = h + 1;
-heap[h] = 32;
-h = h + 1;
-heap[h] = 119;
-h = h + 1;
-heap[h] = 111;
-h = h + 1;
-heap[h] = 114;
-h = h + 1;
-heap[h] = 108;
-h = h + 1;
-heap[h] = 100;
-h = h + 1;
-heap[h] = 0;
-h = h + 1;
-t6 = p - 0;
-t7 = t6 + 2;
-stack[t7] = t5;
-t8 = p + 1;
-t9 = stack[t8];
-t10 = p + 3;
-stack[t10] = t9;
-
-print("%c", 10);
-t11 = p + 2;
-t12 = stack[t11];
-t13 = p + 3;
-t14 = stack[t13];
-t15 = t12;
-t16 = t14;
-L1:
-t17 = heap[t15];
-t18 = heap[t16];
-if (t17 <> t18) goto L2;
-if (t17 == 0) goto L3;
-t15 = t15 + 1;
-t16 = t16 + 1;
-goto L1;
+t2 = t1;
+if (t2 > 0) goto L2;
+print("%c", 110);
+print("%c", 117);
+print("%c", 108);
+print("%c", 108);
+goto L3;
 L2:
-t19 = 0;
-goto L4;
+t3 = heap[t2];
+if (t3 == 0) goto L3;
+print("%c", t3);
+t2 = t2 + 1;
+goto L2;
 L3:
-t19 = 1;
+L1:
+end
+
+
 L4:
-if (t19 == 1) goto L5;
-print("%c", 102);
-print("%c", 97);
-print("%c", 108);
-print("%c", 115);
-print("%c", 101);
-goto L6;
-L5:
-print("%c", 116);
-print("%c", 114);
-print("%c", 117);
-print("%c", 101);
-L6:
-
-print("%c", 10);
-t20 = p + 1;
-t21 = stack[t20];
-t22 = p + 3;
-t23 = stack[t22];
-if (t21 == t23) goto L7;
-t24 = 0;
-goto L8;
-L7:
-t24 = 1;
-L8:
-if (t24 == 1) goto L9;
-print("%c", 102);
-print("%c", 97);
-print("%c", 108);
-print("%c", 115);
-print("%c", 101);
-goto L10;
-L9:
-print("%c", 116);
-print("%c", 114);
-print("%c", 117);
-print("%c", 101);
-L10:
-end
-
-
-proc principal_0_21 begin
-p = p + 1;
-call nivel5_0_1;
-t25 = stack[p];
-p = p - 1;
-end
-
-
-L11:

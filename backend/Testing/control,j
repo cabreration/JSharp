@@ -1,7 +1,14 @@
 void principal() {
+    
+}
+
+const edad := 10;
+
+void funcionIf() {
     string one = "correcto, ya puedes ir a la carcel";
     string two = "incorrecto";
-    int edad = 23;
+    string name = "Javier";
+    int edad = 24;
     if (edad == 18) {
         print(one);
     }
@@ -12,6 +19,47 @@ void principal() {
         print("Ya no hay vuelta atras amigo");
     }
     else {
-        print("Esta edad no es tan significativa meh");
+        print("Esta edad no es tan significativa meh\n");
+        if (name == "Javier") {
+            print("Aun puedes salir de esta, yo creo en ti");
+        }
+        else {
+            print("No te conozco, pero se que puedes");
+        }
     }
+}
+
+void emptyReturn() {
+    boolean b = true
+    if (b) {
+        print("Ejecutando el principio\n");
+    }
+
+    if (edad > 10) {
+        print("Efectivamente\n")
+        return;
+    }
+
+    print("Hmmm, no lo se amiguito");
+}
+
+void funcionWhile() {
+    int i = 0;
+    while (i < 100) {
+        if (i == 15) {
+            i++
+            continue
+        }
+        else if (i == 30) {
+            break
+        }
+        else if (i == 26) {
+            print("retornando sin hacer break");
+            return;
+        }
+        print(i);
+        print('\n');
+        i++
+    }
+    print("aplicando break\n");
 }

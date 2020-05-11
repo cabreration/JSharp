@@ -55,10 +55,12 @@ class IfSentence {
 
             // get the expression value
             let expVal = exp.getTDC(env, label, temp);
-            if (expVal.code == null) {
-                return new Updater(env, label, temp, null);
+            if (expVal.value == null) {
+                return expVal;
             }
-            code.push(expVal.code);
+            if (expVal.code != null) {
+                code.push(expVal.code);
+            }
             label = expVal.label;
             temp = expVal.temp;
             let val = expVal.value;

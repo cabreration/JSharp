@@ -8,12 +8,12 @@ app.use(cors());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-//app.listen(3000, () => console.log('I love you 3000'));
+app.listen(3000, () => console.log('I love you 3000'));
 
 const compile = require('./endpoints/compile')(app);
 const store = require('./endpoints/store')(app);
 
-/* This is only to maker easier the testing part of the project, ill have to erase it later*/
+/* This is only to maker easier the testing part of the project, ill have to erase it later
 const fs = require('fs');
 const Singleton = require('./Procesor/Singleton/singleton').Singleton;
 const Process = require('./Procesor/process').Process;
@@ -54,5 +54,5 @@ fs.readFile('./Testing/current.j', 'utf8', (err, text) => {
             console.error(e);
           }
     }
-});
+});*/
 

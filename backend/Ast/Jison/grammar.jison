@@ -734,6 +734,22 @@ SENTENCE
   | CALL semicolon {
     $$ = $1;
   }
+  | id incOp {
+    $$ = new Unary(new Operator('increment', $2, @2.first_line, @2.first_column),
+      new Identifier($1.toLowerCase(), @1.first_line, @1.first_column));
+  }
+  | id incOp semicolon {
+    $$ = new Unary(new Operator('increment', $2, @2.first_line, @2.first_column),
+      new Identifier($1.toLowerCase(), @1.first_line, @1.first_column));
+  }
+  | id decOp {
+    $$ = new Unary(new Operator('decrement', $2, @2.first_line, @2.first_column),
+      new Identifier($1.toLowerCase(), @1.first_line, @1.first_column));
+  }
+  | id decOp semicolon {
+    $$ = new Unary(new Operator('decrement', $2, @2.first_line, @2.first_column),
+      new Identifier($1.toLowerCase(), @1.first_line, @1.first_column));
+  }
 ;
 
 ASIGNMENT 

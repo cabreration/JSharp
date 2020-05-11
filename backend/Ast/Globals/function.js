@@ -26,16 +26,20 @@ class Function {
         code.push(`proc ${this.id.id}_${this.parameters.getChildren.length}_${this.id.row} begin`);
         
         // translate all of the instructions
+        let endLabel = `L${label}`;
+        label++;
         let instructions = this.sentences.getChildren();
         for (let i = 0; i < instructions.length; i++) {
             let ins = instructions[i];
             let updater = ins.getTDC(env, label, temp);
             label = updater.label;
             temp = updater.temp;
-            if (updater.code != null)
+            if (updater.code != null) {
+                updater.code = updater.code.replace(/@@/g, `${endLabel}`)
                 code.push(updater.code);
+            }
         }
-
+        code.push(`${endLabel}:`);
         code.push('end\n\n');
         return new Updater(env, label, temp, code.join('\n'));
     }
