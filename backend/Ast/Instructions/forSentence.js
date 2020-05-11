@@ -104,6 +104,7 @@ class ForSentence {
             if (tdc.code != null) {
                 tdc.code = tdc.code.replace(/!!!!/g, `goto ${endLabel};`);
                 tdc.code = tdc.code.replace(/{{{{/g, `goto ${middleLabel};`);
+                tdc.code = tdc.code.replace(/@@@@/g, `p = p - ${moves};\n@@@@`);
                 code.push(tdc.code);
                 temp = tdc.temp;
                 label = tdc.label;

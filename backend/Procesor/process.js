@@ -112,7 +112,7 @@ class Process {
                     this.position = stw;
                     Singleton.insertEnviroment(whileEnv);
                     break;
-                case 'dowhile':
+                case 'dowhilesentence':
                     ins.inEnv = i;
                     let dowhileEnv = env.generateSubEnviroment(env.id+i+'-dowhile', 'dowhile sentence');
                     let std = this.position;

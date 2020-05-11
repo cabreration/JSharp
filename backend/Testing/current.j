@@ -1,29 +1,42 @@
-void principal() {
-    funcionIf()
+void funcionSwitch() {
+    int a = 8;
+    switch(a) {
+        case 6:
+            print("aqui no es - 6");
+            break;
+        case 7:
+            print("aqui tampoco es - 7")
+            break
+        case 8:
+            print("aqui si es - 8");
+            break;
+        default:
+            print("aqui menos es - default");
+    }
+
+    string b = "javs" 
+    switch (b) {
+        case "javs":
+        case "javier":
+            print("i can, i will, i must");
+            break;
+        case "josue":
+            print("he can, he will, he must");
+            break;
+    }
+
+    string c = "geperipigoponsapa";
+    switch(c) {
+        case "gep":
+            print("aqui no era");
+            break;
+        case "perior":
+            print("aqui tampoco es");
+        default:
+            print("aqui si es");
+    }
 }
 
-void funcionIf() {
-    string one = "correcto, ya puedes ir a la carcel";
-    string two = "incorrecto";
-    string name = "Javier";
-    int edad = 24;
-    if (edad == 18) {
-        print(one);
-    }
-    else if (edad == 21) {
-        print("ya puedes consumir alcohol en todo el mundo");
-    }
-    else if (edad == 30) {
-        print("Ya no hay vuelta atras amigo");
-    }
-    else {
-        print("Este es tu anio!!\n");
-        double h = 1.80;
-        if (h > 1.75) {
-            print("Puedes conseguir a todas las chicas\n");
-        }
-        else {
-            print("La tienes un poco mas dificil");
-        }
-    }
+void principal() {
+    funcionSwitch()
 }

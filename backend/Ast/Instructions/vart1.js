@@ -39,7 +39,7 @@ class VarT1 {
         if (this.type.name != expType) {
             // manage implicit casting
             let flag = false;
-            if (this.type.name != 'double') {
+            if (this.type.name === 'double') {
                 if (expType === 'int' || expType === 'char') {
                     flag = true;
                 }

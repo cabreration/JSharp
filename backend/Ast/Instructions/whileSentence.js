@@ -80,6 +80,7 @@ class WhileSentence {
             if (tdc.code != null) {
                 tdc.code = tdc.code.replace(/!!!!/g, `p = p - ${moves};\ngoto ${label2};`);
                 tdc.code = tdc.code.replace(/{{{{/g, `p = p - ${moves};\ngoto ${label1};`);
+                tdc.code = tdc.code.replace(/@@@@/g, `p = p - ${moves};\n@@@@`);
                 code.push(tdc.code);
                 temp = tdc.temp;
                 label = tdc.label;

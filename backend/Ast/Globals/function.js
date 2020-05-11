@@ -35,7 +35,7 @@ class Function {
             label = updater.label;
             temp = updater.temp;
             if (updater.code != null) {
-                updater.code = updater.code.replace(/@@/g, `${endLabel}`)
+                updater.code = updater.code.replace(/@@@@/g, `goto ${endLabel};`)
                 code.push(updater.code);
             }
         }

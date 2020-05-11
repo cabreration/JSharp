@@ -8,7 +8,7 @@ class Singleton {
     static oneWords = {
         loop: false,
         choose: false, 
-        arrow: false
+        arrow: null
     }
     
     static insertError(error) {
@@ -100,7 +100,7 @@ class Singleton {
         Singleton.symbolsTable.splice(0, Singleton.symbolsTable.length);
         Singleton.oneWords.loop = false;
         Singleton.oneWords.choose = false;
-        Singleton.oneWords.arrow = false;
+        Singleton.oneWords.arrow = null;
     }
 
     static validateType(type) {

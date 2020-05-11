@@ -76,7 +76,8 @@ class SwitchSentence {
                 code[code.length - 1] = code[code.length - 1].replace(/X@/, k.exec);
                 //ktdc.code = ktdc.code.replace(/X@/, k.exec);
                 ktdc.code = ktdc.code.replace(/!!!!/g, `p = p - ${moves};\ngoto ${scapeLabel};`);
-                ktdc.code = ktdc.code.replace(/{{{{/g, `p = p - ${moves};\ngoto ${scapeLabel};`);
+                ktdc.code = ktdc.code.replace(/{{{{/g, `p = p - ${moves};\n{{{{;`);
+                ktdc.code = ktdc.code.replace(/@@@@/g, `p = p - ${moves};\n@@@@`);
                 code.push(ktdc.code);
                 temp = ktdc.temp;
                 label = ktdc.label;

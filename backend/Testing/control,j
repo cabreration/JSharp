@@ -1,8 +1,11 @@
 void principal() {
-    
+    funcionIf()
+    emptyReturn()
+    funcionWhile()
 }
 
 void funcionIf() {
+    print("Funcion de If:\n");
     string one = "correcto, ya puedes ir a la carcel";
     string two = "incorrecto";
     string name = "Javier";
@@ -29,20 +32,24 @@ void funcionIf() {
 }
 
 void emptyReturn() {
+    print("Funcion de Return Vacio:\n")
     boolean b = true
     if (b) {
         print("Ejecutando el principio\n");
     }
 
+    double edad = 'a'
     if (edad > 10) {
         print("Efectivamente\n")
+        print(edad);
         return;
     }
 
-    print("Hmmm, no lo se amiguito");
+    print("Hmmm, no lo se amiguito\n");
 }
 
 void funcionWhile() {
+    print("Funcion de While:\n")
     int i = 0;
     while (i < 100) {
         if (i == 15) {
@@ -53,7 +60,7 @@ void funcionWhile() {
             break
         }
         else if (i == 26) {
-            print("retornando sin hacer break");
+            print("retornando sin hacer break\n");
             return;
         }
         print(i);
@@ -64,6 +71,7 @@ void funcionWhile() {
 }
 
 void funcionDo(){
+    print("funcion de Do:\n");
     integer a=5;
     do{
     a++;
@@ -76,6 +84,7 @@ void funcionDo(){
             break;
         }
     }while(a<50);
+    print("\n");
 }
 
 void funcionSwitch() {
@@ -88,7 +97,7 @@ void funcionSwitch() {
             print("aqui tampoco es - 7")
             break
         case 8:
-            print("aqui si es - 8");
+            print("aqui si es - 8\n");
             break;
         default:
             print("aqui menos es - default");
@@ -98,7 +107,7 @@ void funcionSwitch() {
     switch (b) {
         case "javs":
         case "javier":
-            print("i can, i will, i must");
+            print("i can, i will, i must\n");
             break;
         case "josue":
             print("he can, he will, he must");
@@ -113,7 +122,7 @@ void funcionSwitch() {
         case "perior":
             print("aqui tampoco es");
         default:
-            print("aqui si es");
+            print("aqui si es\n");
     }
 }
 

@@ -61,7 +61,8 @@ class DowhileSentence {
             let tdc = ins.getTDC(dowhileEnv, label, temp);
             if (tdc.code != null) {
                 tdc.code = tdc.code.replace(/!!!!/g, `p = p - ${moves};\ngoto ${label2};`); // should change this, p = p - moves
-                tdc.code = tdc.code.replace(/{{{{/g, `p = p - ${moves};\ngoto${label1};`); // p = p - moves
+                tdc.code = tdc.code.replace(/{{{{/g, `p = p - ${moves};\ngoto ${label1};`); // p = p - moves
+                tdc.code = tdc.code.replace(/@@@@/g, `p = p - ${moves};\n@@@@`);
                 code.push(tdc.code);
                 temp = tdc.temp;
                 label = tdc.label;

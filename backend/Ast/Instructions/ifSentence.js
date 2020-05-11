@@ -85,6 +85,9 @@ class IfSentence {
             instructions.forEach(ins => {
                 let td = ins.getTDC(ifEnv, label, temp);
                 if (td.code != null) {
+                    td.code = td.code.replace(/!!!!/, `p = p - ${moves};\n!!!!`);
+                    td.code = td.code.replace(/{{{{/, `p = p - ${moves};\n{{{{`);
+                    td.code = td.code.replace(/@@@@/, `p = p - ${moves};\n@@@@`);
                     temp = td.temp;
                     label = td.label;
                     code.push(td.code);
@@ -108,6 +111,7 @@ class IfSentence {
                 if (td.code != null) {
                     td.code = td.code.replace(/!!!!/, `p = p - ${moves};\n!!!!`);
                     td.code = td.code.replace(/{{{{/, `p = p - ${moves};\n{{{{`);
+                    td.code = td.code.replace(/@@@@/, `p = p - ${moves};\n@@@@`);
                     temp = td.temp;
                     label = td.label;
                     code.push(td.code);
