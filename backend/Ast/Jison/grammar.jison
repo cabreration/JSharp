@@ -869,13 +869,16 @@ CASES_LIST
 
 SINGLE_CASE 
   : caseKW EXPRESSION colon SENTENCES {
-    $$ = new Case(new NodeList([$2], 'VALUE'), $4, @1.first_line, @1.first_column);
+    $$ = new Case(new NodeList([$2], 'VALUE'), new NodeList($4, 'SENTENCES'), @1.first_line, @1.first_column);
+  }
+  | caseKW EXPRESSION colon {
+    $$ = new Case(new NodeList([$2], 'VALUE'), new NodeList([], 'SENTENCES'), @1.first_line, @1.first_column);
   }
 ;
 
 DEFAULT_CASE 
   : defaultKW colon SENTENCES {
-    $$ = new Case(null, $3, @1.first_line, @1.first_column);
+    $$ = new Case(null, new NodeList($3, 'SENTENCES'), @1.first_line, @1.first_column);
   }
 ;
 

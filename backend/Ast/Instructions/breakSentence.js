@@ -21,7 +21,7 @@ class BreakSentence {
     }
 
     getTDC(env, label, temp) {
-        if (!Singleton.oneWords.loop) {
+        if (!Singleton.oneWords.loop && !Singleton.oneWords.choose) {
             Singleton.insertError(new SharpError('Semantico', 'La sentencia break unicamente puede ser incluida en un Switch o en un Ciclo', this.row, this.column));
             return new Updater(env, label, temp, null);
         }
