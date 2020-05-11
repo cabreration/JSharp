@@ -26,7 +26,7 @@ class ContinueSentence {
             return new Updater(env, label, temp, null);
         }
         let code = [];
-        code.push(`goto {{;`);
+        code.push(`{{{{;`);
         return new Updater(env, label, temp, code.join('\n'));
     }
 }

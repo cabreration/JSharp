@@ -57,7 +57,8 @@ class Process {
     }
 
     processInstructions(instructions, env, global) {
-        instructions.forEach(ins => {
+        for (let i = 0; i < instructions.length; i++) {
+            let ins = instructions[i];
             switch(ins.getTypeOf()) {
                 case 'vart1':
                     this.processVarT15(env, ins, global);
@@ -81,52 +82,87 @@ class Process {
                     this.processOneStrc(ins);
                     break;
                 case "ifsentence":
-                    let ifEnv = env.generateSubEnviroment(env.id+'-if', 'if sentence');
+                    ins.inEnv = i;
+                    let ifEnv = env.generateSubEnviroment(env.id+i+'-if', 'if sentence');
+                    let sti = this.position;
+                    this.position = 0;
                     this.processInstructions(ins.sentences.getChildren(), ifEnv);
+                    this.position = sti;
                     Singleton.insertEnviroment(ifEnv);
-                    let elseIns = ifEnv.elseSentence;
+                    let elseIns = ins.elseSentence;
                     let counter  = 1;
                     while (elseIns != null) {
-                        let elseEnv = env.generateSubEnviroment(env.id+'-else'+counter, 'else sentence')
+                        elseIns.inEnv = i;
+                        let elseEnv = env.generateSubEnviroment(env.id+i+'-else'+counter, 'else sentence');
+                        counter++;
+                        let ste = this.position;
+                        this.position = 0;
                         this.processInstructions(elseIns.sentences.getChildren(), elseEnv);
+                        this.position = ste;
                         Singleton.insertEnviroment(elseEnv);
-                        elseIns = elseEnv.elseSentence;
+                        elseIns = elseIns.elseSentence;
                     }
                     break;
                 case 'whilesentence':
-                    let whileEnv = env.generateSubEnviroment(env.id+'-while', 'while sentence');
+                    ins.inEnv = i;
+                    let whileEnv = env.generateSubEnviroment(env.id+i+'-while', 'while sentence');
+                    let stw = this.position;
+                    this.position = 0;
                     this.processInstructions(ins.sentences.getChildren(), whileEnv);
+                    this.position = stw;
                     Singleton.insertEnviroment(whileEnv);
                     break;
                 case 'dowhile':
-                    let dowhileEnv = env.generateSubEnviroment(env.id+'-dowhile', 'dowhile sentence');
+                    ins.inEnv = i;
+                    let dowhileEnv = env.generateSubEnviroment(env.id+i+'-dowhile', 'dowhile sentence');
+                    let std = this.position;
+                    this.position = 0;
                     this.processInstructions(ins.sentences.getChildren(), dowhileEnv);
+                    this.position = std;
                     Singleton.insertEnviroment(dowhileEnv);
                     break;
                 case 'trycatchsentence':
-                    let tryEnv = env.generateSubEnviroment(env.id+'-try', 'try block');
+                    ins.inEnv = i;
+                    let tryEnv = env.generateSubEnviroment(env.id+i+'-try', 'try block');
+                    let stt = this.position;
+                    this.position = 0;
                     this.processInstructions(ins.trySentences.getChildren(), tryEnv);
+                    this.position = stt;
                     Singleton.insertEnviroment(tryEnv);
                     let catchEnv = env.generateSubEnviroment(env.id+'-catch', 'catch block');
                     this.processVarT15(catchEnv, ins.exception);
+                    let stc = this.position;
+                    this.position = 0;
                     this.processInstructions(ins.catchSentences.getChildren(), catchEnv);
+                    this.position = stc;
                     Singleton.insertEnviroment(catchEnv);
                     break;
                 case 'forsentence':
-                    let forEnv = env.generateSubEnviroment(env.id+'-for', 'for sentence');
-                    // agregar la primer variable
+                    ins.inEnv = i;
+                    let forEnv = env.generateSubEnviroment(env.id+i+'-for', 'for sentence');
+                    // add the the for start if this is a declaration
+                    let stf = this.position;
+                    this.position = 0;
+                    if (ins.start.getChildren().length > 0 && ins.start.getChildren()[0].getTypeOf() === 'vart1') {
+                        this.processInstructions(ins.start.getChildren(), forEnv);
+                    }
                     this.processInstructions(ins.sentences.getChildren(), forEnv);
+                    this.position = stf;
                     Singleton.insertEnviroment(forEnv);
                     break;
                 case 'switchsentence':
-                    let switchEnv = env.generateSubEnviroment(env.id+'-switch', 'switch sentence');
+                    ins.inEnv = i;
+                    let switchEnv = env.generateSubEnviroment(env.id+i+'-switch', 'switch sentence');
+                    let sts = this.position;
+                    this.position = 0;
                     ins.cases.getChildren().forEach(kase => {
                         this.processInstructions(kase.sentences.getChildren(), switchEnv);
                     });
+                    this.position = sts;
                     Singleton.insertEnviroment(switchEnv);
                     break;
             }
-        });
+        }
     }
 
     processVarT15(env, ins, global) {

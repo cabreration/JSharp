@@ -69,6 +69,7 @@ class Singleton {
                     }
                 }
             }
+            //console.log(Singleton.symbolsTable.filter(amb => amb.id === env.id));
             Singleton.symbolsTable.push(env);
             return env;
         }

@@ -8,6 +8,7 @@ class DowhileSentence {
         this.sentences = sentences; // nodelist -> [ instructions ]
         this.row = row; // number
         this.column = column; // number
+        this.inEnv = -1;
     }
 
     getDot() {
@@ -52,16 +53,21 @@ class DowhileSentence {
         }
 
         let instructions = this.sentences.getChildren();
+        let dowhileEnv = Singleton.getEnviroment(env.id+this.inEnv+'-dowhile');
+        let moves = env.last;
+
+        code.push(`p = p + ${moves};`)
         instructions.forEach(ins => {
-            let tdc = ins.getTDC(env, label, temp);
+            let tdc = ins.getTDC(dowhileEnv, label, temp);
             if (tdc.code != null) {
-                tdc.code = tdc.code.replace(/!!/g, `${label2}`);
-                tdc.code = tdc.code.replace(/{{/g, `${label1}`);
+                tdc.code = tdc.code.replace(/!!!!/g, `p = p - ${moves};\ngoto ${label2};`); // should change this, p = p - moves
+                tdc.code = tdc.code.replace(/{{{{/g, `p = p - ${moves};\ngoto${label1};`); // p = p - moves
                 code.push(tdc.code);
                 temp = tdc.temp;
                 label = tdc.label;
             }
         });
+        code.push(`p = p - ${moves};`)
 
         // finish break and continue flag
         if (!loopFlag) {

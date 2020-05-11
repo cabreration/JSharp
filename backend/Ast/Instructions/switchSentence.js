@@ -8,6 +8,7 @@ class SwitchSentence {
         this.cases = cases; // [ cases ] -> nodelist 
         this.row = row; // number
         this.column = column; // number
+        this.inEnv = - 1;
     }
 
     getDot() {
@@ -64,19 +65,25 @@ class SwitchSentence {
         }
 
         code.push(`${temp1} = ${val};`);
+        let switchEnv = Singleton.getEnviroment(env.id+this.inEnv+'-switch');
+        let moves = env.last;
+
+        code.push(`p = p + ${moves};`);
         for (let i = 0; i < kases.length; i++) {
             let k = kases[i];
-            let ktdc = k.getTDC(env, label, temp, validate, temp1);
+            let ktdc = k.getTDC(switchEnv, label, temp, validate, temp1);
             if (ktdc.code != null) {
                 code[code.length - 1] = code[code.length - 1].replace(/X@/, k.exec);
                 //ktdc.code = ktdc.code.replace(/X@/, k.exec);
-                ktdc.code = ktdc.code.replace(/!!/g, scapeLabel);
+                ktdc.code = ktdc.code.replace(/!!!!/g, `p = p - ${moves};\ngoto ${scapeLabel};`);
+                ktdc.code = ktdc.code.replace(/{{{{/g, `p = p - ${moves};\ngoto ${scapeLabel};`);
                 code.push(ktdc.code);
                 temp = ktdc.temp;
                 label = ktdc.label;
             }
         }
         code[code.length - 1] = code[code.length - 1].replace(/X@/, scapeLabel);
+        code.push(`p = p - ${moves};`);
         code.push(`${scapeLabel}:`);
 
         if (!previouslyFlag) {

@@ -8,6 +8,7 @@ class WhileSentence {
         this.sentences = sentences; // nodelist -> [ sentences ]
         this.row = row; // number
         this.column = column; // number
+        this.inEnv = -1;
     }
 
     getDot() {
@@ -39,6 +40,7 @@ class WhileSentence {
         let code = [];
         let label1 = `L${label}`;
         label++;
+
         code.push(`${label1}:`);
         // get the expression value
         let expVal = exp.getTDC(env, label, temp);
@@ -69,16 +71,22 @@ class WhileSentence {
             Singleton.oneWords.loop = true;
         }
 
+        let whileEnv = Singleton.getEnviroment(env.id+this.inEnv+'-while')
+        let moves = env.last;
+
+        code.push(`p = p + ${moves};`);
         instructions.forEach(ins => {
-            let tdc = ins.getTDC(env, label, temp);
+            let tdc = ins.getTDC(whileEnv, label, temp);
             if (tdc.code != null) {
-                tdc.code = tdc.code.replace(/!!/g, `${label2}`);
-                tdc.code = tdc.code.replace(/{{/g, `${label1}`);
+                tdc.code = tdc.code.replace(/!!!!/g, `p = p - ${moves};\ngoto ${label2};`);
+                tdc.code = tdc.code.replace(/{{{{/g, `p = p - ${moves};\ngoto ${label1};`);
                 code.push(tdc.code);
                 temp = tdc.temp;
                 label = tdc.label;
             }
         });
+        code.push(`p = p - ${moves};`);
+
         code.push(`goto ${label1};`);
         code.push(`${label2}:`);
 

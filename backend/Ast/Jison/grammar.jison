@@ -896,28 +896,28 @@ DOWHILE_SENTENCE
 
 FOR_SENTENCE 
   : forKW leftP FOR_BODY rightP BLOCK {
-    $$ = new ForSentence($3[0], $3[1], $3[2], $4, @1.first_line, @1.first_column);
+    $$ = new ForSentence($3[0], $3[1], $3[2], $5, @1.first_line, @1.first_column);
   }
 ;
 
 FOR_BODY 
   : FOR_START semicolon EXPRESSION semicolon FOR_END {
-    $$ = [$1, new NodeList($3, 'FOR MIDDLE'), $5];
+    $$ = [$1, new NodeList([$3], 'FOR MIDDLE'), $5];
   }
   | FOR_START semicolon semicolon FOR_END {
     $$ = [$1, new NodeList([], 'FOR MIDDLE'), $4];
   }
   | FOR_START semicolon EXPRESSION semicolon {
-    $$ = [$1, new NodeList($3, 'FOR MIDDLE'), new NodeList([], 'FOR END')];
+    $$ = [$1, new NodeList([$3], 'FOR MIDDLE'), new NodeList([], 'FOR END')];
   }
   | FOR_START semicolon semicolon {
     $$ = [$1, new NodeList([], 'FOR MIDDLE'), new NodeList([], 'FOR END')];
   }
   | semicolon EXPRESSION semicolon FOR_END {
-    $$ = [new NodeList([], 'FOR START'), new NodeList($2, 'FOR MIDDLE'), $4];
+    $$ = [new NodeList([], 'FOR START'), new NodeList([$2], 'FOR MIDDLE'), $4];
   }
   | semicolon EXPRESSION semicolon {
-    $$ = [new NodeList([], 'FOR START'), new NodeList($2, 'FOR MIDDLE'), new NodeList([], 'FOR END')];
+    $$ = [new NodeList([], 'FOR START'), new NodeList([$2], 'FOR MIDDLE'), new NodeList([], 'FOR END')];
   }
   | semicolon semicolon FOR_END {
     $$ = [new NodeList([], 'FOR START'), new NodeList([], 'FOR MIDDLE'), new NodeList($3, 'FOR END')];
@@ -929,7 +929,7 @@ FOR_BODY
 
 FOR_START 
   : TYPE id asignment EXPRESSION {
-    $$ = new NodeList(new VarT1($1, new NodeList([new Identifier($2.toLowerCase(), @2.first_line, @2.first_column)], 'ID'), $4), 'FOR START');
+    $$ = new NodeList([new VarT1($1, new NodeList([new Identifier($2.toLowerCase(), @2.first_line, @2.first_column)], 'ID'), $4)], 'FOR START');
   }
   | ASIGNMENT {
     $$ = new NodeList($1, 'FOR START');
@@ -937,11 +937,16 @@ FOR_START
 ;
 
 FOR_END 
-  : EXPRESSION {
-    $$ = new NodeList($1, 'FOR END');
+  : id incOp {
+    $$ = new NodeList([new Unary(new Operator('increment', $2, @2.first_line, @2.first_column),
+      new Identifier($1.toLowerCase(), @1.first_line, @1.first_column))], 'FOR END');
+  }
+  | id decOp {
+    $$ = new NodeList([new Unary(new Operator('decrement', $2, @2.first_line, @2.first_column),
+      new Identifier($1.toLowerCase(), @1.first_line, @1.first_column))], 'FOR END');
   }
   | ASIGNMENT {
-    $$ = new NodeList($1, 'FOR END');
+    $$ = new NodeList([$1], 'FOR END');
   }
 ;
 

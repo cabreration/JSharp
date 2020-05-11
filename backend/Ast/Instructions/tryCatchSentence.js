@@ -6,6 +6,7 @@ class TryCatchSentence {
         this.catchSentences = catchSentences; //nodelist -> [ instructions ]
         this.row = row; // number
         this.column = column // number;
+        this.inEnv = -1;
     }
 
     getDot() {

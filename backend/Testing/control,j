@@ -2,8 +2,6 @@ void principal() {
     
 }
 
-const edad := 10;
-
 void funcionIf() {
     string one = "correcto, ya puedes ir a la carcel";
     string two = "incorrecto";
@@ -19,12 +17,13 @@ void funcionIf() {
         print("Ya no hay vuelta atras amigo");
     }
     else {
-        print("Esta edad no es tan significativa meh\n");
-        if (name == "Javier") {
-            print("Aun puedes salir de esta, yo creo en ti");
+        print("Este es tu anio!!\n");
+        double h = 1.80;
+        if (h > 1.75) {
+            print("Puedes conseguir a todas las chicas\n");
         }
         else {
-            print("No te conozco, pero se que puedes");
+            print("La tienes un poco mas dificil");
         }
     }
 }
@@ -64,6 +63,21 @@ void funcionWhile() {
     print("aplicando break\n");
 }
 
+void funcionDo(){
+    integer a=5;
+    do{
+    a++;
+        if(a==20){
+            print('F')
+            continue;
+        }
+        else if(a==40){
+            print('H');
+            break;
+        }
+    }while(a<50);
+}
+
 void funcionSwitch() {
     int a = 8;
     switch(a) {
@@ -100,5 +114,76 @@ void funcionSwitch() {
             print("aqui tampoco es");
         default:
             print("aqui si es");
+    }
+}
+
+void nestSwtich() {
+    integer a=1
+    switch(a)
+    {
+        case 1:
+            print('l')
+            a=a+3
+            switch(a)
+            {
+                case 1:
+                    print('l')
+                    
+                case 2:
+                    print('m')
+                    
+                case 3:
+                    print('w')
+                    break
+                case 4:
+                    print('j')
+                    
+                case 5:
+                    print('v')
+                    
+                default:
+                    print('d')
+                    
+            }
+            break
+        case 2:
+            print('m')
+            break
+        case 3:
+            print('w')
+            break
+        case 4:
+            print('j')
+            break
+        case 5:
+            print('v')
+            break
+        default:
+            print('d')
+            break
+    }
+}
+
+void funcionFor() {
+    for (integer i = 0; i < 100; i++) {
+        print(i + "\n");
+    }
+
+    for (integer b = 11; b < 15; b++) {
+        print(b);
+        print('\n');
+    }
+
+    integer a=5;
+    for(;;){
+        a++;
+        if(a==20){
+            print('F')
+            continue;
+        }
+        else if(a==40){
+            print('H');
+            break;
+        }
     }
 }

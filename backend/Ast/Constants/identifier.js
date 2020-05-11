@@ -77,7 +77,7 @@ class Identifier {
             if (counter > 1) {
                 code.push(`t${temp} = p - ${spaces};`);
                 temp++;
-                code.push(`t${temp} = t${temp - 1} + ${position}`);
+                code.push(`t${temp} = t${temp - 1} + ${position};`);
                 temp++;
                 code.push(`t${temp} = stack[t${temp - 1}];`);
                 val = `t${temp}`;
