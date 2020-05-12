@@ -9,14 +9,26 @@ void principal() {
     print("El resultado de la resta es " + resta + "\n");
     integer potencia = potencia(2, 7);
     print("El resultado de la potencia es: " + potencia + "\n");
+    polimorphism(7);
+    integer a = 45;
+    string n = "Jose Rodrigo";
+    polimorphism(a, n);
 }
 
 void polimorphism(string name) {
     print("Your name is " + name + "\n");
 }
 
-void polimorphism(int edad, double estatura) {
+void polimorphism(integer edad, double estatura) {
     print("You're " + edad + " and " + estatura + " mts tall\n");
+}
+
+void polimorphism(integer numero) {
+    print("Tu numero favorito es " + numero + "\n");
+}
+
+void polimorphism(integer edad, String name) {
+    print("Tu nombre es: " + name + " y tu edad es: " + edad);
 }
 
 double suma(double arg1, double arg2) {

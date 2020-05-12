@@ -74,6 +74,7 @@ class Call {
         // obtaining the types of the arguments passed in the call
         let types = [];
         let exps = this.expList.getChildren();
+
         for (let i = 0; i < exps.length; i++) {
             let currentType;
             let name;
@@ -104,11 +105,14 @@ class Call {
             // TODO - we should sort here according to the current function
             types = this.sortParameters2(func, types);
             for (let j = 0; j < types.length; j++) {
-                if (filteredOptions[i].symbols[j].type != types[j].type) {
+                if (func.symbols[j+1].type != types[j].type) {
                     flag = false;
                     func = null;
                     break;
                 }
+            }
+            if (func != null) {
+                break;
             }
         }
 
