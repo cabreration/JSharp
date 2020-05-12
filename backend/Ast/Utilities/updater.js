@@ -6,8 +6,6 @@ class Updater {
         this.code = code;
         this.value = null;
         this.type = null;
-        this.falseLabels = null;
-        this.trueLabels = null;
     }
 
     addValue(temp) {
@@ -16,14 +14,6 @@ class Updater {
 
     addType(type) {
         this.type = type;
-    }
-
-    addTLabels(labels) {
-        this.trueLabels = labels;
-    }
-
-    addFLabels(labels) {
-        this.falseLabels = labels;
     }
 }
 

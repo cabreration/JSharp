@@ -1,6 +1,7 @@
+// casting
 double b = 456.2345;
-int a = (integer)b
+int a = (int)b;
 
 void principal() {
-    print(a);
+
 }

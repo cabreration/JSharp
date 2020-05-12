@@ -70,18 +70,6 @@ class Attribute {
                         return new Updater(env, label, temp, null);
                     }
                 }
-                else if (this.type.name === 'double[]') {
-                    if (expType != 'int[]' && expType != 'char[]') {
-                        Singleton.insertError(new SharpError('Semantico', `El valor que se desea agregar a ${this.identifier.id} no es casteable de forma implicita`, this.identifier.row, this.identifier.column));
-                        return new Updater(env, label, temp, null);
-                    }
-                }
-                else if (this.type.name === 'int[]') {
-                    if (expType != 'char[]') {
-                        Singleton.insertError(new SharpError('Semantico', `El valor que se desea agregar a ${this.identifier.id} no es casteable de forma implicita`, this.identifier.row, this.identifier.column));
-                        return new Updater(env, label, temp, null);
-                    }
-                }
             }
 
             // once we checked the expression we can asign it

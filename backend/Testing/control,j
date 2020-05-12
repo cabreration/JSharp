@@ -98,9 +98,8 @@ void funcionSwitch() {
             break
         case 8:
             print("aqui si es - 8\n");
-            break;
         default:
-            print("aqui menos es - default");
+            print("aqui menos es - default\n");
     }
 
     string b = "javs" 
@@ -108,10 +107,8 @@ void funcionSwitch() {
         case "javs":
         case "javier":
             print("i can, i will, i must\n");
-            break;
-        case "josue":
-            print("he can, he will, he must");
-            break;
+        default:
+            print("this should not be printing");
     }
 
     string c = "geperipigoponsapa";

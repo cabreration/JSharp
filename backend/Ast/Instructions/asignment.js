@@ -78,7 +78,7 @@ class Asignment {
         // check that types match
         if (varType != expType) {
             let flag = false;
-            if (this.type.name != 'double') {
+            if (this.type.name === 'double') {
                 if (expType === 'int' || expType === 'char') {
                     flag = true;
                 }

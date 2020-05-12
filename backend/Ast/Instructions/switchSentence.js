@@ -73,9 +73,19 @@ class SwitchSentence {
             let k = kases[i];
             let ktdc = k.getTDC(switchEnv, label, temp, validate, temp1);
             if (ktdc.code != null) {
-                code[code.length - 1] = code[code.length - 1].replace(/X@/, k.exec);
+                if (i === kases.length - 1) {
+                    if (kases[i].value == null) {
+                        code[code.length - 1] = code[code.length - 1].replace(/X@/, scapeLabel);
+                    }
+                    else {
+                        code[code.length - 1] = code[code.length - 1].replace(/X@/, k.exec);
+                    }
+                }
+                else {
+                    code[code.length - 1] = code[code.length - 1].replace(/X@/, k.exec);
+                }
                 //ktdc.code = ktdc.code.replace(/X@/, k.exec);
-                ktdc.code = ktdc.code.replace(/!!!!/g, `p = p - ${moves};\ngoto ${scapeLabel};`);
+                ktdc.code = ktdc.code.replace(/!!!!/g, `goto ${scapeLabel};`);
                 ktdc.code = ktdc.code.replace(/{{{{/g, `p = p - ${moves};\n{{{{;`);
                 ktdc.code = ktdc.code.replace(/@@@@/g, `p = p - ${moves};\n@@@@`);
                 code.push(ktdc.code);
@@ -83,9 +93,9 @@ class SwitchSentence {
                 label = ktdc.label;
             }
         }
-        code[code.length - 1] = code[code.length - 1].replace(/X@/, scapeLabel);
-        code.push(`p = p - ${moves};`);
+        code[code.length - 1] = code[code.length - 1].replace(/X@;/, scapeLabel);
         code.push(`${scapeLabel}:`);
+        code.push(`p = p - ${moves};`);
 
         if (!previouslyFlag) {
             Singleton.oneWords.choose = false;
