@@ -24,7 +24,7 @@ class Call {
     }
 
     checkType(env) {
-        let filt = filter(env);
+        let filt = this.filter(env);
         if (!filt.state) {
             return filt.error;
         }
@@ -183,7 +183,6 @@ class Call {
         let previousArrow = Singleton.oneWords.arrow;
         Singleton.oneWords.arrow = proc.role;
 
-        code.push(`p = p + ${env.last};`);
         // push the value of the parameters to the stack
         for (let i = 0; i < params.length; i++) {
             let arg = params[i];
@@ -194,11 +193,12 @@ class Call {
                 code.push(argCode.code);
             }
             code.push(`t${temp} = ${argCode.value};`);
-            code.push(`t${temp + 1} = p + ${i+1};`)
+            code.push(`t${temp + 1} = p + ${i+1+env.last};`)
             code.push(`stack[t${temp+1}] = t${temp};`);
             temp++;
             temp++;
         }
+        code.push(`p = p + ${env.last};`);
         code.push(`call ${proc.id};`);
         code.push(`t${temp} = stack[p];`);
         code.push(`p = p - ${env.last};`);
