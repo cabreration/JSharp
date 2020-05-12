@@ -1,9 +1,9 @@
 var t1, t2, t3, t4;
 var p, h;
-p = 0;
-h = 1;
 var heap[];
 var stack[];
+p = 0;
+h = 1;
 heap[0] = 0;
 
 call principal_0_1;

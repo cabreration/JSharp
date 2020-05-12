@@ -126,7 +126,7 @@ void funcionSwitch() {
     }
 }
 
-void nestSwtich() {
+void nestedSwitch() {
     integer a=1
     switch(a)
     {

@@ -61,10 +61,10 @@ class Translator {
     generateHeader() {
         let header = [];
         header.push('var p, h;');
-        header.push('p = 0;');
-        header.push(`h = ${Singleton.symbolsTable[0].last};`);
         header.push('var heap[];');
         header.push('var stack[];');
+        header.push('p = 0;');
+        header.push(`h = ${Singleton.symbolsTable[0].last};`);
         header.push('heap[0] = 0;');
         return header.join('\n');
     }

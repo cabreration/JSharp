@@ -1016,6 +1016,8 @@ parse: function parse(input) {
     return true;
 }};
 
+  const Singleton = require('../../Procesor/Singleton/singleton').Singleton;
+  const SharpError = require('../../Procesor/Singleton/sharpError').SharpError;
   const Import = require('../Globals/import').Import;
   const Root = require('../Globals/root').Root;
   const Type = require('../Constants/Type').Type;
@@ -1534,7 +1536,7 @@ case 70:return 75;
 break;
 case 71:return 5;
 break;
-case 72:
+case 72: Singleton.insertError(new SharpError("Lexico", `${yy_.yytext} no pertenece al lenguaje`, yy_.yylineno, yy_.yyleng)); 
 break;
 }
 },

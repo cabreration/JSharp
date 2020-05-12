@@ -10,12 +10,12 @@ module.exports = (app) => {
   app.post('/compile', async(req, res) => {
     let input = req.body.input;
     try {
+      Singleton.restart();
       let p = new parser.Parser();
       let ast = p.parse(input);
       let treePrinter = new TreePrinter();
       let tree = treePrinter.getDot(ast.root);
 
-      Singleton.restart();
       let process = new Process();
       let bst = process.firstApproach(ast);
       // now everything is stored in the singleton class static elements

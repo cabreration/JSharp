@@ -92,11 +92,13 @@
 
 // terminal symbols def end
 
-.                                           {} // lexical errors should be caught here
+.                                           { Singleton.insertError(new SharpError("Lexico", `${yytext} no pertenece al lenguaje`, yylineno, yyleng)); } 
 
 /lex
 
 %{
+  const Singleton = require('../../Procesor/Singleton/singleton').Singleton;
+  const SharpError = require('../../Procesor/Singleton/sharpError').SharpError;
   const Import = require('../Globals/import').Import;
   const Root = require('../Globals/root').Root;
   const Type = require('../Constants/Type').Type;

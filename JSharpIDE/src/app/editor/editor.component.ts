@@ -149,6 +149,10 @@ export class EditorComponent implements OnInit {
         });
       });
       this.table = table.filter(env => env.functionFlag);
+      this.CreateNewTab(result['code'], "tdc");
+      let event = { activeId: this.currentTab, nextId: 'ngb-tab-'+ this.tabsCounter }
+      this.ChangeCurrent(event);
+
       this.success = 'La compilacion fue realizada exitosamente';
       setTimeout(() => this.success = '', 2000);
     }
