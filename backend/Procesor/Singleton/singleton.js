@@ -8,7 +8,7 @@ class Singleton {
     static oneWords = {
         loop: false,
         choose: false, 
-        arrow: null
+        arrow: 'void'
     }
     
     static insertError(error) {
@@ -86,7 +86,7 @@ class Singleton {
     static getFunctions(id) {
         let ret = [];
         for (let i = 0; i < Singleton.symbolsTable.length; i++) {
-            if (Singleton.symbolsTable[i].id.includes(id+'_') && Singleton.symbolsTable[i].functionFlag) {
+            if (Singleton.symbolsTable[i].id.includes(id) && Singleton.symbolsTable[i].functionFlag) {
                 ret.push(Singleton.symbolsTable[i]);
             }
         }
@@ -100,7 +100,7 @@ class Singleton {
         Singleton.symbolsTable.splice(0, Singleton.symbolsTable.length);
         Singleton.oneWords.loop = false;
         Singleton.oneWords.choose = false;
-        Singleton.oneWords.arrow = null;
+        Singleton.oneWords.arrow = 'void';
     }
 
     static validateType(type) {

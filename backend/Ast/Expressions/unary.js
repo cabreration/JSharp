@@ -160,13 +160,13 @@ class Unary {
             if (opt === 1) {
                 code.push(`t${temp} = t${temp} + 1;`)
                 code.push(`heap[${pos}] = t${temp};`);
+                code.push(`t${temp} = t${temp} - 1;`)
             }
             else {
                 code.push(`t${temp} = t${temp} - 1;`)
                 code.push(`heap[${pos}] = t${temp};`);
+                code.push(`t${temp} = t${temp} + 1;`)
             }
-            temp++;
-            code.push(`t${temp} = heap[${pos}];`);
             val = `t${temp}`;
             temp++;
         }
@@ -178,15 +178,15 @@ class Unary {
             if (opt === 1) {
                 code.push(`t${temp + 1} = t${temp + 1} + 1;`);
                 code.push(`stack[t${temp}] = t${temp + 1};`);
+                code.push(`t${temp + 1} = t${temp + 1} - 1;`);
             }
             else {
                 code.push(`t${temp + 1} = t${temp + 1} - 1;`);
                 code.push(`stack[t${temp}] = t${temp + 1};`);
+                code.push(`t${temp + 1} = t${temp + 1} + 1;`);
             }
+            val = `t${temp + 1}`;
             temp++;
-            temp++;
-            code.push(`t${temp} = stack[${temp-2}];`);
-            val = `t${temp}`;
             temp++;
         }
         else {

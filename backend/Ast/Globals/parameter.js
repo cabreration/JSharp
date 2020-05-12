@@ -15,6 +15,8 @@ class Parameter {
     getTypeOf() {
         return 'parameter';
     }
+
+    getTDC(env, label, temp) {}
 }
 
 module.exports.Parameter = Parameter;

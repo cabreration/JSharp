@@ -13,7 +13,7 @@ class Call {
     }
 
     getChildren() {
-        if (this.expList.length > 0)
+        if (this.expList.getChildren().length > 0)
             return [ this.id, this.expList ];
         else 
             return [ this.id ]
@@ -34,7 +34,7 @@ class Call {
     }
 
     filter(env) {
-        // get function 
+        // get all of the functions that have that name
         let options = Singleton.getFunctions(this.id.id);
         if (options.length == 0) {
             return {
@@ -42,8 +42,14 @@ class Call {
                 error: new SharpError('Semantico', `La funcion ${this.id.id} no ha sido definida`, this.id.row, this.id.column)
             }
         }
+        else if (options.length === 1) {
+            return {
+                state: true,
+                lead: options[0]
+            }
+        }
 
-        // choose the right option
+        // if more than one came up, choose based on parameters Count
         let paramsCount = this.expList.getChildren().length;
         let filteredOptions = [];
         for (let i = 0; i < options.length; i++) {
@@ -56,6 +62,12 @@ class Call {
             return {
                 state: false,
                 error: new SharpError('Semantico', `No existe ninguna definicion para la funcion ${this.id.id} que incluya la cantidad de parametros especificada`, this.id.row, this.id.column)
+            }
+        }
+        else if (filteredOptions.length === 1) {
+            return {
+                state: true,
+                lead: filteredOptions[0]
             }
         }
 
@@ -158,21 +170,41 @@ class Call {
         let val;
         // has parameters
         params = this.sortParameters(proc, params);
+        if (params == null) {
+            return new Updater(env, label, temp, null);
+        }
+
+        // now we need to compare that the parameters and the values passed types match
+        let typeValidation = this.validateCallParameters(proc, params, env);
+        if (!typeValidation) {
+            return new Updater(env, label, temp, null);
+        }
+
+        let previousArrow = Singleton.oneWords.arrow;
+        Singleton.oneWords.arrow = proc.role;
+
         code.push(`p = p + ${env.last};`);
         // push the value of the parameters to the stack
         for (let i = 0; i < params.length; i++) {
-            arg = params[i];
+            let arg = params[i];
             let argCode = arg.getTDC(env, label, temp);
             temp = argCode.temp;
             label = argCode.label;
-            code.push(argCode.code);
+            if (argCode.code != null) {
+                code.push(argCode.code);
+            }
             code.push(`t${temp} = ${argCode.value};`);
-            code.push(`stack[p] = t${temp};`);
+            code.push(`t${temp + 1} = p + ${i+1};`)
+            code.push(`stack[t${temp+1}] = t${temp};`);
+            temp++;
             temp++;
         }
         code.push(`call ${proc.id};`);
         code.push(`t${temp} = stack[p];`);
         code.push(`p = p - ${env.last};`);
+
+        Singleton.oneWords.arrow = previousArrow;
+
         val = `t${temp}`;
         temp++;
         let updater = new Updater(env, label, temp, code.join('\n'));
@@ -191,11 +223,18 @@ class Call {
         let sorted = [];
         for (let i = 0; i < params.length; i++) {
             if (params[i].getTypeOf() === 'asignment') {
-                for (let j = 0; j < compareTo.length; j++) {
+                let flag = false;
+                for (let j = i; j < compareTo.length; j++) {
                     if (params[i].id.id === compareTo[j]) {
                         sorted[j] = params[i];
+                        flag = true;
                         break;
                     }
+                }
+                if (!flag) {
+                    // Nombre incorrecto
+                    Singleton.insertError(new SharpError('Semantico', `El parametro denominado ${params[i].id.id} no forma parte de la definicion del metodo`, params[i].id.row, params[i].id.column));
+                    return null;
                 }
             }
             else {
@@ -203,6 +242,46 @@ class Call {
             }
         }
         return sorted;
+    }
+
+    validateCallParameters(proc, params, env) {
+        for (let i = 0; i < params.length; i++) {
+            let procParam = proc.symbols[i+1];
+            let currentParam = params[i];
+            // validate the currentParam value
+            let resultantType;
+            if (currentParam.getTypeOf() === 'asignment') {
+                resultantType = currentParam.expression.checkType(env);
+            }   
+            else {
+                resultantType = currentParam.checkType(env);
+            }
+
+            if (typeof(resultantType) === 'object') {
+                Singleton.insertError(resultantType);
+                return false;
+            }
+
+            let declaredType = procParam.type.name;
+            if (declaredType != resultantType) {
+                if (declaredType === 'var') {
+                    proc.symbols[i+1].type = resultantType;
+                }
+                else if (declaredType === 'double') {
+                    if (resultantType != 'int' && resultantType != 'char') {
+                        Singleton.insertError('Semantico', `La funcion ${this.id.id} esperaba un valor de tipo ${declaredType} pero recibio uno de tipo ${resultantType}`, this.id.row, this.id.column);
+                        return false;
+                    }
+                }
+                else if (declaredType === 'int') {
+                    if (resultantType != 'char') {
+                        Singleton.insertError('Semantico', `La funcion ${this.id.id} esperaba un valor de tipo ${declaredType} pero recibio uno de tipo ${resultantType}`, this.id.row, this.id.column);
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     sortParameters2(env, params) {

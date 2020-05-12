@@ -259,8 +259,10 @@ class Process {
             parameters.forEach(param => {
                 let sym = new Symbol(param.identifier.id, 'parameter', param.type.name, this.position, procEnv.id);
                 let r = procEnv.addSymbol(sym);
-                if (r)
+                if (r) {
                     this.position++;
+                    sym.setActive();
+                }
                 else {
                     Singleton.insertError(new SharpError('Semantico',
                     'El parametro "' + param.identifier.id + '" ya ha sido definido', param.identifier.row, param.identifier.column));
