@@ -20,6 +20,7 @@ const Process = require('./Procesor/process').Process;
 const Translator = require('./Procesor/C3D/translator').Translator;
 const TreePrinter = require('./Ast/Dot/treePrinter').TreePrinter;
 const parser = require('./Ast/Jison/grammar');
+const Prime = require('./Optimus/prime').Prime;
 
 console.log('reading test.j');
 fs.readFile('./Testing/current.j', 'utf8', (err, text) => {
@@ -47,8 +48,13 @@ fs.readFile('./Testing/current.j', 'utf8', (err, text) => {
             fs.writeFile('./Testing/test3DC.txt', threeDCode, (err, file) => {
                 if (err)
                     console.log(err);
+
+                let prime = new Prime();
+                prime.optimization();
             });
             console.log('done');
+
+
           }
           catch (e) {
             console.error(e);
