@@ -114,6 +114,7 @@ TEMPS_LIST
 
 P_DECL
     : varKW p comma h semicolon
+    | varKW h comma p semicolon
 ;
 
 HEAP_DECL

@@ -7,6 +7,10 @@ class AsignmentTDC {
         this.row = row;
     }
 
+    getTypeOf() {
+        return 'asignment';
+    }
+
     print() {
         // Optimizar antes de imprimir
         if (this.left.type === 3) {

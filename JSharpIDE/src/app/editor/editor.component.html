@@ -12,6 +12,9 @@
             <li class="nav-item">
               <a class="nav-link" (click)="openTs()">Tabla de Simbolos</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" (click)="openPrime()">Optimizacion</a>
+            </li>
         </ul>
       </div>
     </nav>
@@ -27,7 +30,7 @@
             <button class="btn btn-sm btn-outline-secondary mr-2">Save File</button>
             <button class="btn btn-sm btn-outline-secondary mr-2" (click)="DeleteTab()">Close File</button>
             <button class="btn btn-sm btn-outline-secondary mr-2" (click)="Compile()">Compile</button>
-            <button class="btn btn-sm btn-outline-secondary mr-2">Optimize</button>
+            <button class="btn btn-sm btn-outline-secondary mr-2" (click)="Optimize()">Optimize</button>
           </div>
         </div>
       </div>
@@ -111,6 +114,27 @@
             <th>{{error.description}}</th>
             <th>{{error.row}}</th>
             <th>{{error.column}}</th>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="optFlag">
+      <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Regla</th>
+            <th scope="col">Original</th>
+            <th scope="col">Resultado</th>
+            <th scope="col">Linea</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let prime of opt">
+            <th>{{prime.regla}}</th>
+            <th>{{prime.original}}</th>
+            <th>{{prime.optimizacion}}</th>
+            <th>{{prime.linea}}</th>
           </tr>
         </tbody>
       </table>

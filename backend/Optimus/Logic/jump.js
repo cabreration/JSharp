@@ -4,6 +4,10 @@ class Jump {
         this.row = row;
     }
 
+    getTypeOf() {
+        return 'jump';
+    }
+
     print() {
         return `goto ${this.label};`;
     }

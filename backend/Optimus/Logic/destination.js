@@ -4,6 +4,10 @@ class Destination {
         this.row = row;
     }
 
+    getTypeOf() {
+        return 'destination';
+    }
+
     print() {
         return `${this.label}:`;
     }

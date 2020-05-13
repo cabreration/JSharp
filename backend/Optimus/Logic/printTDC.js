@@ -5,6 +5,10 @@ class PrintTDC {
         this.row = row;
     }
 
+    getTypeOf() {
+        return 'print';
+    }
+
     print() {
         return `print(${this.mode}, ${this.value});`
     }

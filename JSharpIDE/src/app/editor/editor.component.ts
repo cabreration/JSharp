@@ -31,6 +31,9 @@ export class EditorComponent implements OnInit {
   symbolsFlag = false;
   table = [];
 
+  opt = [];
+  optFlag = false;
+
   @ViewChild('tabSet') tabRef: any;
   tabs = [];
   currentTab = "";
@@ -162,22 +165,48 @@ export class EditorComponent implements OnInit {
     }
   }
 
+  async Optimize() {
+    let result = await this.httpClient.post(httpAddress + 'optimize', { input: this.currentText }).toPromise();
+    if (result['state']=== true) {
+      this.opt = result['reporte'];
+      this.CreateNewTab(result['optimized'], "opt");
+      let event = { activeId: this.currentTab, nextId: 'ngb-tab-'+ this.tabsCounter }
+      this.ChangeCurrent(event);
+      this.success = 'El proceso de optimizacion ha sido completado';
+      setTimeout(() => this.success = '', 2000);
+    }
+    else {
+      this.alert = 'Algo salio mal';
+      setTimeout(() => this.alert = '', 2000);
+    }
+  }
+
   openDot() {
     this.dotFlag = true;
     this.errorsFlag = false;
     this.symbolsFlag = false;
+    this.optFlag = false;
   }
 
   openTs() {
     this.symbolsFlag = true;
     this.dotFlag = false;
     this.errorsFlag = false;
+    this.optFlag = false;
   }
 
   openErrors() {
     this.errorsFlag = true;
     this.dotFlag = false;
     this.symbolsFlag = false;
+    this.optFlag = false;
+  }
+
+  openPrime() {
+    this.optFlag = true;
+    this.dotFlag = false;
+    this.symbolsFlag = false;
+    this.errorsFlag = false;
   }
 
 }

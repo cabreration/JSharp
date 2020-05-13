@@ -4,6 +4,10 @@ class CallTDC {
         this.row = row;
     }
 
+    getTypeOf() {
+        return 'call';
+    }
+
     print() {
         return `call ${this.id};`;
     }

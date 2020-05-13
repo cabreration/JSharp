@@ -12,6 +12,7 @@ app.use(bodyParser.json());
 
 const compile = require('./endpoints/compile')(app);
 const store = require('./endpoints/store')(app);
+const optimize = require('./endpoints/optimize')(app);
 
 /* This is only to maker easier the testing part of the project, ill have to erase it later*/
 const fs = require('fs');
@@ -22,7 +23,7 @@ const TreePrinter = require('./Ast/Dot/treePrinter').TreePrinter;
 const parser = require('./Ast/Jison/grammar');
 const Prime = require('./Optimus/prime').Prime;
 
-console.log('reading test.j');
+/*console.log('reading test.j');
 fs.readFile('./Testing/current.j', 'utf8', (err, text) => {
     if (err) {
         console.error(err);
@@ -60,5 +61,8 @@ fs.readFile('./Testing/current.j', 'utf8', (err, text) => {
             console.error(e);
           }
     }
-}); 
+}); */
+
+let prime = new Prime();
+prime.optimization();
 

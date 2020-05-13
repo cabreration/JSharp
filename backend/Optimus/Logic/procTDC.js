@@ -5,6 +5,10 @@ class ProcTDC {
         this.row = row;
     }
 
+    getTypeOf() {
+        return 'proc';
+    }
+
     print() {
         let code = [];
         code.push(`proc ${this.id} begin`);
