@@ -1023,7 +1023,7 @@ parse: function parse(input) {
   const Type = require('../Constants/type').Type;
   const Function = require('../Globals/function').Function;
   const Identifier = require('../Constants/identifier').Identifier;
-  const NodeList = require('../Utilities/NodeList').NodeList;
+  const NodeList = require('../Utilities/nodeList').NodeList;
   const Parameter = require('../Globals/parameter').Parameter;
   const VarT1 = require('../Instructions/vart1').VarT1;
   const VarT2 = require('../Instructions/vart2').VarT2;

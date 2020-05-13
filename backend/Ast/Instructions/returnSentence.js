@@ -62,7 +62,18 @@ class ReturnSentence {
             }
             temp = expVal.temp;
             label = expVal.label;
-            code.push(`stack[p] = ${expVal.value};`);
+ 
+            // vamos a determinar cuantas posiciones hay que regresar para colocar el resultado en el stack
+            let penv = env;
+            let spaces = 0;
+            while (penv.parent != 'global') {
+                penv = Singleton.getEnviroment(penv.parent);
+                spaces += penv.last;
+            }
+
+            code.push(`t${temp} = p - ${spaces};`)
+            code.push(`stack[t${temp}] = ${expVal.value};`);
+            temp++;
             code.push('@@@@');
             return new Updater(env, label, temp, code.join('\n'));
         }

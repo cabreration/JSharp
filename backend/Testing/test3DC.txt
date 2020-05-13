@@ -1,4 +1,4 @@
-var t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11;
+var t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19, t20, t21;
 var p, h;
 var heap[];
 var stack[];
@@ -35,17 +35,34 @@ L5:
 t7 = t6;
 if (t7 == 0) goto L6;
 p = p + 2;
-stack[p] = 1;
+t8 = p - 2;
+stack[t8] = 1;
 p = p - 2;
 goto L2;
 p = p - 2;
 goto L3;
 L6:
 p = p + 2;
-t8 = p - 2;
-t9 = t8 + 1;
-t10 = stack[t9];
-stack[p] = t10;
+t9 = p - 2;
+t10 = t9 + 1;
+t11 = stack[t10];
+print("%i", t11);
+print("%c", 10);
+t12 = p - 2;
+t13 = t12 + 1;
+t14 = stack[t13];
+
+t15 = t14 - 1;
+t16 = t15;
+t17 = p + 1;
+stack[t17] = t16;
+p = p + 0;
+call factorial_1_5;
+t18 = stack[p];
+p = p - 0;
+t19 = t11 * t18;
+t20 = p - 2;
+stack[t20] = t19;
 p = p - 2;
 goto L2;
 p = p - 2;
