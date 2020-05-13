@@ -477,7 +477,7 @@ case 76:
 break;
 case 77:
 
-    this.$ = new Binary(new Operator('not equal', $$[$0-1], _$[$0-1].first_line, _$[$0-1].first_column), $$[$0-2], $$[$0]);
+    this.$ = new Binary(new Operator('not equals', $$[$0-1], _$[$0-1].first_line, _$[$0-1].first_column), $$[$0-2], $$[$0]);
   
 break;
 case 78:

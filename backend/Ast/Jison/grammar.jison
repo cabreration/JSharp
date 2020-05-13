@@ -533,7 +533,7 @@ EXPRESSION
     $$ = new Unary(new Operator('not', $1, @1.first_line, @1.first_column), $2);
   }
   | EXPRESSION notEquals EXPRESSION {
-    $$ = new Binary(new Operator('not equal', $2, @2.first_line, @2.first_column), $1, $3);
+    $$ = new Binary(new Operator('not equals', $2, @2.first_line, @2.first_column), $1, $3);
   }
   | EXPRESSION equalsValue EXPRESSION {
     $$ = new Binary(new Operator('equal value', $2, @2.first_line, @2.first_column), $1, $3);

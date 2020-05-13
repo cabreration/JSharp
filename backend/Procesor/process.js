@@ -257,7 +257,7 @@ class Process {
             let ret = new Symbol('return', 'local var', proc.type.name, 0, id.id+'_'+parameters.length+'_'+id.row, 0, 0);
             procEnv.addSymbol(ret);
             parameters.forEach(param => {
-                let sym = new Symbol(param.identifier.id, 'parameter', param.type.name, this.position, procEnv.id);
+                let sym = new Symbol(param.identifier.id, 'local var', param.type.name, this.position, procEnv.id);
                 let r = procEnv.addSymbol(sym);
                 if (r) {
                     this.position++;

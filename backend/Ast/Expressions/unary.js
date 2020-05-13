@@ -170,7 +170,7 @@ class Unary {
             val = `t${temp}`;
             temp++;
         }
-        else if (role === 'local var') {
+        else if (role === 'local var' || role === 'parameter') {
             code.push(`t${temp} = p - ${spaces};`);
             temp++;
             code.push(`t${temp} = t${temp-1} + ${pos};`);
@@ -190,7 +190,7 @@ class Unary {
             temp++;
         }
         else {
-            console.error('role');
+            console.error(role);
             console.error('ERROR EN asignment.js');
         }
         if (code.length > 0) {

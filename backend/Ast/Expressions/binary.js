@@ -505,8 +505,8 @@ class Binary {
                 code.push(d.code);
             }
             else if (type2 === 'boolean') {
-                let bool = val2 === '1';
-                let t = this.generateBool3DC(bool);
+                let t = this.generateBool3DC(val2, label);
+                label = t.label;
                 code.push(t.code);
             }
             else if (type2 === 'char') {
@@ -538,8 +538,8 @@ class Binary {
                 code.push(d.code);
             }
             else if (type1 === 'boolean') {
-                let bool = val1 === '1';
-                let t = this.generateBool3DC(bool);
+                let t = this.generateBool3DC(val1, label);
+                label = t.label;
                 code.push(t.code);
             }
             else if (type1 === 'char') {
@@ -611,46 +611,61 @@ class Binary {
         }
     }
 
-    generateBool3DC(val) {
+    generateBool3DC(val, label) {
         let code = [];
-        if (val) {
-            code.push(`heap[h] = 116;`);
-            code.push('h = h + 1;');
-            code.push(`heap[h] = 114;`);
-            code.push('h = h + 1;');
-            code.push('heap[h] = 117;');
-            code.push('h = h + 1;');
-            code.push('heap[h] = 101;');
-            code.push('h = h + 1;');
-        }
-        else {
-            code.push(`heap[h] = 102;`);
-            code.push('h = h + 1;');
-            code.push(`heap[h] = 97;`);
-            code.push('h = h + 1;');
-            code.push('heap[h] = 108;');
-            code.push('h = h + 1;');
-            code.push('heap[h] = 115;');
-            code.push('h = h + 1;');
-            code.push('heap[h] = 101;');
-            code.push('h = h + 1;');
-        }
+        code.push(`if (${val} == 0) goto L${label};`)
+        code.push(`heap[h] = 116;`);
+        code.push('h = h + 1;');
+        code.push(`heap[h] = 114;`);
+        code.push('h = h + 1;');
+        code.push('heap[h] = 117;');
+        code.push('h = h + 1;');
+        code.push('heap[h] = 101;');
+        code.push('h = h + 1;');
+        code.push(`goto L${label + 1};`)
+        code.push(`L${label}:`);
+        code.push(`heap[h] = 102;`);
+        code.push('h = h + 1;');
+        code.push(`heap[h] = 97;`);
+        code.push('h = h + 1;');
+        code.push('heap[h] = 108;');
+        code.push('h = h + 1;');
+        code.push('heap[h] = 115;');
+        code.push('h = h + 1;');
+        code.push('heap[h] = 101;');
+        code.push('h = h + 1;');
+        code.push(`L${label+1}:`);
+        label++;
+        label++;
         return {
-            code: code.join('\n')
+            code: code.join('\n'),
+            label: label
         }
     }
 
     generateString3DC(val, label, temp) {
         let code = [];
         code.push(`t${temp} = heap[${val}];`); // first char
+        code.push(`if (t${temp} == 0) goto L${label + 1};`)
         code.push(`L${label}:`);
-        code.push(`if (t${temp} == 0) goto L${label+1};`);
+        code.push(`if (t${temp} == 0) goto L${label + 2};`);
         code.push(`heap[h] = t${temp};`);
         code.push('h = h + 1;');
         code.push(`${val} = ${val} + 1;`);
         code.push(`t${temp} = heap[${val}];`);
         code.push(`goto L${label};`);
         label++;
+        code.push(`L${label}:`);
+        label++;
+        // Print null here
+        code.push(`heap[h] = 110;`);
+        code.push('h = h + 1;')
+        code.push('heap[h] = 117;');
+        code.push('h = h + 1;')
+        code.push('heap[h] = 108;');
+        code.push('h = h + 1;')
+        code.push('heap[h] = 108;');
+        code.push('h = h + 1;');
         code.push(`L${label}:`);
         label++;
         temp++;
@@ -702,13 +717,34 @@ class Binary {
         let temp1 = temp;
         let temp2 = temp + 1; // contains the accumulated number
         let temp3 = temp + 2;
-        temp += 3;
+        let temp4 = temp + 3;
+        let temp5 = temp + 4;
+        temp += 5;
         let label1 = label;
         let label2 = label + 1;
         let label3 = label + 2;
-        label += 3;
-        code.push(`t${temp1} = ${val}; #original`);
-        code.push(`t${temp2} = 0; #acumulador`);
+        let label4 = label + 3;
+        let label5 = label + 4;
+        let label6 = label + 5;
+        label += 6;
+        code.push(`t${temp1} = ${val};`);
+        code.push(`t${temp5} = 0;`);
+        /* Printing numbers that end in 0 */
+
+        code.push(`if (t${temp1} <> 0) goto L${label5};`);
+        code.push(`heap[h] = 48;`)
+        code.push('h = h + 1;')
+        code.push(`goto L${label6};`);
+        code.push(`L${label5}:`);
+        code.push(`t${temp4} = t${temp1} % 10;`);
+        code.push(`if (t${temp4} > 0) goto L${label4};`)
+        code.push(`t${temp1} = t${temp1} / 10;`);
+        code.push(`t${temp5} = t${temp5} + 1;`)
+        code.push(`goto L${label5};`);
+
+        /* Printing numbers that end in 0 */
+        code.push(`L${label4}:`)
+        code.push(`t${temp2} = 0;`);
         code.push(`L${label1}:`);
         code.push(`if (t${temp1} == 0) goto L${label2};`);
         code.push(`t${temp3} = t${temp1} % 10;`);
@@ -727,6 +763,13 @@ class Binary {
         code.push('h = h + 1;');
         code.push(`goto L${label2};`);
         code.push(`L${label3}:`);
+        // aqui hay que imprimir los ceros que le quitamos al principio
+        code.push(`if (t${temp5} == 0) goto L${label6};`);
+        code.push(`heap[h] = 48;`);
+        code.push(`h = h + 1;`);
+        code.push(`t${temp5} = t${temp5} - 1;`)
+        code.push(`goto L${label3};`)
+        code.push(`L${label6}:`);
         return {
             temp: temp,
             label: label,

@@ -78,12 +78,12 @@ class Asignment {
         // check that types match
         if (varType != expType) {
             let flag = false;
-            if (this.type.name === 'double') {
+            if (varType === 'double') {
                 if (expType === 'int' || expType === 'char') {
                     flag = true;
                 }
             }
-            else if (this.type.name === 'int') {
+            else if (varType === 'int') {
                 if (expType === 'char') {
                     flag = true;
                 }
@@ -116,7 +116,7 @@ class Asignment {
             temp++;
         }
         else {
-            console.error('role');
+            console.error(role);
             console.error('ERROR EN asignment.js');
         }
         if (code.length > 0) 

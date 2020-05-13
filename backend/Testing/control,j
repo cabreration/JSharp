@@ -193,3 +193,36 @@ void funcionFor() {
         }
     }
 }
+
+void corazon(double n) {
+    string figura = "";
+    double i = -3 * n / 2;
+    while (i < n + 1) {
+        figura = "";
+        double j = -3*n/2;
+        while (j < ((3*n/2)+1)) {
+            double absolutoI = i;
+            double absolutoJ = j;
+            if (i < 0) {
+                absolutoI = i * -1;
+            }
+            if (j < 0) {
+                absolutoJ = j*-1;
+            }
+            if ((absolutoI + absolutoJ < n) || ((-n/2-i) * (-n/2-i) + ( n/2-j) * ( n/2-j) <= n*n/2) || ((-n/2-i) * (-n/2-i) + (-n/2-j) * (-n/2-j) <= n*n/2)) {
+                figura = figura + "* ";
+            }
+            else {
+                if (figura == null) {
+                    figura = ". "
+                }
+                else {
+                    figura = figura + ". ";
+                }
+            }
+            j = j + 1;
+        }
+        print(figura);
+        i = i + 1;
+    }
+}
