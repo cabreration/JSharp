@@ -54,5 +54,5 @@ fs.readFile('./Testing/current.j', 'utf8', (err, text) => {
             console.error(e);
           }
     }
-});
+}); 
 

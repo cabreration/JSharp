@@ -101,7 +101,7 @@
   const SharpError = require('../../Procesor/Singleton/sharpError').SharpError;
   const Import = require('../Globals/import').Import;
   const Root = require('../Globals/root').Root;
-  const Type = require('../Constants/Type').Type;
+  const Type = require('../Constants/type').Type;
   const Function = require('../Globals/function').Function;
   const Identifier = require('../Constants/identifier').Identifier;
   const NodeList = require('../Utilities/NodeList').NodeList;
