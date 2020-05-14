@@ -119,6 +119,16 @@ class Prime {
                         }
                         break;
                     }
+                    else if (lines[j].getTypeOf() === 'proc') {
+                        // Si se podria eliminar lo que esta entre el salto y el procedimiento
+                        let spaces = j - i - 1;
+                        let index = i + 1;
+                        for (let k = 0; k < spaces; k++) {
+                            lines[index] = null;
+                            index++;
+                        }
+                        break;
+                    }
                 }
                 if (flag) {
                     // puedo eliminar todas las instrucciones
@@ -378,6 +388,9 @@ class Prime {
                     if (now.getTypeOf() === 'destination') {
                         break;
                     }
+                    else if (now.getTypeOf() === 'proc') {
+                        break;
+                    }
                     else {
                         original += lines[j].print() + '\n';
                         lines[j] = null;
@@ -407,7 +420,17 @@ class Prime {
         }
     }
 
-    rule22(lines, flag) {}
+    rule22(lines, flag) {
+        for (let i = 0; i < lines.length; i++) {
+            if (flag) {
+                flag = false;
+                continue;
+            }
+
+            let current = lines[i]; 
+            // lo primero es separar en bloques
+        }
+    }
 
     rule23(lines, flag, container) {
         let wholeA = [];
@@ -483,7 +506,89 @@ class Prime {
         return lines;
     }
 
-    rule24(lines, flag) {} 
+    rule24(lines, flag) {
+        for (let i = 0; i < lines.length; i++) {
+            if (flag) {
+                flag = false;
+                continue;
+            }
+
+            let current = lines[i]; 
+            if (current.getTypeOf() === 'destination') {
+                let label = current.label;
+                let actions = [];
+                let flag = false;
+                for (let j = i + 1; j < lines.length; j++) {
+                    let now = lines[j];
+                    actions.push({pos: j, ref: now});
+                    if (now.getTypeOf() === 'conditional' || now.getTypeOf() === 'jump') {
+                        if (now.label === label) {
+                            flag = true;
+                            break;
+                        }
+                        else {
+                            break;
+                        }
+                    }
+                    else if (now.getTypeOf() === 'destination') {
+                        break;
+                    }
+                }
+                if (flag) {
+                    let indexes = []
+                    for (let j = 0; j < actions.length; j++) {
+                        
+                    }
+                }
+            }
+        }
+    } 
+
+
+    getBlocks(lines, flag) {
+        let blocks = [];
+        let runner = [];
+        for (let i = 0; i < lines.length; i++) {
+            if (flag) {
+                flag = false;
+                continue;
+            }
+            let current = lines[i];
+            if (current.getTypeOf() === 'conditional' || current.getTypeOf() === 'jump' || current.getTypeOf() === 'call') {
+                if (runner.length == 0) {
+                    blocks.push( [ current ] );
+                }
+                else {
+                    blocks.push(runner);
+                    blocks.push( [ current ] );
+                }
+                runner = [];
+            }
+            else if (current.getTypeOf() === 'destination') {
+                if (runner.length == 0) {
+                    runner.push(current);
+                }
+                else {
+                    blocks.push(runner);
+                    runner = [ current ];
+                }
+            }
+            else if (current.getTypeOf() === 'proc') {
+                let b = this.blocks(current.instructions, false, current.id);
+                b.forEach(sq => {
+                   blocks.push(sq); 
+                });
+            }
+            else {
+                runner.push(current)
+                if (i + 1 == lines.length) {
+                    blocks.push( runner );
+                }
+            }
+        }
+
+        return blocks;
+    }
 
     blocks(lines, flag, id) {
         // un bloque tiene las instrucciones y etiqueta del bloque al que saltaria y su etiqueta propia
