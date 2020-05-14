@@ -4,54 +4,9 @@ var heap[];
 var stack[];
 p = 0;
 h = 0;
-if (t3 < t4) goto L12;
+t1 = 5;
+t2 = t1 + 30;
+if (t2 < 45) goto L1;
 call principal;
-proc principal begin
-t3 = 1;
-t4 = t3;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-t4 = t3;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-L11:
-t3 = t4;
-goto L6;
 L1:
-goto L7;
 L2:
-t2 = 10;
-print("%i", t2);
-L3:
-goto L6;
-L5:
-goto L2;
-L4:
-goto L7;
-L6:
-L7:
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-goto L10;
-L9:
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-L10:
-end

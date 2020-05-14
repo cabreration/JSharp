@@ -5,94 +5,20 @@ var stack[];
 p = 0;
 h = 0;
 
-if (t3 < t4) goto L12;
-goto L11;
-L12:
-
+t1 = 5;
+t2 = t1 + 30;
+if (t2 < 45) goto L1;
 call principal;
+L1:
+goto L2;
+
 proc principal begin
 t3 = 1;
-t4 = t3;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-t3 = t4;
-
-t4 = t3;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-L11:
-t3 = t4;
-goto L3;
-L1:
-goto L4;
-t1 = 5 + 0;
-print("%i", t1);
-goto L4;
-L2:
-t2 = 10;
-print("%i", t2);
 L3:
-goto L6;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-L5:
-goto L2;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-L4:
-goto L7;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-L6:
-goto L7;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-L7:
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-goto L10;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-L9:
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-h = h + 1;
-L10:
+t3 = t3 * 10;
+t4 = t3 + 1;
+if (t4 <= 10000) goto L3;
+print("%i", t4);
 end
+
+L2:

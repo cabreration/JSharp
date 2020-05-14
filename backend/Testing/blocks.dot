@@ -1,0 +1,33 @@
+digraph G {
+ node[shape=box]
+node0[label="var temps_list
+var p, h;
+var heap[];
+var stack[];p = 0;
+h = 0;
+t1 = 5;
+t2 = t1 + 30;
+"]
+node1[label="if (t2 < 45) goto L1;"]
+node2[label="call principal;"]
+L1[label="goto L2;"]
+principal[label="t3 = 1;
+"]
+L3[label="t3 = t3 * 10;
+t4 = t3 + 1;
+"]
+node6[label="if (t4 <= 10000) goto L3;"]
+node7[label="print
+"]
+node8[label="end"]
+node0->node1
+node1->L1
+node1->node2
+node2->principal
+L1->L2
+principal->L3
+L3->node6
+node6->L3
+node6->node7
+node7->node8
+}
