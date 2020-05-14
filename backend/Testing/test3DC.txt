@@ -1,25 +1,47 @@
-var t1,t2;
-var P, H;
+var t1, t2, t3, t4;
+var p, h;
 var heap[];
-var Stack[];
+var stack[];
 p = 0;
 h = 0;
 
-call principal;
+if (t3 < t4) goto L12;
+goto L11;
+L12:
 
+call principal;
 proc principal begin
-if(2 < 3) goto L1;
-goto L2;
+t3 = 1;
+t4 = t3;
+h = h + 1;
+h = h + 1;
+h = h + 1;
+h = h + 1;
+h = h + 1;
+h = h + 1;
+h = h + 1;
+t3 = t4;
+
+t4 = t3;
+h = h + 1;
+h = h + 1;
+h = h + 1;
+h = h + 1;
+h = h + 1;
+h = h + 1;
+L11:
+t3 = t4;
+goto L3;
 L1:
-goto L3;
-t1=5+0;
-print("%i" , t1);
-goto L3;
-L2:
-t2=10*1;
-print("%i" , t2);
-L3:
 goto L4;
+t1 = 5 + 0;
+print("%i", t1);
+goto L4;
+L2:
+t2 = 10;
+print("%i", t2);
+L3:
+goto L6;
 h = h + 1;
 h = h + 1;
 h = h + 1;
@@ -34,7 +56,7 @@ h = h + 1;
 h = h + 1;
 h = h + 1;
 L4:
-goto L6;
+goto L7;
 h = h + 1;
 h = h + 1;
 h = h + 1;
@@ -44,4 +66,33 @@ h = h + 1;
 h = h + 1;
 h = h + 1;
 L6:
+goto L7;
+h = h + 1;
+h = h + 1;
+h = h + 1;
+h = h + 1;
+h = h + 1;
+h = h + 1;
+L7:
+h = h + 1;
+h = h + 1;
+h = h + 1;
+h = h + 1;
+h = h + 1;
+h = h + 1;
+goto L10;
+h = h + 1;
+h = h + 1;
+h = h + 1;
+h = h + 1;
+h = h + 1;
+h = h + 1;
+L9:
+h = h + 1;
+h = h + 1;
+h = h + 1;
+h = h + 1;
+h = h + 1;
+h = h + 1;
+L10:
 end

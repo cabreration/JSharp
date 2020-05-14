@@ -295,10 +295,10 @@ CONDITION
 
 C_OPT
     : int {
-        $$ = $1;
+        $$ = Number($1);
     }
     | float {
-        $$ = $1;
+        $$ = Number($1);
     }
     | temp {
         $$ = $1;

@@ -28,6 +28,15 @@ class AsignmentTDC {
         }
     }
 
+    rule1Form() {
+        if (this.left.type === 1) {
+            if (this.right.type === 3 && typeof(this.right.arg1) != 'number') {
+                return true;
+            }
+        }
+        return false;
+    }
+
     performOptimization() {
         let original = `${this.left.value} = ${this.right.getNormal()};`
         if (this.right.type === 2 && this.right.operator === '+' ) {

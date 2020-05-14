@@ -3,10 +3,37 @@ class ConditionTDC {
         this.arg1 = arg1;
         this.arg2 = arg2;
         this.operator = operator;
+        this.row = row;
     }
 
     print() {
         return `(${this.arg1} ${this.operator} ${this.arg2})`
+    }
+
+    negate() {
+        let neg;
+        switch(this.operator) {
+            case "<":
+                neg = ">=";
+                break;
+            case "<=":
+                neg = ">";
+                break;
+            case ">":
+                neg = "<=";
+                break;
+            case ">=":
+                neg = "<";
+                break;
+            case "<>":
+                neg = '==';
+                break;
+            case "==":
+                neg = "<>";
+                break;
+        }
+
+        return `(${this.arg1} ${neg} ${this.arg2})`;
     }
 }
 

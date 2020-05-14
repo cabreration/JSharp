@@ -117,7 +117,7 @@ case 12:
         this.$ = $$[$0-1];
     
 break;
-case 14: case 15: case 16: case 17: case 18: case 19: case 20: case 40: case 43: case 44: case 45: case 46: case 47: case 48: case 49: case 54: case 55: case 56: case 57: case 58: case 59: case 60: case 62: case 66: case 67: case 68: case 69: case 70: case 71: case 72: case 73:
+case 14: case 15: case 16: case 17: case 18: case 19: case 20: case 40: case 43: case 44: case 45: case 46: case 47: case 48: case 49: case 56: case 57: case 58: case 59: case 60: case 62: case 66: case 67: case 68: case 69: case 70: case 71: case 72: case 73:
 
         this.$ = $$[$0];
     
@@ -167,7 +167,7 @@ case 37: case 38: case 39:
         this.$ = new Right(5, $$[$0-1], null, null);
     
 break;
-case 41: case 42:
+case 41: case 42: case 54: case 55:
 
         this.$ = Number($$[$0]);
     

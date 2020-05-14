@@ -54,6 +54,8 @@ class ForSentence {
         code.push(`${middleLabel}:`);
         let endLabel = `L${label}`;
         label++;
+        let continueLabel = `L${label}`;
+        label++;
         // validating condition
         if (this.middle.getChildren().length > 0) {
             // check that the condition returns a boolean
@@ -94,22 +96,27 @@ class ForSentence {
             Singleton.oneWords.loop = true;
         }
 
-        if (this.end.getChildren().length > 0) {
-            this.sentences.getChildren().push(this.end.getChildren()[0]);
-        }
-
         let instructions = this.sentences.getChildren();
         instructions.forEach(ins => {
             let tdc = ins.getTDC(forEnv, label, temp);
             if (tdc.code != null) {
                 tdc.code = tdc.code.replace(/!!!!/g, `goto ${endLabel};`);
-                tdc.code = tdc.code.replace(/{{{{/g, `goto ${middleLabel};`);
+                tdc.code = tdc.code.replace(/{{{{/g, `goto ${continueLabel};`);
                 tdc.code = tdc.code.replace(/@@@@/g, `p = p - ${moves};\n@@@@`);
                 code.push(tdc.code);
                 temp = tdc.temp;
                 label = tdc.label;
             }
         });
+        code.push(`${continueLabel}:`)
+        if (this.end.getChildren().length > 0) {
+            let tdc = this.end.getChildren()[0].getTDC(forEnv, label, temp);
+            if (tdc.code != null) {
+                code.push(tdc.code);
+                temp = tdc.temp;
+                label = tdc.label;
+            }
+        }
         code.push(`goto ${middleLabel};`);
         code.push(`${endLabel}:`);
         code.push(`p = p - ${moves};`);
