@@ -84,7 +84,7 @@
 
 INIT
     : TDC EOF {
-        return lines;
+        return { lines: lines };
     }
 ;
 

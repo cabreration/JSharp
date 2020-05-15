@@ -9,12 +9,12 @@ class ProcTDC {
         return 'proc';
     }
 
-    print() {
+    print(flag) {
         let code = [];
         code.push(`proc ${this.id} begin`);
         for (let i = 0; i < this.instructions.length; i++) {
             let ins = this.instructions[i];
-            let opt = ins.print();
+            let opt = ins.print(flag);
             code.push(opt);
         }
         code.push(`end`);

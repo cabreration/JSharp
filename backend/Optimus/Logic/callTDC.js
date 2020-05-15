@@ -8,7 +8,7 @@ class CallTDC {
         return 'call';
     }
 
-    print() {
+    print(flag) {
         return `call ${this.id};`;
     }
 }

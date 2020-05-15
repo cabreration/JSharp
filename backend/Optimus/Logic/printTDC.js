@@ -9,7 +9,7 @@ class PrintTDC {
         return 'print';
     }
 
-    print() {
+    print(flag) {
         return `print(${this.mode}, ${this.value});`
     }
 }

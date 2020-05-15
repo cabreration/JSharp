@@ -22,7 +22,7 @@ class VarT3 {
 
     getTDC(env, label, temp) {
         // validate expression
-        let expType = this.expression.checkType(env.id);
+        let expType = this.expression.checkType(env);
         if (typeof(expType) === 'object') {
             Singleton.insertError(expType);
             return new Updater(env, label, temp, null);

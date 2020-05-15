@@ -11,7 +11,7 @@ class AsignmentTDC {
         return 'asignment';
     }
 
-    print() {
+    print(flag) {
         // Optimizar antes de imprimir
         if (this.left.type === 3) {
             // a heap
@@ -23,8 +23,10 @@ class AsignmentTDC {
         }
         else {
             // evaluate if a optimizacion can be performed
-            //return `${this.left.value} = ${this.right.getNormal()};`;
-            return this.performOptimization();
+            if (flag)
+                return this.performOptimization();
+            else
+                return `${this.left.value} = ${this.right.getNormal()};`;
         }
     }
 

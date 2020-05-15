@@ -85,7 +85,7 @@ var $0 = $$.length - 1;
 switch (yystate) {
 case 1:
 
-        return lines;
+        return { lines: lines };
     
 break;
 case 4:

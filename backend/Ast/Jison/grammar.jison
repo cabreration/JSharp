@@ -752,9 +752,6 @@ SENTENCE
     $$ = new Unary(new Operator('decrement', $2, @2.first_line, @2.first_column),
       new Identifier($1.toLowerCase(), @1.first_line, @1.first_column));
   }
-  | error rightC {
-    console.log('Me estoy recuperando al encontrar una llave de cierre')
-  }
 ;
 
 ASIGNMENT 

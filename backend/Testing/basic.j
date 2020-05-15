@@ -9,6 +9,10 @@ void principal() {
     piramide(10)
     print("FIN NIVEL 2\n\n");
     corazon(5);
+    print('\n');
+    pruebaAmbitos()
+    print('\n');
+    operacionFunciones();
 }
 
 // DECLARACIONES SIMPLES
@@ -183,6 +187,41 @@ void nivel2While() {
         i++
     }
     print("aplicando break\n");
+}
+
+void pruebaAmbitos() {
+
+    integer i = 1;
+    while (i <= 3) {
+        integer j = 1;
+        while (j <= 3) {
+            print(i * j);
+            print("\n");
+            j++;
+        }
+        print("===========\n");
+        i++;
+    }
+
+}
+
+void operacionFunciones() {
+    print(multiplicador(3,3));
+    print("\n");
+    print(multiplicador(6,4));
+    print("\n");
+    print(multiplicador(8,7));
+    print("\n");
+}
+
+integer multiplicador(integer a, integer b){
+    if (a * b < 15) {
+        return 1;
+    }else if (a * b >= 15 && a * b < 30) {
+        return 2;
+    }else {
+        return 3;
+    }
 }
 
 void piramide(integer limite) {

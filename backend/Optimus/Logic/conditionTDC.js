@@ -6,7 +6,7 @@ class ConditionTDC {
         this.row = row;
     }
 
-    print() {
+    print(flag) {
         return `(${this.arg1} ${this.operator} ${this.arg2})`
     }
 

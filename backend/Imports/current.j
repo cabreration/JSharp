@@ -1,242 +1,94 @@
-// Archivo de prueba - basicos
-
-
 void principal() {
-    nivel1();
-    print("FIN NIVEL 1\n\n")
-    nivel2Switch(10, "Salomon", "Otorrinolaringologo")
-    switchAnidado();
-    piramide(10)
-    print("FIN NIVEL 2\n\n");
-    corazon(5);
+    inicio();
 }
 
-// DECLARACIONES SIMPLES
+integer var1 = 79;
 
-integer int1, int2, int3, int4, int5 = 47
-double doub1, doub2, doub3, doub4, doub4 = 563.21
-boolean bool1, bool2, bool3, bool4, bool5 = true;
-char c1, c2, c3, c4, c5 = 'A';
-string str1, str2, str3, str4, str5 = "Hola Mundo";
+void Inicio() {
+    print("-----------------CALIFICACION-----------------\n");
+    integer var1 = 0;
 
-/*
- * Nivel 1
- * Imprimir algunas de las variables
- * Cambiar su valor y volver a imprimirlas
- * Declarar variables locales del metodo 
- * Imprimir esas variables
- * Incluye algunos casteos implicitos
-*/
-void nivel1() {
-    print("El valor integer: " + int4 + "\n"); 
-    print("El valor double: " + doub3 + "\n");
-    print("El valor booleano: " + bool1 + "\n");
-    print("El valor char: " + c5 + "\n");
-    print("El valor de string: " + str2 + "\n");
-
-    int4 = 'a';
-    doub3 = int4;
-    bool1 = !bool1;
-    c5 = 'B';
-    str2 = "Adios Mundo"
-
-    print("El valor integer: " + int4 + "\n");
-    print("El valor double: " + doub3 + "\n");
-    print("El valor booleano: " + bool1 + "\n");
-    print("El valor char: " + c5 + "\n");
-    print("El valor de string: " + str2 + "\n");
-
-    integer localI_1, localI_2, localI_3;
-    boolean localB_1, localB_2, localB_3;
-    double localD_1, localD_2, localD_3;
-    char localC_1, localC_2, localC_3;
-    string localS_1, localS_2, localS_3;
-
-    // Imprimiendo los valores por defecto
-    print("El valor integer: " + localI_2 + "\n");
-    print("El valor double: " + localD_3 + "\n");
-    print("El valor booleano: " + localB_1 + "\n");
-    print("El valor char: " + localC_1 + "\n");
-    print("El valor de string: " + localS_3 + "\n");
-
-    // Cambiando valores
-    localI_1 = 777
-    localB_2 = !localB_2
-    localD_3 = localD_3 + 88.88
-    localC_1 = 't'
-    localS_2 = "si alguien mas con su carinio"
-
-    print("El valor integer: " + localI_1 + "\n");
-    print("El valor double: " + localD_3 + "\n");
-    print("El valor booleano: " + localB_2 + "\n");
-    print("El valor char: " + localC_1 + "\n");
-    print("El valor de string: " + localS_2 + "\n");
-    print("\n\n");
-}
-
-/*
- * NIVEL 2
- * Una funcion por  cada sentencia de control, poco anidamiento
- */
-
-void nivel2Switch(integer primero, string segundo, string tercero) {
-    switch(primero) {
-        case 6:
-            print("Switch incorrecto\n");
-            break;
-        case 7:
-            print("Aqui tambien es incorrecto\n")
-            break
-        case 8:
-            print("Otro que es incorrecto\n");
-        default:
-            print("Justamente aqui es el lugar correcto: " + primero + "\n");
-    }
-
-    switch (segundo) {
-        case "Salomon":
-        case "David":
-            print("Cases sin break correctos\n");
-        default:
-            print("Uff, segundo switch incorrecto\n");
-    }
-
-    switch(Tercero) {
-        case "Dentista":
-            print("Tercer Switch incorrecto :(");
-            break;
-        case "Dogtor":
-            print("Tercer Switch incorrecto :'v");
-        case "Otorrinolaringologo":
-            print("Aqui si es!!! - Tercer Switch\n")
-        default:
-            print("Incorrecto - el default solo se imprime si no hay ninguna coincidencia \n");
-    }
-
-    print("\n\n");
-}
-
-void switchAnidado() {
-    integer a=1
-    switch(a)
+    if (var1 != 0)
     {
-        case 1:
-            print('l')
-            a=a+3
-            switch(a)
-            {
-                case 1:
-                    print('l')
-                    
-                case 2:
-                    print('m')
-                    
-                case 3:
-                    print('w')
-                    break
-                case 4:
-                    print('j')
-                    
-                case 5:
-                    print('v')
-                    
-                default:
-                    print('d')
-                    
-            }
-            break
-        case 2:
-            print('m')
-            break
-        case 3:
-            print('w')
-            break
-        case 4:
-            print('j')
-            break
-        case 5:
-            print('v')
-            break
-        default:
-            print('d')
-            break
+        print("No se toma con prioridad la variable local ante la global\n");
     }
+    else{
+        print("Tu manejo de los ambitos parece correcto\n")
+    }
+
+    Declaracion();
+
+    Ambitos2();
+
+    Aritmeticas();
+
+    //Logicas();
+
+    //Relacionales();
 }
 
-void nivel2While() {
-    print("Funcion de While:\n")
-    int i = 0;
-    while (i < 100) {
-        if (i == 15) {
-            i++
-            continue
-        }
-        else if (i == 30) {
-            break
-        }
-        else if (i == 26) {
-            print("retornando sin hacer break\n");
-            return;
-        }
-        print(i);
-        print('\n');
-        i++
+ void declaracion(){
+    print("========= Metodo Declaracion =========\n");
+    var n4 := 2;
+    var str4 := "Voy a ganar Compiladore";
+    var db4 := 0.0;
+    var db1 := db4;
+    var chr4 := 's';
+
+    if (db1 == db4) {
+        print(str4 + chr4 +" " +n4+" :D\n");
     }
-    print("aplicando break\n");
+    else {
+        print("Problemas en el metodo declaracion :(\n");
+    }
+    print("======================================\n");
 }
 
-void piramide(integer limite) {
-    for (integer i = 0; i < limite; i++) {
-        for (integer j = i; j < limite; j++) {
-            print("*")
-        }
-        print("\n");
-    }
+ void Ambitos2(){
+    print("========= Error Ambitos ==============\n");
+    print("Debería lanzar error: "+amb1);
+    string amb1 = "Desde ambito2";
+    print("======================================\n");
+    print("================ Nice ================\n");
+    punteo = punteo + 5;
+    print("Sin error: "+amb1+ "\n");
+    print("======================================\n");
 
-    print("Fin de la piramide\n\n");
 }
 
+void Aritmeticas() {
 
-/*
- * NIVEL 3 - sentencias de control complicadas
-*/
-
-void corazon(double n) {
-    string figura = "";
-    double i = -3 * n / 2;
-    while (i < n + 1) {
-        figura = "";
-        double j = -3*n/2;
-        while (j < ((3*n/2)+1)) {
-            double absolutoI = i;
-            double absolutoJ = j;
-            if (i < 0) {
-                absolutoI = i * -1;
-            }
-            if (j < 0) {
-                absolutoJ = j*-1;
-            }
-            if ((absolutoI + absolutoJ < n) || ((-n/2-i) * (-n/2-i) + ( n/2-j) * ( n/2-j) <= n*n/2) || ((-n/2-i) * (-n/2-i) + (-n/2-j) * (-n/2-j) <= n*n/2)) {
-                if (figura == null) {
-                    figura = "* ";
-                }
-                else {  
-                    figura = figura + "* ";
-                }
-            }
-            else {
-                if (figura == null) {
-                    figura = ". "
-                }
-                else {
-                    figura = figura + ". ";
-                }
-            }
-            j = j + 1;
-        }
-        print(figura + "\n");
-        i = i + 1;
+    print("==============Aritmeticas=============\n");
+    string art1 = "Hola "+"C"+"O"+"M"+"P"+"I" + '\n';
+    print(art1);
+    if (art1=="Hola COMPI\n"){
+        print("you da beast\n");
+    }else {
+        print("Perdiste 3 puntos en suma de y :c");
     }
 
-    print("\nFin del Corazon\n\n");
+    double n1 = 0.0 + 1 + 1 + 1 + 0.1 + 49;
+    print("El valor de  n1 = "+n1);
+    if (n1 == 52.1){
+        print("Buena suma muchacho\n");
+    }else {
+        print("Perdiste 5 puntos en suma de enteros booleanos y caracteres :c\n");
+    }
+
+    double n4 = (5750 * 2) - 11800 * 1.0;
+    double n3 = (((3 * 3) + 4) - 80 + 40.00 * 2 + 358.50 - (29 / 14.50)) - (0.50) + n4;
+    print("El valor de n3 = " + n3 + "\n");
+    if (n3 == 69 || n3 == 69.0)
+    {
+        print("Buenas aritmeticas muchacho\n");
+    }
+    else 
+    {
+        print("Perdiste 3 puntos :c \n");
+    }
+    
+    //operacionesBasicas();
+    //operacionesAvanzadas();
+    print("======================================\n");
+    
 }

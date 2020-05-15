@@ -31,12 +31,12 @@ class Prime {
                     // lines = this.rule19(lines, true);
                     lines = this.rule20(lines, true);
                     // lines = this.rule23(lines, true, null);
-                    prime.push(lines[0].print()); // temporales
+                    prime.push(lines[0].print(false)); // temporales
                     prime.push('var p, h;');
                     prime.push('var heap[];')
                     prime.push('var stack[];')
                     for (let i = 1; i < lines.length; i++) {
-                        let result = lines[i].print();
+                        let result = lines[i].print(true);
                         if (result != null && result != '\n' && result != '') {
                             prime.push(result);
                         }
@@ -84,7 +84,7 @@ class Prime {
                                 break;
                             }
                             else if (asig.right.arg1 === name && asig.left.value === other) {
-                                Report.changes.push({ regla: 1, original: asig.print(), optimizacion: '', linea: asig.row });
+                                Report.changes.push({ regla: 1, original: asig.print(false), optimizacion: '', linea: asig.row });
                                 lines[j] = null;
                             }
                         }
@@ -136,10 +136,10 @@ class Prime {
                     let prime = '';
                     for (let j = i; j < lines.length; j++) {
                         if (lines[j].getTypeOf() === 'destination') {
-                            prime = lines[j].print();
+                            prime = lines[j].print(false);
                             break;
                         }
-                        original += lines[j].print() + '\n';
+                        original += lines[j].print(false) + '\n';
                         lines[j] = null;
                     }
                     Report.changes.push({regla: 2, original: original, optimzacion: prime, linea: current.row});
@@ -174,9 +174,9 @@ class Prime {
                             let dest = lines[i + 2];
                             if (dest.getTypeOf() === 'destination' && dest.label === lab) {
                                 // All the conditions met, now update
-                                let original = current.print();
-                                original += '\n' + jmp.print();
-                                original += '\n' + dest.print();
+                                let original = current.print(false);
+                                original += '\n' + jmp.print(false);
+                                original += '\n' + dest.print(false);
                                 let neg = cond.negate();
                                 let prime = `if ${neg} goto ${dest.label};`;
                                 lines[i + 1] = null;
@@ -234,21 +234,21 @@ class Prime {
                     }
                     if (res) {
                         if (i+1 < lines.length && lines[i+1].getTypeOf() === 'jump') {
-                            let original = current.print();
+                            let original = current.print(false);
                             let prime = '';
-                            original += '\n' + lines[i+1].print();
+                            original += '\n' + lines[i+1].print(false);
                             lines[i+1]= null;    
                             lines[i] = new Jump(label, current.row);
-                            prime = lines[i].print();
+                            prime = lines[i].print(false);
                             Report.changes.push({regla: 4, original: original, optimizacion: prime, linea: current.row})
                         }
                     }
                     else {
                         if (i + 1 < lines.length && lines[i+1].getTypeOf() === 'jump') {
-                            let original = current.print();
+                            let original = current.print(false);
                             let prime = '';
-                            original += '\n'+ lines[i+1].print();
-                            prime = lines[i+1].print();    
+                            original += '\n'+ lines[i+1].print(false);
+                            prime = lines[i+1].print(false);    
                             Report.changes.push({regla: 5, original: original, optimizacion: prime, linea: current.row});
                             lines[i] = null;
                         }
@@ -282,9 +282,9 @@ class Prime {
                             if (j + 1 == lines.length)
                                 break;
                             if (lines[j+1].getTypeOf() === 'jump') {
-                                let original = current.print();
+                                let original = current.print(false);
                                 current.label = lines[j+1].label;
-                                let prime = current.print();
+                                let prime = current.print(false);
                                 Report.changes.push({regla: current.getTypeOf() === 'jump' ? 6 : 7, original: original, optimizacion: prime, linea: current.row });
                             }
                             break;
@@ -351,7 +351,7 @@ class Prime {
                             }
 
                             if (state) {
-                                original += lines[j].print() + '\n';
+                                original += lines[j].print(false) + '\n';
                                 lines[j] = null;
                             }
                         }
@@ -392,7 +392,7 @@ class Prime {
                         break;
                     }
                     else {
-                        original += lines[j].print() + '\n';
+                        original += lines[j].print(false) + '\n';
                         lines[j] = null;
                     }
                 }
@@ -611,11 +611,11 @@ class Prime {
                 let lab = runLabel == null ? blocks.length : runLabel;
                 runJump = current.label;
                 if (runner == '') {
-                    blocks.push( { instructions: current.print(), label: lab, jump: runJump, elseJump: blocks.length+1});
+                    blocks.push( { instructions: current.print(false), label: lab, jump: runJump, elseJump: blocks.length+1});
                 }
                 else {
                     blocks.push({instructions: runner, label: lab, jump: blocks.length + 1, elseJump: null});
-                    blocks.push({ instructions: current.print(), label: blocks.length, jump: runJump, elseJump: blocks.length+1 });
+                    blocks.push({ instructions: current.print(false), label: blocks.length, jump: runJump, elseJump: blocks.length+1 });
                 }
                 runner = '';
                 runLabel = null;
@@ -625,11 +625,11 @@ class Prime {
                 let lab = runLabel == null ? blocks.length : runLabel;
                 runJump = current.label;
                 if (runner == '') {
-                    blocks.push( { instructions: current.print(), label: lab, jump: runJump, elseJump: null});
+                    blocks.push( { instructions: current.print(false), label: lab, jump: runJump, elseJump: null});
                 }
                 else {
                     blocks.push({instructions: runner, label: lab, jump: blocks.length + 1, elseJump: null});
-                    blocks.push({ instructions: current.print(), label: blocks.length, jump: runJump, elseJump: null });
+                    blocks.push({ instructions: current.print(false), label: blocks.length, jump: runJump, elseJump: null });
                 } 
                 runner = '';
                 runLabel = null;
@@ -650,11 +650,11 @@ class Prime {
                 let lab = runLabel == null ? blocks.length : runLabel;
                 runJump = current.id;
                 if (runner == '') {
-                    blocks.push( { instructions: current.print(), label: lab, jump: runJump, elseJump: null});
+                    blocks.push( { instructions: current.print(false), label: lab, jump: runJump, elseJump: null});
                 }
                 else {
                     blocks.push({instructions: runner, label: lab, jump: blocks.length + 1, elseJump: null});
-                    blocks.push({ instructions: current.print(), label: blocks.length, jump: runJump, elseJump: null });
+                    blocks.push({ instructions: current.print(false), label: blocks.length, jump: runJump, elseJump: null });
                 } 
                 runner = '';
                 runLabel = null;
@@ -682,7 +682,7 @@ class Prime {
                 if (current.getTypeOf() === 'print')
                     runner += 'print\n';
                 else
-                    runner += current.print() + '\n';
+                    runner += current.print(false) + '\n';
                 if (i + 1 == lines.length) {
                     let lab = runLabel == null ? blocks.length : runLabel;
                     blocks.push( { instructions: runner, label: lab, jump: blocks.length, elseJump: null} );

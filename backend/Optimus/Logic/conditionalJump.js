@@ -9,7 +9,7 @@ class ConditionalJump {
         return 'conditional';
     }
 
-    print() {
+    print(flag) {
         return `if ${this.condition.print()} goto ${this.label};`;
     }
 }

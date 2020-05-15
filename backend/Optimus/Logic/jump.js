@@ -8,7 +8,7 @@ class Jump {
         return 'jump';
     }
 
-    print() {
+    print(flag) {
         return `goto ${this.label};`;
     }
 }

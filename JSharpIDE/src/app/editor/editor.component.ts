@@ -168,6 +168,7 @@ export class EditorComponent implements OnInit {
   async Optimize() {
     let result = await this.httpClient.post(httpAddress + 'optimize', { input: this.currentText }).toPromise();
     if (result['state']=== true) {
+      this.dot = result['diagrama'];
       this.opt = result['reporte'];
       this.CreateNewTab(result['optimized'], "opt");
       let event = { activeId: this.currentTab, nextId: 'ngb-tab-'+ this.tabsCounter }

@@ -8,7 +8,7 @@ class Destination {
         return 'destination';
     }
 
-    print() {
+    print(flag) {
         return `${this.label}:`;
     }
 }
