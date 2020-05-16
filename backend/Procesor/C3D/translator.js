@@ -90,6 +90,7 @@ class Translator {
         let globalCode = [];
         for (let i = 0; i < procedures.length; i++) {
             let current = procedures[i];
+            Singleton.oneWords.arrow = current.type.name;
             let id = current.id.id;
             let paramsCount = current.parameters.getChildren().length;
             let row = current.id.row;

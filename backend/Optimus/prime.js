@@ -30,7 +30,7 @@ class Prime {
                     lines = this.rules6n7(lines, true);
                     // lines = this.rule19(lines, true);
                     lines = this.rule20(lines, true);
-                    // lines = this.rule23(lines, true, null);
+                    lines = this.rule23(lines, true, null);
                     prime.push(lines[0].print(false)); // temporales
                     prime.push('var p, h;');
                     prime.push('var heap[];')
@@ -243,6 +243,13 @@ class Prime {
                             prime = lines[i].print(false);
                             Report.changes.push({regla: 4, original: original, optimizacion: prime, linea: current.row})
                         }
+                        /*else if ((i+1 < lines.length && lines[i+1].getTypeOf() != 'jump') || i + 1 == lines.length) {
+                            let original = current.print(false);
+                            let prime = '';
+                            lines[i] = new Jump(label, current.row);
+                            prime = lines[i].print(false);
+                            Report.changes.push({regla: 4, original: original, optimizacion: prime, linea: current.row})
+                        }*/
                     }
                     else {
                         if (i + 1 < lines.length && lines[i+1].getTypeOf() === 'jump') {
@@ -253,6 +260,12 @@ class Prime {
                             Report.changes.push({regla: 5, original: original, optimizacion: prime, linea: current.row});
                             lines[i] = null;
                         }
+                        /*else if (i+1 < lines.length && lines[i+1].getTypeOf() != 'jump' || i + 1 == lines.length) {
+                            let original = current.print(false);
+                            let prime = '';  
+                            Report.changes.push({regla: 5, original: original, optimizacion: prime, linea: current.row});
+                            lines[i] = null;
+                        }*/
                     }
                 }
             }
@@ -346,9 +359,7 @@ class Prime {
                                 state = true;
                             }
                             else if (now.getTypeOf() === 'destination' && now.label != label) {
-                                if (state) {
-                                    break;
-                                }
+                                break;
                             }
 
                             if (state) {
@@ -363,7 +374,7 @@ class Prime {
                 }
             }
             else if (current.getTypeOf() === 'proc') {
-                current.instructions = this.rules4n5(current.instructions, false);
+                current.instructions = this.rule19(current.instructions, false);
             }
 
         }
@@ -489,6 +500,14 @@ class Prime {
                     if (ocurrencies.length > 0) {
                         continue;
                     }
+                    ocurrencies = wholeA.filter(el => el.left.type === 2 && el.left.value == name);
+                    if (ocurrencies.length > 0) continue;
+                    ocurrencies = wholeA.filter(el => el.left.type === 3 && el.left.value == name);
+                    if (ocurrencies.length > 0) continue;
+                    ocurrencies = wholeA.filter(el => el.right.type === 4 && el.right.arg1 == name);
+                    if (ocurrencies.length > 0) continue;
+                    ocurrencies = wholeA.filter(el => el.right.type === 5 && el.right.arg1 == name);
+                    if (ocurrencies.length > 0) continue;
                     ocurrencies = wholeP.filter(el => el.value == name || el.value == '-'+name);
                     if (ocurrencies.length > 0) {
                         continue;
@@ -498,6 +517,7 @@ class Prime {
                     if (ocurrencies.length > 0) {
                         continue;
                     }
+                    Report.changes.push({ regla: 23, original: lines[i].print(false), optimizacion: '', linea: current.row });
                     lines[i] = null;
                 }
             }

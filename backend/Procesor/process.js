@@ -273,7 +273,6 @@ class Process {
             if (flag) {
                 procEnv = Singleton.insertEnviroment(procEnv);
                 if (procEnv != null) {
-                    Singleton.oneWords.arrow = procEnv.role;
                     // Gotta process the instructions of every procedure
                     let sentences = proc.sentences.getChildren();
                     this.processInstructions(sentences, procEnv);

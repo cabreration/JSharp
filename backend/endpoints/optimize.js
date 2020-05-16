@@ -23,9 +23,9 @@ module.exports = (app) => {
       lines = optimizer.rule3(lines, true);
       lines = optimizer.rules4n5(lines, true);
       lines = optimizer.rules6n7(lines, true);
-      // lines = this.rule19(lines, true);
+      lines = optimizer.rule19(lines, true);
       lines = optimizer.rule20(lines, true);
-      // lines = this.rule23(lines, true, null);
+      lines = optimizer.rule23(lines, true, null);
       prime.push('var p, h;');
       prime.push('var heap[];')
       prime.push('var stack[];')

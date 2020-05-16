@@ -34,7 +34,6 @@ h = h + 1;
 h = h + 1;
 L2:
 if (0 == 1) goto L3;
-goto L5;
 h = h + 1;
 h = h + 1;
 h = h + 1;
