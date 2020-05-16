@@ -9,7 +9,6 @@ class Symbol {
         this.column = column;
         this.constant = false;
         this.active = false;
-        this.arraySize = 0;
     }
 
     shadow() {
@@ -22,10 +21,6 @@ class Symbol {
 
     setActive() {
         this.active = true;
-    }
-
-    setSize(size) {
-        this.arraySize = size;
     }
 }
 

@@ -760,7 +760,7 @@ SENTENCE
 
 ASIGNMENT 
   : id asignment EXPRESSION {
-    $$ = new Asignment(new Identifier($1.toLowerCase(), @1.first_line, @1.first_column), [], $3, @2.first_line, @2.first_column);
+    $$ = new Asignment(new Identifier($1.toLowerCase(), @1.first_line, @1.first_column), null, $3, @2.first_line, @2.first_column);
   }
   | id dot id asignment EXPRESSION {
     $$ = new Asignment(new Identifier($1.toLowerCase(), @1.first_line, @1.first_column), new NodeList([new Access(1, $3.toLowerCase(), @2.first_line, @2.first_column)], 'ACCESS LIST'), $5, @4.first_line. @4.first_column);
@@ -820,7 +820,7 @@ EXP_OPT
     $$ = $1;
   }
   | id asignment EXPRESSION {
-    $$ = new Asignment(new Identifier($1.toLowerCase(), @1.first_line, @1.first_column), [], $3, @1.first_line, @1.first_column);
+    $$ = new Asignment(new Identifier($1.toLowerCase(), @1.first_line, @1.first_column), null, $3, @1.first_line, @1.first_column);
   }
   | byValue EXPRESSION {
     $2.byValue();
@@ -828,7 +828,7 @@ EXP_OPT
   }
   | id asignment byValue EXPRESSION {
     $4.byValue();
-    $$ = new Asignment(new Identifier($1.toLowerCase(), @1.first_line, @1.first_column), [], $4, @1.first_line, @1.first_column);
+    $$ = new Asignment(new Identifier($1.toLowerCase(), @1.first_line, @1.first_column), null, $4, @1.first_line, @1.first_column);
   }
 ;
 
