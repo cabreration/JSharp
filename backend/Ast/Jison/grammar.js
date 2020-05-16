@@ -362,38 +362,36 @@ case 54:
 
     $$[$0-9].name += '[]';
     $$[$0-9].arrayFlag = true;
-    $$[$0-3].name += '[]';
-    $$[$0-3].arrayFlag = true;
-    this.$ = new VarT1($$[$0-9], $$[$0-6], new ArrayExpression(null, $$[$0-3], $$[$0-1]));
+    this.$ = new VarT1($$[$0-9], new NodeList($$[$0-6], 'IDENTIFIERS LIST'), new ArrayExpression(null, $$[$0-3], $$[$0-1]));
   
 break;
 case 55:
 
-    this.$ = new VarT1(new Type($$[$0-9]+'[]', _$[$0-9].first_line, _$[$0-9].first_column, true), $$[$0-6], new ArrayExpression(null, new Type($$[$0-3]+'[]', _$[$0-3].first_line, _$[$0-3].first_column),$$[$0-1]));
+    this.$ = new VarT1(new Type($$[$0-9]+'[]', _$[$0-9].first_line, _$[$0-9].first_column, true), new NodeList($$[$0-6], 'IDENTIFIERS LIST'), new ArrayExpression(null, new Type($$[$0-3], _$[$0-3].first_line, _$[$0-3].first_column, false) ,$$[$0-1]));
   
 break;
 case 56:
 
     $$[$0-7].name += '[]';
     $$[$0-7].arrayFlag = true;
-    this.$ = new VarT1($$[$0-7], $$[$0-4], new ArrayExpression(new NodeList($$[$0-1], 'ELEMENTS')));
+    this.$ = new VarT1($$[$0-7], new NodeList($$[$0-4], 'IDENTIFIERS LIST'), new ArrayExpression(new NodeList($$[$0-1], 'ELEMENTS')));
   
 break;
 case 57:
 
-    this.$ = new VarT1(new Type($$[$0-7]+'[]', _$[$0-7].first_line, _$[$0-7].first_column, true), $$[$0-4], new ArrayExpression(new NodeList($$[$0-1], 'ELEMENTS')));
+    this.$ = new VarT1(new Type($$[$0-7]+'[]', _$[$0-7].first_line, _$[$0-7].first_column, true), new NodeList($$[$0-4], 'IDENTIFIERS LIST'), new ArrayExpression(new NodeList($$[$0-1], 'ELEMENTS')));
   
 break;
 case 58:
 
     $$[$0-3].name += '[]';
     $$[$0-3].arrayFlag = true;
-    this.$ = new VarT5($$[$0-3], $$[$0]);
+    this.$ = new VarT5($$[$0-3], new NodeList($$[$0], 'IDENTIFIERS LIST'));
   
 break;
 case 59:
 
-    this.$ = new VarT5(new Type($$[$0-3]+'[]', _$[$0-3].first_line, _$[$0-3].first_column, true), $$[$0]);
+    this.$ = new VarT5(new Type($$[$0-3]+'[]', _$[$0-3].first_line, _$[$0-3].first_column, true), new NodeList($$[$0], 'IDENTIFIERS LIST'));
   
 break;
 case 60: case 165:
@@ -605,6 +603,21 @@ break;
 case 102:
 
     this.$ = new CharValue($$[$0], _$[$0].first_line, _$[$0].first_column);
+  
+break;
+case 103:
+
+    this.$ = new ArrayExpression(null, new Type($$[$0-3], _$[$0-3].first_line, _$[$0-3].first_column, false), $$[$0-1], _$[$0-4].first_line, _$[$0-4].first_column);
+  
+break;
+case 104:
+
+    this.$ = new ArrayExpression(null, $$[$0-3], $$[$0-1], _$[$0-4].first_line, _$[$0-4].first_column);
+  
+break;
+case 105:
+
+    this.$ = new ArrayExpression(new NodeList($$[$0-1], 'VALUES'), null, null, _$[$0-2].first_line, _$[$0-2].first_column);
   
 break;
 case 106:

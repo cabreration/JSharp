@@ -318,6 +318,9 @@ class PrintSentence {
 
         code.push(`${temp1} = 1;`);
         code.push(`${temp2} = heap[${value}];`);
+        code.push(`${temp2} = ${temp2} + 1;`);
+        code.push('print("%c", 91);');
+        code.push('print("%c", 32);');
         code.push(`${label1}:`);
         code.push(`if (${temp1} == ${temp2}) goto ${label2};`);
         code.push(`${temp3} = ${value} + ${temp1};`);
@@ -350,13 +353,15 @@ class PrintSentence {
                 label = obj.label;
                 break;
         }
+        code.push('print("%c", 32);');
         code.push(`${temp1} = ${temp1} + 1;`);
         code.push(`goto ${label1};`);
         code.push(`${label2}:`);
+        code.push('print("%c", 93);');
         return {
             label: label,
             temp: temp,
-            code: code.join('\n');
+            code: code.join('\n')
         }
     }
 }

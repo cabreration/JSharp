@@ -432,28 +432,26 @@ ARRAY_DECL
   : TYPE leftS rightS ID_LIST asignment strcKW TYPE leftS EXPRESSION rightS {
     $1.name += '[]';
     $1.arrayFlag = true;
-    $7.name += '[]';
-    $7.arrayFlag = true;
-    $$ = new VarT1($1, $4, new ArrayExpression(null, $7, $9));
+    $$ = new VarT1($1, new NodeList($4, 'IDENTIFIERS LIST'), new ArrayExpression(null, $7, $9));
   }
   | id leftS rightS ID_LIST asignment strcKW id leftS EXPRESSION rightS {
-    $$ = new VarT1(new Type($1+'[]', @1.first_line, @1.first_column, true), $4, new ArrayExpression(null, new Type($7+'[]', @7.first_line, @7.first_column),$9));
+    $$ = new VarT1(new Type($1+'[]', @1.first_line, @1.first_column, true), new NodeList($4, 'IDENTIFIERS LIST'), new ArrayExpression(null, new Type($7, @7.first_line, @7.first_column, false) ,$9));
   }
   | TYPE leftS rightS ID_LIST asignment leftC E_LIST rightC {
     $1.name += '[]';
     $1.arrayFlag = true;
-    $$ = new VarT1($1, $4, new ArrayExpression(new NodeList($7, 'ELEMENTS')));
+    $$ = new VarT1($1, new NodeList($4, 'IDENTIFIERS LIST'), new ArrayExpression(new NodeList($7, 'ELEMENTS')));
   }
   | id leftS rightS ID_LIST asignment leftC E_LIST rightC {
-    $$ = new VarT1(new Type($1+'[]', @1.first_line, @1.first_column, true), $4, new ArrayExpression(new NodeList($7, 'ELEMENTS')));
+    $$ = new VarT1(new Type($1+'[]', @1.first_line, @1.first_column, true), new NodeList($4, 'IDENTIFIERS LIST'), new ArrayExpression(new NodeList($7, 'ELEMENTS')));
   }
   | TYPE leftS rightS ID_LIST {
     $1.name += '[]';
     $1.arrayFlag = true;
-    $$ = new VarT5($1, $4);
+    $$ = new VarT5($1, new NodeList($4, 'IDENTIFIERS LIST'));
   }
   | id leftS rightS ID_LIST {
-    $$ = new VarT5(new Type($1+'[]', @1.first_line, @1.first_column, true), $4);
+    $$ = new VarT5(new Type($1+'[]', @1.first_line, @1.first_column, true), new NodeList($4, 'IDENTIFIERS LIST'));
   }
 ;
 
@@ -764,9 +762,13 @@ ASIGNMENT
   : id asignment EXPRESSION {
     $$ = new Asignment(new Identifier($1.toLowerCase(), @1.first_line, @1.first_column), [], $3, @2.first_line, @2.first_column);
   }
-  | id dot id asignment EXPRESSION
+  | id dot id asignment EXPRESSION {
+    $$ = new Asignment(new Identifier($1.toLowerCase(), @1.first_line, @1.first_column), new NodeList([new Access(1, $3.toLowerCase(), @2.first_line, @2.first_column)], 'ACCESS LIST'), $5, @4.first_line. @4.first_column);
+  }
   | id dot id ACCESS_LIST asignment EXPRESSION
-  | id leftS EXPRESSION rightS asignment EXPRESSION
+  | id leftS EXPRESSION rightS asignment EXPRESSION {
+    $$ = new Asignment(new Identifier($1.toLowerCase(), @1.first_line, @1.first_column), new NodeList([new Access(2, $3, @2.first_line, @2.first_column)], 'ACCESS LIST'), $6,  @5.first_line, @5.first_column);
+  }
   | id leftS EXPRESSION rightS ACCESS_LIST asignment EXPRESSION
   | id dot CALL asignment EXPRESSION
   | id dot CALL ACCESS_LIST asignment EXPRESSION

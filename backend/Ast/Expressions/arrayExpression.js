@@ -115,6 +115,7 @@ class ArrayExpression {
             code.push(`${val} = h;`);
             code.push(`${runner} = ${sizeTDC.value};`);
             code.push(`heap[h] = ${runner};`);
+            code.push('h = h + 1;');
             code.push(`${label1}:`);
             code.push(`if (${runner} == 0) goto ${label2};`);
             code.push(`heap[h] = 0;`);
@@ -132,8 +133,13 @@ class ArrayExpression {
             let arrayType = this.checkType(env);
             let val = `t${temp}`;
             temp++;
+            let pos = `t${temp}`;
+            temp++;
+            code.push(`${pos} = h + 1;`);
             code.push(`${val} = h;`);
             code.push(`heap[h] = ${this.exp_list.getChildren().length};`);
+            code.push(`h = h + 1;`)
+            code.push(`h = h + ${this.exp_list.getChildren().length};`);
             for (let i = 0; i < this.exp_list.getChildren().length; i++) {
                 // agregamos el td de cada una de las expresiones
                 let now = this.exp_list.getChildren()[i];
@@ -141,13 +147,14 @@ class ArrayExpression {
                 if (td.value == null) {
                     return new Updater(env, label, temp, null);
                 }
+                
                 if (td.code != null) {
                     code.push(td.code);
                     temp = td.temp;
                     label = td.label;
                 }
-                code.push(`heap[h] = ${td.value};`);
-                code.push(`h = h + 1;`)
+                code.push(`heap[${pos}] = ${td.value};`);
+                code.push(`${pos} = ${pos} + 1;`)
             }
 
             let up = new Updater(env, label, temp, code.join('\n'));

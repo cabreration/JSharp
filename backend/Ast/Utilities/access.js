@@ -1,8 +1,8 @@
 class Access {
 
     constructor(type, lead, row, column) {
-        this.type = type; // 1 - simple, 2 - array, 3 - function
-        this.lead = lead;
+        this.type = type; // 1 - attribute, 2 - array, 3 - function
+        this.lead = lead; // could be an id, an integer or a function call
         this.row = row;
         this.column = column;
     }
@@ -12,7 +12,7 @@ class Access {
     }
 
     getDot() {
-        return '[label="ACCESS"];\n';
+        return `[label="ACCESS: ${this.type === 1 || this.type === 3 ? '.'+this.lead : '['+this.lead+']'}"];\n`;
     }
 
     getTypeOf() {
