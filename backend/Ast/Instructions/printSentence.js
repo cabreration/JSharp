@@ -35,7 +35,7 @@ class PrintSentence {
         temp = updater.temp;
         code.push(updater.code);
 
-        // TODO - write code according to expression type
+        // write code according to expression type
         if (updater.type == null) {
             console.error('YOU LEFT AN EXPRESSION WITH OUT RETURNING TYPE');
         }
@@ -65,19 +65,34 @@ class PrintSentence {
                 label = bool.label;
                 break;
             case 'int[]':
-                // TODO
+                let ir = this.printArray(updater.value, temp, label, 'int');
+                label = ir.label;
+                temp = ir.temp;
+                code.push(ir.code);
                 break;
             case 'double[]':
-                // TODO
+                let dr = this.printArray(updater.value, temp, label, 'double');
+                label = dr.label;
+                temp = dr.temp;
+                code.push(dr.code);
                 break;
             case 'char[]':
-                // TODO
+                let cr = this.printArray(updater.value, temp, label, 'char');
+                label = cr.label;
+                temp = cr.temp;
+                code.push(cr.code);
                 break;
             case 'boolean[]':
-                // TODO
+                let br = this.printArray(updater.value, temp, label, 'boolean');
+                label = br.label;
+                temp = br.temp;
+                code.push(br.code);
                 break;
             case 'string[]':
-                // TODO
+                let sr = this.printArray(updater.value, temp, label, 'string');
+                label = sr.label;
+                temp = sr.temp;
+                code.push(sr.code);
                 break;
             default:
                 if (updater.type.includes('[]')) {
@@ -229,14 +244,34 @@ class PrintSentence {
                     temp = str.temp;
                     break;
                 case 'int[]':
+                    let ir = this.printArray(temp2, temp, label, 'int');
+                    label = ir.label;
+                    temp = ir.temp;
+                    code.push(ir.code);
                     break;
                 case 'double[]':
+                    let dr = this.printArray(temp2, temp, label, 'double');
+                    label = dr.label;
+                    temp = dr.temp;
+                    code.push(dr.code);
                     break;
                 case 'char[]':
+                    let cr = this.printArray(temp2, temp, label, 'char');
+                    label = cr.label;
+                    temp = cr.temp;
+                    code.push(cr.code);
                     break;
                 case 'boolean[]':
+                    let br = this.printArray(temp2, temp, label, 'boolean');
+                    label = br.label;
+                    temp = br.temp;
+                    code.push(br.code);
                     break;
                 case 'string[]':
+                    let sr = this.printArray(temp2, temp, label, 'string');
+                    label = sr.label;
+                    temp = sr.temp;
+                    code.push(sr.code);
                     break;
                 default:
                     if (att.type.name.includes('[]')) {
@@ -263,6 +298,65 @@ class PrintSentence {
             code: code.join('\n'),
             label: label,
             temp: temp
+        }
+    }
+
+    printArray(value, temp, label, type) {
+        let code = [];
+        let temp1 = `t${temp}`;
+        temp++;
+        let temp2 = `t${temp}`;
+        temp++;
+        let temp3 = `t${temp}`;
+        temp++;
+        let temp4 = `t${temp}`;
+        temp++;
+        let label1 = `L${label}`;
+        label++;
+        let label2 = `L${label}`;
+        label++;
+
+        code.push(`${temp1} = 1;`);
+        code.push(`${temp2} = heap[${value}];`);
+        code.push(`${label1}:`);
+        code.push(`if (${temp1} == ${temp2}) goto ${label2};`);
+        code.push(`${temp3} = ${value} + ${temp1};`);
+        code.push(`${temp4} = heap[${temp3}];`);
+        switch(type) {
+            case 'int':
+                code.push(this.printInt(temp4));
+                break;
+            case 'double':
+                code.push(this.printDouble(temp4));
+                break;
+            case 'char':
+                code.push(this.printChar(temp4));
+                break;
+            case 'boolean':
+                let bool = this.printBoolean(temp4, label);
+                code.push(bool.code);
+                label = bool.label;
+                break;
+            case 'string':
+                let str = this.printString(temp4, label, temp);
+                code.push(str.code);
+                label = str.label;
+                temp = str.temp;
+                break;
+            default:
+                let obj = this.printObj(temp4, type, label, temp);
+                code.push(obj.code);
+                temp = obj.temp;
+                label = obj.label;
+                break;
+        }
+        code.push(`${temp1} = ${temp1} + 1;`);
+        code.push(`goto ${label1};`);
+        code.push(`${label2}:`);
+        return {
+            label: label,
+            temp: temp,
+            code: code.join('\n');
         }
     }
 }

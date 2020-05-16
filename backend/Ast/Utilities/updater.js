@@ -6,6 +6,7 @@ class Updater {
         this.code = code;
         this.value = null;
         this.type = null;
+        this.size = -1;
     }
 
     addValue(temp) {
@@ -14,6 +15,10 @@ class Updater {
 
     addType(type) {
         this.type = type;
+    }
+
+    addSize(size) {
+        this.size = size;
     }
 }
 

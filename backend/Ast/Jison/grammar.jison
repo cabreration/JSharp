@@ -612,9 +612,15 @@ EXPRESSION
   | charValue {
     $$ = new CharValue($1, @1.first_line, @1.first_column);
   }
-  | strcKW id leftS EXPRESSION rightS
-  | strcKW TYPE leftS EXPRESSION rightS
-  | leftC E_LIST rightC
+  | strcKW id leftS EXPRESSION rightS {
+    $$ = new ArrayExpression(null, new Type($2, @2.first_line, @2.first_column, false), $4, @1.first_line, @1.first_column);
+  }
+  | strcKW TYPE leftS EXPRESSION rightS {
+    $$ = new ArrayExpression(null, $2, $4, @1.first_line, @1.first_column);
+  }
+  | leftC E_LIST rightC {
+    $$ = new ArrayExpression(new NodeList($2, 'VALUES'), null, null, @1.first_line, @1.first_column);
+  }
   | strcKW id leftP rightP {
     $$ = new New(new Identifier($2.toLowerCase(), @2.first_line, @2.first_column));
   }
