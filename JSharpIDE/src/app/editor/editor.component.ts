@@ -143,6 +143,7 @@ export class EditorComponent implements OnInit {
       //sessionStorage.setItem('tabs', JSON.stringify(this.tabs));
       this.dot = result['dot'];
       this.errors = result['errors'];
+      console.log(JSON.stringify(this.errors));
       let table = result['table'];
       this.symbols = [];
       table.forEach(env => {

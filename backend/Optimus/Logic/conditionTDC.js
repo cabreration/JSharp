@@ -35,6 +35,29 @@ class ConditionTDC {
 
         return `(${this.arg1} ${neg} ${this.arg2})`;
     }
+
+    negateOperator() {
+        switch(this.operator) {
+            case ">":
+                this.operator = "<=";
+                break;
+            case "<":
+                this.operator = ">=";
+                break;
+            case ">=":
+                this.operator = "<";
+                break;
+            case "<=":
+                this.operator = ">";
+                break;
+            case "==":
+                this.operator = "<>";
+                break;
+            case "<>":
+                this.operator = "==";
+                break;
+        }
+    }
 }
 
 module.exports.ConditionTDC = ConditionTDC;

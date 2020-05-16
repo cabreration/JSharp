@@ -49,7 +49,7 @@ class AsignmentTDC {
                 return null;
             }
             // regla 12
-            else if (this.right.arg1 != this.left.value && this.right == 0) {
+            else if (this.right.arg1 != this.left.value && this.right.arg2 == 0) {
                 let prime = `${this.left.value} = ${this.right.arg1};`;
                 Report.changes.push({ regla: 12, original: original, optimizacion: prime, linea: this.row });
                 return prime;
@@ -79,8 +79,8 @@ class AsignmentTDC {
                 return original;
             }
         }  
-        // regla 10
         if (this.right.type === 2 && this.right.operator === '*' ) {
+            // regla 10
             if ((this.right.arg1 == this.left.value && this.right.arg2 == 1) 
             || (this.right.arg1 == 1 && this.right.arg2 == this.left.value)) {
                 Report.changes.push({ regla: 10, original: original, optimizacion: '', linea: this.row });
@@ -92,9 +92,9 @@ class AsignmentTDC {
                 Report.changes.push({regla: 14, original: original, optimizacion: prime, linea: this.row});
                 return prime;
             }
-            else if (this.right.arg1 == 1 && this.right.arg2 == this.left.value) {
+            else if (this.right.arg1 == 1 && this.right.arg2 != this.left.value) {
                 let prime = `${this.left.value} = ${this.right.arg2};`;
-                Report.changes.push({regla: 14, original, original, optimizacion, prime, linea: this.row});
+                Report.changes.push({regla: 14, original: original, optimizacion: prime, linea: this.row});
                 return prime;
             }
             // regla 16
@@ -111,7 +111,7 @@ class AsignmentTDC {
             // regla 17
             else if (this.right.arg1 == 0 || this.right.arg2 == 0) {
                 let prime = `${this.left.value} = 0;`
-                Report.changes.push({regla: 17, original: original, optimizacion: prime, line: this.row});
+                Report.changes.push({regla: 17, original: original, optimizacion: prime, linea: this.row});
                 return prime;
             }
             else {

@@ -11,7 +11,8 @@ class Right {
             case 1:
                 return `- ${this.arg1}`
             case 2:
-                return `${this.arg1} ${this.operator} ${this.arg2}`;
+                let a = `${this.arg1} ${this.operator} ${this.arg2}`;
+                return a;
             case 3:
                 return `${this.arg1}`;
             case 4:

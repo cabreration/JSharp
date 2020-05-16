@@ -204,14 +204,28 @@ A_OPT
 ;
 
 EXPRESSION
-    : minusOp E_OPT {
-        $$ = new Right(1, $2, null, $1);
-    }
-    | E_OPT OPERATOR E_OPT {
-        $$ = new Right(2, $1, $3, $2);
+    : E_OPT OPERATOR E_OPT {
+        // validar cuando vengan signos menos
+        if ($1.type != undefined && $3.type != undefined) {
+            $$ = new Right(2, '-'+$1.arg1, '-'+$3.arg1, $2);
+        }
+        else if ($1.type != undefined && $3.type == undefined) {
+            $$ = new Right(2, '-'+$1.arg1, $3, $2);
+        }
+        else if ($1.type == undefined && $3.type != undefined) {
+            $$ = new Right(2, $1, '-'+$3.arg1, $2);
+        }
+        else {
+            $$ = new Right(2, $1, $3, $2);
+        }
     }
     | E_OPT {
-        $$ = new Right(3, $1, null, null);
+        if ($1.type != undefined) {
+            $$ = $1;
+        }
+        else {
+            $$ = new Right(3, $1, null, null);
+        }
     }
     | stackKW leftS temp rightS {
         $$ = new Right(4, $3, null, null);
@@ -248,6 +262,21 @@ E_OPT
     }
     | h {
         $$ = $1;
+    }
+    | minusOp temp {
+        $$ = new Right(1, $2, null, $1);
+    }
+    | minusOp int {
+        $$ = -Number($2);
+    }
+    | minusOp float {
+        $$ = -Number($2);
+    }
+    | minusOp p {
+        $$ = new Right(1, $2, null, $1);
+    }
+    | minusOp h {
+        $$ = new Right(1, $2, null, $1);
     }
 ;
 
@@ -302,6 +331,15 @@ C_OPT
     }
     | temp {
         $$ = $1;
+    }
+    | minusOp int {
+        $$ = -Number($2);
+    }
+    | minusOp float {
+        $$ = -Number($2);
+    }
+    | minusOp temp {
+        $$ = '-'+$1;
     }
 ;
 
@@ -361,16 +399,31 @@ PRINT_VALUES
         $$ = $1;
     }
     | int {
-        $$ = $1;
+        $$ = Number($1);
     }
     | float {
-        $$ = $1;
+        $$ = Number($1);
     }
     | h {
         $$ = $1;
     }
     | p {
         $$ = $1;
+    }
+    | minusOp temp {
+        $$ = '-'+$1;
+    }
+    | minusOp int {
+        $$ = -Number($2);
+    }
+    | minusOp float {
+        $$ = -Number($2);
+    }
+    | minusOp p {
+        $$ = '-'+$1;
+    }
+    | minusOp h {
+        $$ = '-'+$1;
     }
 ;
 

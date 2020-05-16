@@ -149,7 +149,7 @@ class Call {
             if (func == null) {
                 return {
                     state: false,
-                    error: new Error('Semantico', `No existe la definicion de ${this.id.id} con tal numero y tipo de parametros`, this.id.row, this.id.column)
+                    error: new SharpError('Semantico', `No existe la definicion de ${this.id.id} con tal numero y tipo de parametros`, this.id.row, this.id.column)
                 }
             }
         }
@@ -184,8 +184,8 @@ class Call {
             return new Updater(env, label, temp, null);
         }
 
-        let previousArrow = Singleton.oneWords.arrow;
-        Singleton.oneWords.arrow = proc.role;
+        //let previousArrow = Singleton.oneWords.arrow;
+        //Singleton.oneWords.arrow = proc.role;
 
         // push the value of the parameters to the stack
         for (let i = 0; i < params.length; i++) {
@@ -207,7 +207,7 @@ class Call {
         code.push(`t${temp} = stack[p];`);
         code.push(`p = p - ${env.last};`);
 
-        Singleton.oneWords.arrow = previousArrow;
+        //Singleton.oneWords.arrow = previousArrow;
 
         val = `t${temp}`;
         temp++;
@@ -273,13 +273,13 @@ class Call {
                 }
                 else if (declaredType === 'double') {
                     if (resultantType != 'int' && resultantType != 'char') {
-                        Singleton.insertError('Semantico', `La funcion ${this.id.id} esperaba un valor de tipo ${declaredType} pero recibio uno de tipo ${resultantType}`, this.id.row, this.id.column);
+                        Singleton.insertError(new SharpError('Semantico', `La funcion ${this.id.id} esperaba un valor de tipo ${declaredType} pero recibio uno de tipo ${resultantType}`, this.id.row, this.id.column));
                         return false;
                     }
                 }
                 else if (declaredType === 'int') {
                     if (resultantType != 'char') {
-                        Singleton.insertError('Semantico', `La funcion ${this.id.id} esperaba un valor de tipo ${declaredType} pero recibio uno de tipo ${resultantType}`, this.id.row, this.id.column);
+                        Singleton.insertError(new SharpError('Semantico', `La funcion ${this.id.id} esperaba un valor de tipo ${declaredType} pero recibio uno de tipo ${resultantType}`, this.id.row, this.id.column));
                         return false;
                     }
                 }

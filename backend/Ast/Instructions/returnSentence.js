@@ -33,7 +33,7 @@ class ReturnSentence {
         else {
             // check that this is not a void function
             if (Singleton.oneWords.arrow === 'void') {
-                Singleton.insertError('Semantico', 'La funcion actual es de tipo void, no es posible retornar valores', this.row, this.column);
+                Singleton.insertError(new SharpError('Semantico', 'La funcion actual es de tipo void, no es posible retornar valores', this.row, this.column));
             }
             // evaluate the expression
             let expType = this.value.checkType(env);
@@ -45,8 +45,13 @@ class ReturnSentence {
             if (expType != Singleton.oneWords.arrow) {
                 if (Singleton.oneWords.arrow === 'double') {
                     if (expType != 'int' && expType != 'char') {
-                        Singleton.insertError('Semantico', `Una funcion de tipo ${Singleton.oneWords.arrow} no puede retornar un valor de tipo ${expType}`, this.row, this.column);
+                        Singleton.insertError(new SharpError('Semantico', `Una funcion de tipo ${Singleton.oneWords.arrow} no puede retornar un valor de tipo ${expType}`, this.row, this.column));
                         return new Updater(env, label, temp, null);
+                    }
+                }
+                else if (Singleton.oneWords.arrow = 'int') {
+                    if (expType != 'char') {
+                        Singleton.insertError(new SharpError('Semantico', `Una funcion de tipo ${Singleton.oneWords.arrow} no puede retornar un valor de tipo ${expType}`, this.row, this.column));
                     }
                 }
             }

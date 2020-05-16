@@ -70,7 +70,7 @@ class Prime {
             if (current.getTypeOf() === 'asignment') {
                 if (current.rule1Form()) {
                     let name = current.left.value;
-                    let other = current.right.arg1;
+                    let other = current.right.arg1.replace('-', '');
                     for (let j = i + 1; j < lines.length; j++) {
                         let asig = lines[j];
                         if (asig == null) {
@@ -83,7 +83,7 @@ class Prime {
                             if (asig.left.value === name) {
                                 break;
                             }
-                            else if (asig.right.arg1 === name && asig.left.value === other) {
+                            else if (asig.right.arg1.toString().replace('-', '') === name && asig.left.value === other) {
                                 Report.changes.push({ regla: 1, original: asig.print(false), optimizacion: '', linea: asig.row });
                                 lines[j] = null;
                             }
@@ -178,10 +178,11 @@ class Prime {
                                 original += '\n' + jmp.print(false);
                                 original += '\n' + dest.print(false);
                                 let neg = cond.negate();
-                                let prime = `if ${neg} goto ${dest.label};`;
+                                let prime = `if ${neg} goto ${jmp.label};`;
                                 lines[i + 1] = null;
                                 lines[i + 2] = null;
-                                lines[i].label = dest.label;
+                                lines[i].label = jmp.label;
+                                lines[i].condition.negateOperator();
                                 Report.changes.push({regla: 3, original: original, optimizacion: prime, linea: current.row});
                             }
                         }
@@ -483,15 +484,17 @@ class Prime {
             if (current.getTypeOf() === 'asignment') {
                 if (current.left.type === 1 && current.left.value != 'p' && current.left.value != 'h') {
                     let name = current.left.value;
-                    let ocurrencies = wholeA.filter(el => el.right.arg1 == name || el.right.arg2 == name);
+                    let ocurrencies = wholeA.filter(el => el.right.arg1 == name || el.right.arg2 == name
+                        || el.right.arg1 == '-'+name || el.right.arg2 == '-'+name);
                     if (ocurrencies.length > 0) {
                         continue;
                     }
-                    ocurrencies = wholeP.filter(el => el.value == name);
+                    ocurrencies = wholeP.filter(el => el.value == name || el.value == '-'+name);
                     if (ocurrencies.length > 0) {
                         continue;
                     }
-                    ocurrencies = wholeC.filter(el => el.condition.arg1 == name || el.condition.arg2 == name);
+                    ocurrencies = wholeC.filter(el => el.condition.arg1 == name || el.condition.arg2 == name 
+                        || el.condition.arg1 == '-'+name || el.condition.arg2 == '-'+name);
                     if (ocurrencies.length > 0) {
                         continue;
                     }

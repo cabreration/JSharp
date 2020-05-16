@@ -6,7 +6,7 @@ const app = express();
 
 app.use(cors());
 app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '50mb', extended: true }));
 
 app.listen(3000, () => console.log('I love you 3000'));
 
@@ -24,7 +24,7 @@ const parser = require('./Ast/Jison/grammar');
 const Prime = require('./Optimus/prime').Prime;
 
 console.log('reading test.j');
-fs.readFile('./Testing/current.j', 'utf8', (err, text) => {
+fs.readFile('./Testing/basic.j', 'utf8', (err, text) => {
     if (err) {
         console.error(err);
     }

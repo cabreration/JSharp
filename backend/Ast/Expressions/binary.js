@@ -73,10 +73,10 @@ class Binary {
 
     validateBoolean(type1, type2) {
         if (type1 != 'boolean') {
-            return new SharpError('Semantico', 'Operacion invalida: No es posible aplicar el operador ' + this.operator.op +' a valores de tipo' + type1, this.operator.row, this.operator.column);
+            return new SharpError('Semantico', 'Operacion invalida: No es posible aplicar el operador ' + this.operator.op +' a valores de tipo ' + type1, this.operator.row, this.operator.column);
         }
         else if (type2 != 'boolean') {
-            return new SharpError('Semantico', 'Operacion invalida: No es posible aplicar el operador ' + this.operator.op + ' a valores de tipo' + type2, this.operator.row, this.operator.column);
+            return new SharpError('Semantico', 'Operacion invalida: No es posible aplicar el operador ' + this.operator.op + ' a valores de tipo ' + type2, this.operator.row, this.operator.column);
         }
         else 
             return 'boolean';
@@ -131,7 +131,7 @@ class Binary {
         }
         else if (type1 === 'boolean') {
             if (type2 === 'boolean') {
-                'boolean'
+                return 'boolean';
             }
             else {
                 return new SharpError('Semantico', 'Operacion invalida: No es posible aplicar el operador ' + this.operator.op +' entre valores de tipo ' + type1 + ' y ' + type2, this.operator.row, this.operator.column);
@@ -719,16 +719,27 @@ class Binary {
         let temp3 = temp + 2;
         let temp4 = temp + 3;
         let temp5 = temp + 4;
-        temp += 5;
+        let temp6 = temp + 5;
+        temp += 6;
         let label1 = label;
         let label2 = label + 1;
         let label3 = label + 2;
         let label4 = label + 3;
         let label5 = label + 4;
         let label6 = label + 5;
-        label += 6;
+        let label7 = label + 6;
+        let label8 = label + 7;
+        let label9 = label + 8;
+        label += 9;
         code.push(`t${temp1} = ${val};`);
         code.push(`t${temp5} = 0;`);
+        code.push(`if (t${temp1} > 0) goto L${label7};`)
+        code.push(`t${temp6} = 1;`);
+        code.push(`t${temp1} = -1 * t${temp1};`)
+        code.push(`goto L${label8};`)
+        code.push(`L${label7}:`)
+        code.push(`t${temp6} = 0;`);
+        code.push(`L${label8}:`);
         /* Printing numbers that end in 0 */
 
         code.push(`if (t${temp1} <> 0) goto L${label5};`);
@@ -754,6 +765,10 @@ class Binary {
         code.push(`t${temp2} = t${temp2} + t${temp3};`);
         code.push(`goto L${label1};`);
         code.push(`L${label2}:`);
+        code.push(`if (t${temp6} == 0) goto L${label9};`)
+        code.push(`heap[h] = 45;`)
+        code.push('h = h + 1;');
+        code.push(`L${label9}:`)
         code.push(`if (t${temp2} == 0) goto L${label3};`);
         code.push(`t${temp3} = t${temp2} % 10;`);
         code.push(`t${temp2} = t${temp2} - t${temp3};`);
@@ -761,7 +776,7 @@ class Binary {
         code.push(`t${temp3} = t${temp3} + 48;`);
         code.push(`heap[h] = t${temp3};`);
         code.push('h = h + 1;');
-        code.push(`goto L${label2};`);
+        code.push(`goto L${label9};`);
         code.push(`L${label3}:`);
         // aqui hay que imprimir los ceros que le quitamos al principio
         code.push(`if (t${temp5} == 0) goto L${label6};`);
