@@ -786,7 +786,7 @@ ASIGNMENT
     $$ = new Asignment(new Identifier($1.toLowerCase(), @1.first_line, @1.first_column), new NodeList($4, 'ACCESS LIST'), $6, @5.first_line, @5.first_line);
   }
   | id leftS EXPRESSION rightS asignment EXPRESSION {
-    $$ = new Asignment(new Identifier($1.toLowerCase(), @1.first_line, @1.first_column), new NodeList([new Access(2, new Identifier($3.toLowerCase(), @3.first_line, @3.first_column), @2.first_line, @2.first_column)], 'ACCESS LIST'), $6,  @5.first_line, @5.first_column);
+    $$ = new Asignment(new Identifier($1.toLowerCase(), @1.first_line, @1.first_column), new NodeList([new Access(2, $3, @2.first_line, @2.first_column)], 'ACCESS LIST'), $6,  @5.first_line, @5.first_column);
   }
   | id leftS EXPRESSION rightS ACCESS_LIST asignment EXPRESSION {
     $5.unshift(new Access(2, $3, @2.first_line, @2.first_column));

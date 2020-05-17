@@ -9,3 +9,8 @@ void principal() {
   print('\n');
   print(newton.rival);
 }
+
+char[] getArray(string str) {
+  var array := str.toCharArray();
+  return array;
+}

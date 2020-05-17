@@ -31,9 +31,6 @@ class AccessExpression {
             let enviroment = Singleton.getEnviroment(thenv);
             let res = enviroment.getSymbol(this.identifier.id);
             counter++;
-            if (counter > 1) {
-                spaces += enviroment.last;
-            }
             if (res.state) {
                 symbol = res.lead;
                 break;
@@ -241,17 +238,18 @@ class AccessExpression {
                             varType = 'char[]';
                             temp = tca.temp;
                             label = tca.label;
-                            code.push(tca.label);
+                            code.push(tca.code);
                             absolute = tca.value;
                         }
                         else {
                             Singleton.insertError(new SharpError('Semantico', `La funcion toCharArray no puede usarse sobre valores de tipo ${varType}`, this.row, this.column));
                             return new Updater(env, label, temp, null);
                         }
+                        break;
                     case 'charat':
                         if (varType === 'string') {
                             // get the parameter
-                            let par = access.lead.exList.getChildren()[0];
+                            let par = access.lead.expList.getChildren()[0];
                             let parTDC = par.getTDC(env, label, temp);
                             if (parTDC.value == null) {
                                 return new Updater(env, label, temp, null);
@@ -272,6 +270,7 @@ class AccessExpression {
                             Singleton.insertError(new SharpError('Semantico', `La funcion charAt no puede usarse sobre valores de tipo ${varType}`, this.row, this.column));
                             return new Updater(env, label, temp, null);
                         }
+                        break;
                     case 'length':
                         if (varType === 'string') {
                             let strl = this.strLength(label, temp, absolute);
@@ -285,9 +284,15 @@ class AccessExpression {
                             Singleton.insertError(new SharpError('Semantico', `La funcion length no puede usarse sobre valores de tipo ${varType}`, this.row, this.column));
                             return new Updater(env, label, temp, null);
                         } 
+                        break
                     case 'touppercase':
                         if (varType === 'string') {
-
+                            let upc = this.upper(label, temp, absolute);
+                            label = upc.label;
+                            temp = upc.temp;
+                            code.push(upc.code);
+                            absolute = upc.value;
+                            varType = 'string'
                         }
                         else {
                             Singleton.insertError(new SharpError('Semantico', `La funcion toUpperCase no puede usarse sobre valores de tipo ${varType}`, this.row, this.column));
@@ -296,23 +301,27 @@ class AccessExpression {
                         break;
                     case 'tolowercase':
                         if (varType === 'string') {
-
+                            let lowc = this.lower(label, temp, absolute);
+                            label = lowc.label;
+                            temp = lowc.temp;
+                            code.push(lowc.code);
+                            absolute = lowc.value;
+                            varType = 'string';
                         }
                         else {
                             Singleton.insertError(new SharpError('Semantico', `La funcion toLowerCase no puede usarse sobre valores de tipo ${varType}`, this.row, this.column));
                             return new Updater(env, label, temp, null);
                         }
+                        break
                     case 'linealize':
                         if (varType.includes('[]')) {
                             // nada mas crear un nuevo arreglo que sea igual y eso se retorna
-                        }
-                        else if (varType === 'string') {
-
                         }
                         else {
                             Singleton.insertError(new SharpError('Semantico', `La funcion Linealize no puede usarse sobre valores de tipo ${varType}`, this.row, this.column));
                             return new Updater(env, label, temp, null);
                         }
+                        break;
                 }
             }
         }
@@ -424,6 +433,7 @@ class AccessExpression {
         code.push(`${temp3} = heap[${temp1}];`)
         code.push(`if (${temp2} == ${position}) goto ${label2};`)
         code.push(`${temp1} = ${temp1} + 1;`);
+        code.push(`${temp2} = ${temp2} + 1;`);
         code.push(`goto ${label1};`);
         code.push(`${label2}:`);
 
@@ -431,7 +441,7 @@ class AccessExpression {
             label: label,
             temp: temp,
             code: code.join('\n'),
-            value: temp2
+            value: temp3
         }
     }
 
@@ -442,8 +452,6 @@ class AccessExpression {
         let temp4 = `t${temp}`;
         temp++;
         let temp5 = `t${temp}`;
-        temp++;
-        let init = `t${temp}`;
         temp++;
         let label1 = `L${label}`;
         label++;
@@ -472,6 +480,8 @@ class AccessExpression {
         code.push(`${temp4} = ${temp4} + 1;`);
         code.push(`goto ${label1};`)
         code.push(`${label2}:`);
+        code.push('heap[h] = 0;');
+        code.push('h = h + 1;');
         return {
             code: code.join('\n'),
             temp: temp,
@@ -487,8 +497,6 @@ class AccessExpression {
         let temp4 = `t${temp}`;
         temp++;
         let temp5 = `t${temp}`;
-        temp++;
-        let init = `t${temp}`;
         temp++;
         let label1 = `L${label}`;
         label++;
@@ -517,6 +525,8 @@ class AccessExpression {
         code.push(`${temp4} = ${temp4} + 1;`);
         code.push(`goto ${label1};`)
         code.push(`${label2}:`);
+        code.push('heap[h] = 0;');
+        code.push('h = h + 1;');
         return {
             code: code.join('\n'),
             temp: temp,

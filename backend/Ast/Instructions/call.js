@@ -185,6 +185,7 @@ class Call {
         }
 
         // push the value of the parameters to the stack
+        // AQUI DEBO CAMBIAR LOS PARAMETROS POR VALOR
         for (let i = 0; i < params.length; i++) {
             let arg = params[i];
             let argCode = arg.getTDC(env, label, temp);

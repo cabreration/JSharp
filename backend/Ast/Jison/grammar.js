@@ -738,7 +738,7 @@ case 153:
 break;
 case 154:
 
-    this.$ = new Asignment(new Identifier($$[$0-5].toLowerCase(), _$[$0-5].first_line, _$[$0-5].first_column), new NodeList([new Access(2, new Identifier($$[$0-3].toLowerCase(), _$[$0-3].first_line, _$[$0-3].first_column), _$[$0-4].first_line, _$[$0-4].first_column)], 'ACCESS LIST'), $$[$0],  _$[$0-1].first_line, _$[$0-1].first_column);
+    this.$ = new Asignment(new Identifier($$[$0-5].toLowerCase(), _$[$0-5].first_line, _$[$0-5].first_column), new NodeList([new Access(2, $$[$0-3], _$[$0-4].first_line, _$[$0-4].first_column)], 'ACCESS LIST'), $$[$0],  _$[$0-1].first_line, _$[$0-1].first_column);
   
 break;
 case 155:

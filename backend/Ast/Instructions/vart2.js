@@ -41,6 +41,10 @@ class VarT2 {
         let code = [];
         let fUpdater = this.expression.getTDC(env, label, temp);
         let expValue = fUpdater.value;
+        if (expValue == null) {
+            Singleton.insertError(new SharpError('Semantico', 'No se obtuvo valor de la expresion', this.identifier.row, this.identifier.column));
+            return new Updater(env, label, temp, null);
+        }
         env = fUpdater.env;
         label = fUpdater.label;
         temp = fUpdater.temp;
