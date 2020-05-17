@@ -35,6 +35,19 @@ class Strc {
         return { res: true };
     }
 
+    getAttributeInfo(id) {
+        let atts = this.attributes.getChildren();
+        for (let i = 0; i < atts.length; i++) {
+            if (atts[i].identifier.id == id) {
+                return {
+                    position: i,
+                    type: atts[i].type.name
+                }
+            }
+        }
+        return null;
+    }
+
     getTDC(env, label, temp) {
         // TODO - validate it and store it in the Singleton list
     }

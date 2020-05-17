@@ -184,9 +184,6 @@ class Call {
             return new Updater(env, label, temp, null);
         }
 
-        //let previousArrow = Singleton.oneWords.arrow;
-        //Singleton.oneWords.arrow = proc.role;
-
         // push the value of the parameters to the stack
         for (let i = 0; i < params.length; i++) {
             let arg = params[i];
@@ -206,8 +203,6 @@ class Call {
         code.push(`call ${proc.id};`);
         code.push(`t${temp} = stack[p];`);
         code.push(`p = p - ${env.last};`);
-
-        //Singleton.oneWords.arrow = previousArrow;
 
         val = `t${temp}`;
         temp++;

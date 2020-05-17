@@ -18,7 +18,7 @@ class Access {
     }
 
     getChildren() {
-        return [ this.lead ];
+        return [];
     }
 
     getDot() {
@@ -33,6 +33,22 @@ class Access {
         let code = [];
         if (this.type === 1) {
             // attribute
+            let strc = Singleton.getStrc(this.parentType);
+            if (strc == null) {
+                console.error("ALGO NO ESTA BIEN, ACCESS.JS");
+                return new Updater(env, label, temp, null);
+            }
+
+            let info = strc.getAttributeInfo(this.lead.id);
+            if (info == null) {
+                Singleton.insertError(new SharpError('Semantico', `El tipo de dato ${this.parentType} no cuenta con un atributo ${this.lead.id}`, this.lead.row, this.lead.column));
+                return new Updater(env, label, temp, null);
+            }
+
+            this.myType = info.type;
+            let updater = new Updater(env, label, temp, null);
+            updater.addValue(`${info.position}`);
+            return updater;
         }
         else if (this.type === 2) {
             // array position

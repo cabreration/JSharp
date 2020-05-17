@@ -4,103 +4,691 @@ node0[label="var temps_list
 var p, h;
 var heap[];
 var stack[];p = 0;
-h = 0;
-t1 = 1;
+h = 1;
+heap[0] = 0;
 "]
-node1[label="if (t1 > 1) goto L1;"]
-node2[label="t2 = t1;
+node1[label="call principal_0_4;"]
+node2[label="goto L30;"]
+principal_0_4[label="t1 = h;
+t2 = h;
+h = h + 5;
+t3 = h;
+heap[h] = 65;
 h = h + 1;
+heap[h] = 98;
 h = h + 1;
+heap[h] = 105;
 h = h + 1;
+heap[h] = 110;
 h = h + 1;
+heap[h] = 97;
 h = h + 1;
-t1 = t2;
-t3 = 1;
-t4 = t3;
+heap[h] = 100;
 h = h + 1;
+heap[h] = 105;
 h = h + 1;
+heap[h] = 0;
 h = h + 1;
+heap[t2] = t3;
+t2 = t2 + 1;
+t4 = h;
+heap[h] = 84;
 h = h + 1;
+heap[h] = 111;
 h = h + 1;
+heap[h] = 32;
+h = h + 1;
+heap[h] = 98;
+h = h + 1;
+heap[h] = 101;
+h = h + 1;
+heap[h] = 32;
+h = h + 1;
+heap[h] = 111;
+h = h + 1;
+heap[h] = 114;
+h = h + 1;
+heap[h] = 32;
+h = h + 1;
+heap[h] = 110;
+h = h + 1;
+heap[h] = 111;
+h = h + 1;
+heap[h] = 116;
+h = h + 1;
+heap[h] = 32;
+h = h + 1;
+heap[h] = 116;
+h = h + 1;
+heap[h] = 111;
+h = h + 1;
+heap[h] = 32;
+h = h + 1;
+heap[h] = 98;
+h = h + 1;
+heap[h] = 101;
+h = h + 1;
+heap[h] = 0;
+h = h + 1;
+heap[t2] = t4;
+t2 = t2 + 1;
+heap[t2] = 100;
+t2 = t2 + 1;
+heap[t2] = 0;
+t2 = t2 + 1;
+heap[t2] = 0;
+t2 = t2 + 1;
+t5 = p + 1;
+stack[t5] = t1;
+t6 = p + 1;
+t7 = stack[t6];
+t8 = t7;
 "]
-L1[label="h = h + 1;
-h = h + 1;
-h = h + 1;
-t3 = t4;
-"]
-node4[label="if (1 == 1) goto L2;"]
-node5[label="h = h + 1;
-h = h + 1;
-h = h + 1;
-"]
-L2[label="if (0 == 1) goto L3;"]
-node7[label="h = h + 1;
-h = h + 1;
-h = h + 1;
-"]
-L3[label="if (1 == 1) goto L5;"]
-node9[label="goto L6;"]
-L5[label="t6 = 6;
-"]
-L6[label="t6 = 7;
-"]
-node12[label="if (7 < 4) goto L7;"]
-node13[label="goto L8;"]
-L7[label="t4 = t4 * 1;
-t4 = t4 / 1;
-t5 = 100;
-t5 = t5 * 1;
-t5 = t5 / 1;
-"]
-L8[label="t9 = 10;
-t10 = 11;
-t11 = 12;
+node4[label="if (t8 > 0) goto L2;"]
+node5[label="print
+print
+print
 print
 "]
-node16[label="if (t10 > 1) goto L2;"]
-node17[label="t13 = 52 * 12;
+node6[label="goto L3;"]
+L2[label="print
+print
+t9 = heap[t8];
+print
+print
+print
+print
+print
+print
+print
+print
+t10 = t9;
 "]
-L9[label="if (1 > 15) goto L10;"]
-node19[label="t13 = 52 * 12;
-t13 = 52 * 12;
-t13 = 52 * 12;
-t13 = 52 * 12;
+node8[label="if (t10 > 0) goto L4;"]
+node9[label="print
+print
+print
+print
 "]
+node10[label="goto L5;"]
+L4[label="t11 = heap[t10];
+"]
+node12[label="if (t11 == 0) goto L5;"]
+node13[label="print
+t10 = t10 + 1;
+"]
+node14[label="goto L4;"]
+L5[label="print
+print
+t8 = t8 + 1;
+t9 = heap[t8];
+print
+print
+print
+print
+print
+print
+print
+t12 = t9;
+"]
+node16[label="if (t12 > 0) goto L6;"]
+node17[label="print
+print
+print
+print
+"]
+node18[label="goto L7;"]
+L6[label="t13 = heap[t12];
+"]
+node20[label="if (t13 == 0) goto L7;"]
+node21[label="print
+t12 = t12 + 1;
+"]
+node22[label="goto L6;"]
+L7[label="print
+print
+t8 = t8 + 1;
+t9 = heap[t8];
+print
+print
+print
+print
+print
+print
+print
+print
+print
+t8 = t8 + 1;
+t9 = heap[t8];
+print
+print
+print
+print
+print
+print
+print
+print
+"]
+node24[label="if (t9 == 1) goto L8;"]
+node25[label="print
+print
+print
+print
+print
+"]
+node26[label="goto L9;"]
+L8[label="print
+print
+print
+print
+"]
+L9[label="print
+print
+t8 = t8 + 1;
+t9 = heap[t8];
+print
+print
+print
+print
+print
+print
+print
+t14 = t9;
+"]
+node29[label="if (t14 > 0) goto L10;"]
+node30[label="print
+print
+print
+print
+"]
+node31[label="goto L11;"]
 L10[label="print
 print
+t15 = heap[t14];
+print
+print
+print
+print
+print
+print
+print
+print
+t16 = t15;
+"]
+node33[label="if (t16 > 0) goto L12;"]
+node34[label="print
 print
 print
 print
 "]
-node21[label="if (t10 > 1) goto L2;"]
+node35[label="goto L13;"]
+L12[label="t17 = heap[t16];
+"]
+node37[label="if (t17 == 0) goto L13;"]
+node38[label="print
+t16 = t16 + 1;
+"]
+node39[label="goto L12;"]
+L13[label="print
+print
+t14 = t14 + 1;
+t15 = heap[t14];
+print
+print
+print
+print
+print
+print
+print
+t18 = t15;
+"]
+node41[label="if (t18 > 0) goto L14;"]
+node42[label="print
+print
+print
+print
+"]
+node43[label="goto L15;"]
+L14[label="t19 = heap[t18];
+"]
+node45[label="if (t19 == 0) goto L15;"]
+node46[label="print
+t18 = t18 + 1;
+"]
+node47[label="goto L14;"]
+L15[label="print
+print
+t14 = t14 + 1;
+t15 = heap[t14];
+print
+print
+print
+print
+print
+print
+print
+print
+print
+print
+print
+print
+t14 = t14 + 1;
+print
+"]
+L11[label="print
+t8 = t8 + 1;
+print
+"]
+L3[label="print
+t21 = p - 0;
+t22 = t21 + 1;
+t20 = stack[t22];
+t20 = t20 + 1;
+t23 = h;
+heap[h] = 65;
+h = h + 1;
+heap[h] = 32;
+h = h + 1;
+heap[h] = 99;
+h = h + 1;
+heap[h] = 97;
+h = h + 1;
+heap[h] = 100;
+h = h + 1;
+heap[h] = 97;
+h = h + 1;
+heap[h] = 32;
+h = h + 1;
+heap[h] = 97;
+h = h + 1;
+heap[h] = 99;
+h = h + 1;
+heap[h] = 99;
+h = h + 1;
+heap[h] = 105;
+h = h + 1;
+heap[h] = 111;
+h = h + 1;
+heap[h] = 110;
+h = h + 1;
+heap[h] = 32;
+h = h + 1;
+heap[h] = 99;
+h = h + 1;
+heap[h] = 111;
+h = h + 1;
+heap[h] = 114;
+h = h + 1;
+heap[h] = 114;
+h = h + 1;
+heap[h] = 101;
+h = h + 1;
+heap[h] = 115;
+h = h + 1;
+heap[h] = 112;
+h = h + 1;
+heap[h] = 111;
+h = h + 1;
+heap[h] = 110;
+h = h + 1;
+heap[h] = 100;
+h = h + 1;
+heap[h] = 101;
+h = h + 1;
+heap[h] = 32;
+h = h + 1;
+heap[h] = 117;
+h = h + 1;
+heap[h] = 110;
+h = h + 1;
+heap[h] = 97;
+h = h + 1;
+heap[h] = 32;
+h = h + 1;
+heap[h] = 114;
+h = h + 1;
+heap[h] = 101;
+h = h + 1;
+heap[h] = 97;
+h = h + 1;
+heap[h] = 99;
+h = h + 1;
+heap[h] = 99;
+h = h + 1;
+heap[h] = 105;
+h = h + 1;
+heap[h] = 111;
+h = h + 1;
+heap[h] = 110;
+h = h + 1;
+heap[h] = 0;
+h = h + 1;
+heap[t20] = t23;
+t25 = p - 0;
+t26 = t25 + 1;
+t24 = stack[t26];
+t24 = t24 + 2;
+heap[t24] = 47;
+t27 = p + 1;
+t28 = stack[t27];
+t29 = t28;
+"]
+node51[label="if (t29 > 0) goto L16;"]
+node52[label="print
+print
+print
+print
+"]
+node53[label="goto L17;"]
+L16[label="print
+print
+t30 = heap[t29];
+print
+print
+print
+print
+print
+print
+print
+print
+t31 = t30;
+"]
+node55[label="if (t31 > 0) goto L18;"]
+node56[label="print
+print
+print
+print
+"]
+node57[label="goto L19;"]
+L18[label="t32 = heap[t31];
+"]
+node59[label="if (t32 == 0) goto L19;"]
+node60[label="print
+t31 = t31 + 1;
+"]
+node61[label="goto L18;"]
+L19[label="print
+print
+t29 = t29 + 1;
+t30 = heap[t29];
+print
+print
+print
+print
+print
+print
+print
+t33 = t30;
+"]
+node63[label="if (t33 > 0) goto L20;"]
+node64[label="print
+print
+print
+print
+"]
+node65[label="goto L21;"]
+L20[label="t34 = heap[t33];
+"]
+node67[label="if (t34 == 0) goto L21;"]
+node68[label="print
+t33 = t33 + 1;
+"]
+node69[label="goto L20;"]
+L21[label="print
+print
+t29 = t29 + 1;
+t30 = heap[t29];
+print
+print
+print
+print
+print
+print
+print
+print
+print
+t29 = t29 + 1;
+t30 = heap[t29];
+print
+print
+print
+print
+print
+print
+print
+print
+"]
+node71[label="if (t30 == 1) goto L22;"]
+node72[label="print
+print
+print
+print
+print
+"]
+node73[label="goto L23;"]
+L22[label="print
+print
+print
+print
+"]
+L23[label="print
+print
+t29 = t29 + 1;
+t30 = heap[t29];
+print
+print
+print
+print
+print
+print
+print
+t35 = t30;
+"]
+node76[label="if (t35 > 0) goto L24;"]
+node77[label="print
+print
+print
+print
+"]
+node78[label="goto L25;"]
+L24[label="print
+print
+t36 = heap[t35];
+print
+print
+print
+print
+print
+print
+print
+print
+t37 = t36;
+"]
+node80[label="if (t37 > 0) goto L26;"]
+node81[label="print
+print
+print
+print
+"]
+node82[label="goto L27;"]
+L26[label="t38 = heap[t37];
+"]
+node84[label="if (t38 == 0) goto L27;"]
+node85[label="print
+t37 = t37 + 1;
+"]
+node86[label="goto L26;"]
+L27[label="print
+print
+t35 = t35 + 1;
+t36 = heap[t35];
+print
+print
+print
+print
+print
+print
+print
+t39 = t36;
+"]
+node88[label="if (t39 > 0) goto L28;"]
+node89[label="print
+print
+print
+print
+"]
+node90[label="goto L29;"]
+L28[label="t40 = heap[t39];
+"]
+node92[label="if (t40 == 0) goto L29;"]
+node93[label="print
+t39 = t39 + 1;
+"]
+node94[label="goto L28;"]
+L29[label="print
+print
+t35 = t35 + 1;
+t36 = heap[t35];
+print
+print
+print
+print
+print
+print
+print
+print
+print
+print
+print
+print
+t35 = t35 + 1;
+print
+"]
+L25[label="print
+t29 = t29 + 1;
+print
+"]
+L17[label="print
+"]
+node98[label="end"]
 node0->node1
-node1->L1
-node1->node2
-node2->L1
-L1->node4
+node1->principal_0_4
+node2->L30
+principal_0_4->node3
 node4->L2
-node4->node5
-node5->L2
-L2->L3
-L2->node7
-node7->L3
-L3->L5
-L3->node9
-node9->L6
-L5->L6
-L6->node12
-node12->L7
-node12->node13
-node13->L8
-L7->L8
-L8->node16
-node16->L2
-node16->node17
-node17->L9
-L9->L10
-L9->node19
-node19->L10
-L10->node21
-node21->L2
-node21->node22
+node4->node4
+node5->node7
+node6->L3
+L2->node11
+node8->L4
+node8->node12
+node9->node15
+node10->L5
+L4->node19
+node12->L5
+node12->node20
+node13->node23
+node14->L4
+L5->node27
+node16->L6
+node16->node28
+node17->node31
+node18->L7
+L6->node35
+node20->L7
+node20->node36
+node21->node39
+node22->L6
+L7->node43
+node24->L8
+node24->node44
+node25->node47
+node26->L9
+L8->L9
+L9->node53
+node29->L10
+node29->node54
+node30->node57
+node31->L11
+L10->node61
+node33->L12
+node33->node62
+node34->node65
+node35->L13
+L12->node69
+node37->L13
+node37->node70
+node38->node73
+node39->L12
+L13->node77
+node41->L14
+node41->node78
+node42->node81
+node43->L15
+L14->node85
+node45->L15
+node45->node86
+node46->node89
+node47->L14
+L15->L11
+L11->L3
+L3->node97
+node51->L16
+node51->node98
+node52->node101
+node53->L17
+L16->node105
+node55->L18
+node55->node106
+node56->node109
+node57->L19
+L18->node113
+node59->L19
+node59->node114
+node60->node117
+node61->L18
+L19->node121
+node63->L20
+node63->node122
+node64->node125
+node65->L21
+L20->node129
+node67->L21
+node67->node130
+node68->node133
+node69->L20
+L21->node137
+node71->L22
+node71->node138
+node72->node141
+node73->L23
+L22->L23
+L23->node147
+node76->L24
+node76->node148
+node77->node151
+node78->L25
+L24->node155
+node80->L26
+node80->node156
+node81->node159
+node82->L27
+L26->node163
+node84->L27
+node84->node164
+node85->node167
+node86->L26
+L27->node171
+node88->L28
+node88->node172
+node89->node175
+node90->L29
+L28->node179
+node92->L29
+node92->node180
+node93->node183
+node94->L28
+L29->L25
+L25->L17
+L17->node98
 }

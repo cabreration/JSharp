@@ -625,6 +625,39 @@ case 106:
     this.$ = new New(new Identifier($$[$0-2].toLowerCase(), _$[$0-2].first_line, _$[$0-2].first_column));
   
 break;
+case 107:
+
+    this.$ = new AccessExpression(new Identifier($$[$0-2], _$[$0-2].first_line, _$[$0-2].first_column), new NodeList([new Access(1, new Identifier($$[$0], _$[$0].first_line, _$[$0].first_line), _$[$0-1].first_line, _$[$0-1].first_column)], 'ACCESS LIST'), _$[$0-1].first_line, _$[$0-1].first_column);
+  
+break;
+case 108:
+
+    $$[$0].unshift(new Access(1, new Identifier($$[$0-1], _$[$0-1].first_line, _$[$0-1].first_column, _$[$0-2].first_line, _$[$0-2].first_column)));
+    this.$ = new AccessExpression(new Identifier($$[$0-3], _$[$0-3].first_line, _$[$0-3].first_column), new NodeList($$[$0], 'ACCESS LIST'), _$[$0-2].first_line, _$[$0-2].first_column);
+  
+break;
+case 109:
+
+    this.$ = new AccessExpression(new Identifier($$[$0-3], _$[$0-3].first_line, _$[$0-3].first_column), new NodeList([new Access(2, $$[$0-1], _$[$0].first_line, _$[$0].first_column)], 'ACCESS LIST'), _$[$0-2].first_line, _$[$0-2].first_column);
+  
+break;
+case 110:
+
+    $$[$0].unshift(new Access(2, $$[$0-2], _$[$0-1].first_line, _$[$0-1].first_column));
+    this.$ = new AccessExpression(new Identifier($$[$0-4], _$[$0-4].first_line, _$[$0-4].first_column), new NodeList($$[$0], 'ACCESS LIST'), _$[$0-3].first_line, _$[$0-3].first_column);
+  
+break;
+case 111:
+
+    this.$ = new AccessExpression(new Identifier($$[$0-2], _$[$0-2].first_line, _$[$0-2].first_column), new NodeList([new Access(3, $$[$0], _$[$0-1].first_line, _$[$0-1].first_column)], 'ACCESS LIST'), _$[$0-1].first_line, _$[$0-1].first_column);
+  
+break;
+case 112:
+
+    $$[$01].unshift(new Access(3, $$[$0-1], _$[$0-2].first_line, _$[$0-2].first_column));
+    this.$ = new AccessExpression(new Identifier($$[$0-3], _$[$0-3].first_line, _$[$0-3].first_column), new NodeList($$[$01], 'ACCESS LIST'), _$[$0-2].first_line, _$[$0-2].first_column);
+  
+break;
 case 114:
 
     this.$ = new Type('int', _$[$0-1].first_line, _$[$0-1].first_column, false);
@@ -694,12 +727,24 @@ case 151:
 break;
 case 152:
 
-    this.$ = new Asignment(new Identifier($$[$0-4].toLowerCase(), _$[$0-4].first_line, _$[$0-4].first_column), new NodeList([new Access(1, $$[$0-2].toLowerCase(), _$[$0-3].first_line, _$[$0-3].first_column)], 'ACCESS LIST'), $$[$0], _$[$0-1].first_line. _$[$0-1].first_column);
+    this.$ = new Asignment(new Identifier($$[$0-4].toLowerCase(), _$[$0-4].first_line, _$[$0-4].first_column), new NodeList([new Access(1, new Identifier($$[$0-2].toLowerCase(), _$[$0-2].first_line, _$[$0-2].first_column), _$[$0-3].first_line, _$[$0-3].first_column)], 'ACCESS LIST'), $$[$0], _$[$0-1].first_line, _$[$0-1].first_column);
+  
+break;
+case 153:
+
+    $$[$0-2].unshift(new Access(1, new Identifier($$[$0-3].toLowerCase(), _$[$0-3].first_line, _$[$0-3].first_column), _$[$0-4].first_line, _$[$0-4].first_column));
+    this.$ = new Asignment(new Identifier($$[$0-5].toLowerCase(), _$[$0-5].first_line, _$[$0-5].first_column), new NodeList($$[$0-2], 'ACCESS LIST'), $$[$0], _$[$0-1].first_line, _$[$0-1].first_line);
   
 break;
 case 154:
 
-    this.$ = new Asignment(new Identifier($$[$0-5].toLowerCase(), _$[$0-5].first_line, _$[$0-5].first_column), new NodeList([new Access(2, $$[$0-3], _$[$0-4].first_line, _$[$0-4].first_column)], 'ACCESS LIST'), $$[$0],  _$[$0-1].first_line, _$[$0-1].first_column);
+    this.$ = new Asignment(new Identifier($$[$0-5].toLowerCase(), _$[$0-5].first_line, _$[$0-5].first_column), new NodeList([new Access(2, new Identifier($$[$0-3].toLowerCase(), _$[$0-3].first_line, _$[$0-3].first_column), _$[$0-4].first_line, _$[$0-4].first_column)], 'ACCESS LIST'), $$[$0],  _$[$0-1].first_line, _$[$0-1].first_column);
+  
+break;
+case 155:
+
+    $$[$0-2].unshift(new Access(2, $$[$0-4], _$[$0-5].first_line, _$[$0-5].first_column));
+    this.$ = new Asignment(new Identifier($$[$0-6], _$[$0-6].first_line, _$[$0-6].first_column), new NodeList($$[$0-2], 'ACCESS LIST'), $$[$0], _$[$0-1].first_line, _$[$0-1].first_column);
   
 break;
 case 160:
@@ -1082,6 +1127,7 @@ parse: function parse(input) {
   const Strc = require('../Globals/strc').Strc;
   const New = require('../Expressions/new').New;
   const ArrayExpression = require('../Expressions/arrayExpression').ArrayExpression;
+  const AccessExpression = require('../Expressions/accessExpression').AccessExpression;
   let global_vars = [];
   let functions_list = [];
   let global_strcs = [];

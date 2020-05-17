@@ -203,10 +203,16 @@ class Asignment {
                             temp = obj.temp;
                             label = obj.label;
                         }
-                        let t = `t${temp}`;
-                        temp++;
-                        code.push(`${t} = ${ar.value} + 1;`);
-                        code.push(`${absolute} = ${absolute} + ${t};`);
+                        //let t = `t${temp}`;
+                        //temp++;
+                        //code.push(`${t} = ${obj.value} + 1;`);
+                        code.push(`${absolute} = ${absolute} + ${obj.value};`);
+                        if (varType != 'int' && varType != 'double' && varType != 'boolean' && varType != 'char') {
+                            if (i + 1 < this.accessList.getChildren().length) {
+                                code.push(`${absolute} = heap[${absolute}];`);
+                            }
+                            
+                        }
                     }
                 }
                 else if (access.type === 2) {
@@ -231,6 +237,12 @@ class Asignment {
                         temp++;
                         code.push(`${t} = ${ar.value} + 1;`);
                         code.push(`${absolute} = ${absolute} + ${t};`);
+                        if (varType != 'int' && varType != 'double' && varType != 'boolean' && varType != 'char') {
+                            if (i + 1 < this.accessList.getChildren().length) {
+                                code.push(`${absolute} = heap[${absolute}];`);
+                            }
+                            
+                        }
                     }
                 }
                 else {

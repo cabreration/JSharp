@@ -140,6 +140,7 @@
   const Strc = require('../Globals/strc').Strc;
   const New = require('../Expressions/new').New;
   const ArrayExpression = require('../Expressions/arrayExpression').ArrayExpression;
+  const AccessExpression = require('../Expressions/accessExpression').AccessExpression;
   let global_vars = [];
   let functions_list = [];
   let global_strcs = [];
@@ -622,12 +623,27 @@ EXPRESSION
   | strcKW id leftP rightP {
     $$ = new New(new Identifier($2.toLowerCase(), @2.first_line, @2.first_column));
   }
-  | id dot id
-  | id dot id ACCESS_LIST
-  | id leftS EXPRESSION rightS
-  | id leftS EXPRESSION rightS ACCESS_LIST
-  | id dot CALL
-  | id dot CALL ACCESS_LIST
+  | id dot id {
+    $$ = new AccessExpression(new Identifier($1, @1.first_line, @1.first_column), new NodeList([new Access(1, new Identifier($3, @3.first_line, @3.first_line), @2.first_line, @2.first_column)], 'ACCESS LIST'), @2.first_line, @2.first_column);
+  }
+  | id dot id ACCESS_LIST {
+    $4.unshift(new Access(1, new Identifier($3, @3.first_line, @3.first_column, @2.first_line, @2.first_column)));
+    $$ = new AccessExpression(new Identifier($1, @1.first_line, @1.first_column), new NodeList($4, 'ACCESS LIST'), @2.first_line, @2.first_column);
+  }
+  | id leftS EXPRESSION rightS {
+    $$ = new AccessExpression(new Identifier($1, @1.first_line, @1.first_column), new NodeList([new Access(2, $3, @4.first_line, @4.first_column)], 'ACCESS LIST'), @2.first_line, @2.first_column);
+  }
+  | id leftS EXPRESSION rightS ACCESS_LIST {
+    $5.unshift(new Access(2, $3, @4.first_line, @4.first_column));
+    $$ = new AccessExpression(new Identifier($1, @1.first_line, @1.first_column), new NodeList($5, 'ACCESS LIST'), @2.first_line, @2.first_column);
+  }
+  | id dot CALL {
+    $$ = new AccessExpression(new Identifier($1, @1.first_line, @1.first_column), new NodeList([new Access(3, $3, @2.first_line, @2.first_column)], 'ACCESS LIST'), @2.first_line, @2.first_column);
+  }
+  | id dot CALL ACCESS_LIST {
+    $5.unshift(new Access(3, $3, @2.first_line, @2.first_column));
+    $$ = new AccessExpression(new Identifier($1, @1.first_line, @1.first_column), new NodeList($5, 'ACCESS LIST'), @2.first_line, @2.first_column);
+  }
   | CALL {
     $$ = $1;
   }
@@ -763,13 +779,19 @@ ASIGNMENT
     $$ = new Asignment(new Identifier($1.toLowerCase(), @1.first_line, @1.first_column), null, $3, @2.first_line, @2.first_column);
   }
   | id dot id asignment EXPRESSION {
-    $$ = new Asignment(new Identifier($1.toLowerCase(), @1.first_line, @1.first_column), new NodeList([new Access(1, $3.toLowerCase(), @2.first_line, @2.first_column)], 'ACCESS LIST'), $5, @4.first_line. @4.first_column);
+    $$ = new Asignment(new Identifier($1.toLowerCase(), @1.first_line, @1.first_column), new NodeList([new Access(1, new Identifier($3.toLowerCase(), @3.first_line, @3.first_column), @2.first_line, @2.first_column)], 'ACCESS LIST'), $5, @4.first_line, @4.first_column);
   }
-  | id dot id ACCESS_LIST asignment EXPRESSION
+  | id dot id ACCESS_LIST asignment EXPRESSION {
+    $4.unshift(new Access(1, new Identifier($3.toLowerCase(), @3.first_line, @3.first_column), @2.first_line, @2.first_column));
+    $$ = new Asignment(new Identifier($1.toLowerCase(), @1.first_line, @1.first_column), new NodeList($4, 'ACCESS LIST'), $6, @5.first_line, @5.first_line);
+  }
   | id leftS EXPRESSION rightS asignment EXPRESSION {
-    $$ = new Asignment(new Identifier($1.toLowerCase(), @1.first_line, @1.first_column), new NodeList([new Access(2, $3, @2.first_line, @2.first_column)], 'ACCESS LIST'), $6,  @5.first_line, @5.first_column);
+    $$ = new Asignment(new Identifier($1.toLowerCase(), @1.first_line, @1.first_column), new NodeList([new Access(2, new Identifier($3.toLowerCase(), @3.first_line, @3.first_column), @2.first_line, @2.first_column)], 'ACCESS LIST'), $6,  @5.first_line, @5.first_column);
   }
-  | id leftS EXPRESSION rightS ACCESS_LIST asignment EXPRESSION
+  | id leftS EXPRESSION rightS ACCESS_LIST asignment EXPRESSION {
+    $5.unshift(new Access(2, $3, @2.first_line, @2.first_column));
+    $$ = new Asignment(new Identifier($1, @1.first_line, @1.first_column), new NodeList($5, 'ACCESS LIST'), $7, @6.first_line, @6.first_column);
+  }
   | id dot CALL asignment EXPRESSION
   | id dot CALL ACCESS_LIST asignment EXPRESSION
 ;
