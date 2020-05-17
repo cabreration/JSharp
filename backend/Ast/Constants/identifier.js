@@ -91,6 +91,91 @@ class Identifier {
                 temp++;
             }
         }
+
+        if (this.byValue) {
+            let flag = true;
+            switch(type) {
+                case 'string':
+                case 'int':
+                case 'double':
+                case 'boolean':
+                case 'char':
+                    flag = false;
+                    break;
+            }
+
+            if (flag) {
+                if (type.includes('[]')) {
+                    // copiamos un arreglo, este es facil de copiar
+                    let temp0 = `t${temp}`;
+                    temp++;
+                    let temp1 = `t${temp}`;
+                    temp++;
+                    let temp2 = `t${temp}`;
+                    temp++;
+                    let temp3 = `t${temp}`;
+                    temp++;
+                    let temp4 = `t${temp}`;
+                    temp++;
+                    let label1 = `L${label}`;
+                    label++;
+                    let label2 = `L${label}`;
+                    label++;
+
+                    code.push(`${temp0} = h;`)
+                    code.push(`${temp1} = heap[${val}];`);
+                    code.push(`heap[h] = ${temp1};`);
+                    code.push(`h = h + 1;`);
+                    code.push(`${temp2} = 0;`)
+                    code.push(`${temp3} = ${val} + 1;`)
+                    code.push(`${label1}:`)
+                    code.push(`${temp4} = heap[${temp3}];`)
+                    code.push(`if (${temp2} == ${temp1}) goto ${label2};`);
+                    code.push(`heap[h] = ${temp4};`);
+                    code.push(`h = h + 1;`);
+                    code.push(`${temp3} = ${temp3} + 1;`)
+                    code.push(`${temp2} = ${temp2} + 1;`);
+                    code.push(`goto ${label1};`);
+                    code.push(`${label2}:`)
+                    val = temp0;
+                }
+                else {
+                    // copiamos un objeto, para poder copiar el objeto hay que buscar su tipo y copiar sus atributos
+                    // uno por uno
+                    let strc = Singleton.getStrc(type);
+                    let attsCount = strc.attributes.getChildren().length;
+                    let temp0 = `t${temp}`;
+                    temp++;
+                    let temp1 = `t${temp}`;
+                    temp++;
+                    let temp2 = `t${temp}`;
+                    temp++;
+                    let temp3 = `t${temp}`;
+                    temp++;
+                    let temp4 = `t${temp}`;
+                    temp++;
+                    let label1 = `L${label}`;
+                    label++;
+                    let label2 = `L${label}`;
+                    label++;
+
+                    code.push(`${temp0} = h;`)
+                    code.push(`${temp1} = 0;`);
+                    code.push(`${temp2} = ${val};`)
+                    code.push(`${label1}:`)
+                    code.push(`${temp3} = heap[${temp2}];`)
+                    code.push(`if (${temp1} == ${attsCount}) goto ${label2};`);
+                    code.push(`heap[h] = ${temp3};`);
+                    code.push(`h = h + 1;`);
+                    code.push(`${temp2} = ${temp2} + 1;`)
+                    code.push(`${temp1} = ${temp1} + 1;`);
+                    code.push(`goto ${label1};`);
+                    code.push(`${label2}:`)
+                    val = temp0;
+                }
+            }
+        }
+
         let updater = new Updater(env, label, temp, code.join('\n'));
         updater.addValue(val);
         updater.addType(type);

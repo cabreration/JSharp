@@ -53,17 +53,22 @@ class AccessExpression {
             let access = this.access_list.getChildren()[i];
             if (access.type === 1) {
 
-                let strc = Singleton.getStrc(varType);
-                if (strc == null) {
-                    console.error("ALGO NO ESTA BIEN, ACCESSEXPRESSION.JS");
-                    return new SharpError('Semantico', 'No se que paso', this.row, this.column);
+                if (access.lead.id === 'length' && varType.includes('[]')) {
+                    varType = 'int';
+                }   
+                else {
+                    let strc = Singleton.getStrc(varType);
+                    if (strc == null) {
+                        console.error("ALGO NO ESTA BIEN, ACCESSEXPRESSION.JS");
+                        return new SharpError('Semantico', `El tipo de dato ${varType} no es un objeto`, this.row, this.column);
+                    }
+                    let info = strc.getAttributeInfo(access.lead.id);
+                    if (info == null) {
+                        return new SharpError('Semantico', `El tipo de dato ${varType} no cuenta con un atributo ${access.lead.id}`, access.lead.row, access.lead.column);
+                    }
+                    varType = info.type;
                 }
-
-                let info = strc.getAttributeInfo(access.lead.id);
-                if (info == null) {
-                    return new SharpError('Semantico', `El tipo de dato ${this.parentType} no cuenta con un atributo ${this.lead.id}`, this.lead.row, this.lead.column);
-                }
-                varType = info.type;
+                
             }
             else if (access.type === 2) {
                 if (varType.includes('[]'))
@@ -316,6 +321,11 @@ class AccessExpression {
                     case 'linealize':
                         if (varType.includes('[]')) {
                             // nada mas crear un nuevo arreglo que sea igual y eso se retorna
+                            let lin = this.linealize(label, temp, absolute);
+                            label = lin.label;
+                            temp = lin.temp;
+                            code.push(lin.code);
+                            absolute = lin.value;
                         }
                         else {
                             Singleton.insertError(new SharpError('Semantico', `La funcion Linealize no puede usarse sobre valores de tipo ${varType}`, this.row, this.column));
@@ -537,6 +547,8 @@ class AccessExpression {
 
     linealize(label, temp, value) {
         let code = [];
+        let temp1 = `t${temp}`;
+        temp++;
         let temp4 = `t${temp}`;
         temp++;
         let temp5 = `t${temp}`;
@@ -551,15 +563,17 @@ class AccessExpression {
         code.push(`${init} = h;`);
         code.push(`${temp4} = ${value};`)
         code.push(`${temp5} = heap[${temp4}];`);
+        code.push(`${temp1} = ${temp5};`);
         code.push(`heap[h] = ${temp5};`);
-        code.push('h + h + 1;');
+        code.push('h = h + 1;');
         code.push(`${temp4} = ${temp4} + 1;`);
         code.push(`${label3}:`);
         code.push(`${temp5} = heap[${temp4}];`);
-        code.push(`if (${temp5} == 0) goto ${label4};`);
+        code.push(`if (${temp1} == 0) goto ${label4};`);
         code.push(`heap[h] = ${temp5};`);
         code.push(`h = h + 1;`);
         code.push(`${temp4} = ${temp4} + 1;`);
+        code.push(`${temp1} = ${temp1} - 1;`);
         code.push(`goto ${label3};`)
         code.push(`${label4}:`);
         return {

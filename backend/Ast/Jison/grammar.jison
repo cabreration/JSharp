@@ -430,29 +430,21 @@ VAR_T5
 ;
 
 ARRAY_DECL
-  : TYPE leftS rightS ID_LIST asignment strcKW TYPE leftS EXPRESSION rightS {
-    $1.name += '[]';
-    $1.arrayFlag = true;
-    $$ = new VarT1($1, new NodeList($4, 'IDENTIFIERS LIST'), new ArrayExpression(null, $7, $9));
-  }
-  | id leftS rightS ID_LIST asignment strcKW id leftS EXPRESSION rightS {
-    $$ = new VarT1(new Type($1+'[]', @1.first_line, @1.first_column, true), new NodeList($4, 'IDENTIFIERS LIST'), new ArrayExpression(null, new Type($7, @7.first_line, @7.first_column, false) ,$9));
-  }
-  | TYPE leftS rightS ID_LIST asignment leftC E_LIST rightC {
-    $1.name += '[]';
-    $1.arrayFlag = true;
-    $$ = new VarT1($1, new NodeList($4, 'IDENTIFIERS LIST'), new ArrayExpression(new NodeList($7, 'ELEMENTS')));
-  }
-  | id leftS rightS ID_LIST asignment leftC E_LIST rightC {
-    $$ = new VarT1(new Type($1+'[]', @1.first_line, @1.first_column, true), new NodeList($4, 'IDENTIFIERS LIST'), new ArrayExpression(new NodeList($7, 'ELEMENTS')));
-  }
-  | TYPE leftS rightS ID_LIST {
+  : TYPE leftS rightS ID_LIST {
     $1.name += '[]';
     $1.arrayFlag = true;
     $$ = new VarT5($1, new NodeList($4, 'IDENTIFIERS LIST'));
   }
   | id leftS rightS ID_LIST {
     $$ = new VarT5(new Type($1+'[]', @1.first_line, @1.first_column, true), new NodeList($4, 'IDENTIFIERS LIST'));
+  }
+  | TYPE leftS rightS ID_LIST asignment EXPRESSION {
+    $1.name += '[]';
+    $1.arrayFlag = true;
+    $$ = new VarT1($1, new NodeList($4, 'IDENTIFIERS LIST'), $6);
+  }
+  | id leftS rightS ID_LIST asignment EXPRESSION {
+    $$ = new VarT1(new Type($1+'[]', @1.first_line, @1.first_column, true), new NodeList($4, 'IDENTIFIERS LIST'), $6);
   }
 ;
 
@@ -845,11 +837,11 @@ EXP_OPT
     $$ = new Asignment(new Identifier($1.toLowerCase(), @1.first_line, @1.first_column), null, $3, @1.first_line, @1.first_column);
   }
   | byValue EXPRESSION {
-    $2.byValue();
+    $2.byValue = true;
     $$ = $2;
   }
   | id asignment byValue EXPRESSION {
-    $4.byValue();
+    $4.byValue = true;
     $$ = new Asignment(new Identifier($1.toLowerCase(), @1.first_line, @1.first_column), null, $4, @1.first_line, @1.first_column);
   }
 ;

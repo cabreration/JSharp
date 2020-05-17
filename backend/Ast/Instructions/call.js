@@ -43,6 +43,14 @@ class Call {
             }
         }
         else if (options.length === 1) {
+            // comparar el numero de parametros
+            if (options[0].paramsCount != this.expList.getChildren().length) {
+                return {
+                    state: false,
+                    error: new SharpError('Semantico', `La funcion ${this.id.id} toma ${options[0].paramsCount} parametros`, this.id.row, this.id.column)
+                }
+            }
+
             return {
                 state: true,
                 lead: options[0]
@@ -80,7 +88,7 @@ class Call {
             let name;
             if (exps[i].getTypeOf() === 'asignment') {
                 currentType = exps[i].expression.checkType(env);
-                name = exps[i].id;
+                name = exps[i].id.id;
             }
             else {
                 currentType = exps[i].checkType(env);
@@ -185,9 +193,11 @@ class Call {
         }
 
         // push the value of the parameters to the stack
-        // AQUI DEBO CAMBIAR LOS PARAMETROS POR VALOR
         for (let i = 0; i < params.length; i++) {
             let arg = params[i];
+            if (arg.getTypeOf() === 'asignment') {
+                arg = arg.expression;
+            }
             let argCode = arg.getTDC(env, label, temp);
             temp = argCode.temp;
             label = argCode.label;
@@ -224,7 +234,7 @@ class Call {
         for (let i = 0; i < params.length; i++) {
             if (params[i].getTypeOf() === 'asignment') {
                 let flag = false;
-                for (let j = i; j < compareTo.length; j++) {
+                for (let j = 0; j < compareTo.length; j++) {
                     if (params[i].id.id === compareTo[j]) {
                         sorted[j] = params[i];
                         flag = true;
