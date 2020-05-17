@@ -75,7 +75,7 @@ class AccessExpression {
                     return new SharpError('Semantico', `El acceso por indices no puede usarse sobre valores de tipo ${varType}`, this.row, this.column);
             }
             else {
-                switch (access.lead.id) {
+                switch (access.lead.id.id) {
                     case 'tochararray':
                         if (varType === 'string')
                             return 'char[]';
@@ -96,7 +96,7 @@ class AccessExpression {
                         if (varType === 'string') 
                             return 'string'
                         else 
-                            return new SharpError('Semantico', `La funcion ${access.lead.id} no puede usarse sobre valores de tipo ${varType}`, this.row, this.column);
+                            return new SharpError('Semantico', `La funcion ${access.lead.id.id} no puede usarse sobre valores de tipo ${varType}`, this.row, this.column);
                     case 'linealize':
                         if (varType.includes('[]'))
                             return varType;
@@ -166,8 +166,17 @@ class AccessExpression {
             let access = this.access_list.getChildren()[i];
             if (access.type === 1) {
                 if (varType.includes('[]')) {
-                    Singleton.insertError(new SharpError('Semantico', 'No es posible acceder por atributo en un elemento que es un arreglo', this.row, this.column));
-                    return new Updater(env, label, temp, null);
+                    if (access.lead.id != 'length') {
+                        Singleton.insertError(new SharpError('Semantico', 'No es posible acceder por atributo en un elemento que es un arreglo', this.row, this.column));
+                        return new Updater(env, label, temp, null);
+                    }
+                    else {
+                        varType = 'int';
+                        let temp1 = `t${temp}`;
+                        temp++;
+                        code.push(`${temp1} = heap[${absolute}];`);
+                        code.push(`${absolute} = ${temp1};`);
+                    }
                 }
                 else {
                     // buscar el nuevo tipo
@@ -224,13 +233,331 @@ class AccessExpression {
                 }
             }
             else {
-                // TODO - aqui si tengo que trabajar las funciones y devolve los resultados
+                switch (access.lead.id.id) {
+                    case 'tochararray':
+                        if (varType === 'string') {
+                            // crear una funcion que convierta la cadena en un arreglo y retornar su referencia
+                            let tca = this.toCharArray(temp, label, absolute);
+                            varType = 'char[]';
+                            temp = tca.temp;
+                            label = tca.label;
+                            code.push(tca.label);
+                            absolute = tca.value;
+                        }
+                        else {
+                            Singleton.insertError(new SharpError('Semantico', `La funcion toCharArray no puede usarse sobre valores de tipo ${varType}`, this.row, this.column));
+                            return new Updater(env, label, temp, null);
+                        }
+                    case 'charat':
+                        if (varType === 'string') {
+                            // get the parameter
+                            let par = access.lead.exList.getChildren()[0];
+                            let parTDC = par.getTDC(env, label, temp);
+                            if (parTDC.value == null) {
+                                return new Updater(env, label, temp, null);
+                            }
+                            if (parTDC.code != null) {
+                                code.push(parTDC.code);
+                                temp = parTDC.temp;
+                                label = parTDC.label;
+                            }
+                            varType = 'char';
+                            let cat = this.characterAt(label, temp, absolute, parTDC.value);
+                            temp = cat.temp;
+                            label = cat.label;
+                            code.push(cat.code);
+                            absolute = cat.value;
+                        }
+                        else {
+                            Singleton.insertError(new SharpError('Semantico', `La funcion charAt no puede usarse sobre valores de tipo ${varType}`, this.row, this.column));
+                            return new Updater(env, label, temp, null);
+                        }
+                    case 'length':
+                        if (varType === 'string') {
+                            let strl = this.strLength(label, temp, absolute);
+                            label = strl.label;
+                            temp = strl.temp;
+                            code.push(strl.code);
+                            absolute = strl.value;
+                            varType = 'int';
+                        }
+                        else {
+                            Singleton.insertError(new SharpError('Semantico', `La funcion length no puede usarse sobre valores de tipo ${varType}`, this.row, this.column));
+                            return new Updater(env, label, temp, null);
+                        } 
+                    case 'touppercase':
+                        if (varType === 'string') {
+
+                        }
+                        else {
+                            Singleton.insertError(new SharpError('Semantico', `La funcion toUpperCase no puede usarse sobre valores de tipo ${varType}`, this.row, this.column));
+                            return new Updater(env, label, temp, null);
+                        }
+                        break;
+                    case 'tolowercase':
+                        if (varType === 'string') {
+
+                        }
+                        else {
+                            Singleton.insertError(new SharpError('Semantico', `La funcion toLowerCase no puede usarse sobre valores de tipo ${varType}`, this.row, this.column));
+                            return new Updater(env, label, temp, null);
+                        }
+                    case 'linealize':
+                        if (varType.includes('[]')) {
+                            // nada mas crear un nuevo arreglo que sea igual y eso se retorna
+                        }
+                        else if (varType === 'string') {
+
+                        }
+                        else {
+                            Singleton.insertError(new SharpError('Semantico', `La funcion Linealize no puede usarse sobre valores de tipo ${varType}`, this.row, this.column));
+                            return new Updater(env, label, temp, null);
+                        }
+                }
             }
         }
         let up = new Updater(env, label, temp, code.join('\n'));
         up.addValue(absolute);
         up.addType(varType);
         return up;
+    }
+
+    toCharArray(temp, label, value) {
+        let code = [];
+        let temp1 = `t${temp}`;
+        temp++;
+        let temp2 = `t${temp}`;;
+        temp++;
+        let temp3 = `t${temp}`;
+        temp++;
+        let temp4 = `t${temp}`;
+        temp++;
+        let temp5 = `t${temp}`;
+        temp++;
+        let init = `t${temp}`;
+        temp++;
+        let label1 = `L${label}`;
+        label++;
+        let label2 = `L${label}`;
+        label++;
+        let label3 = `L${label}`;
+        label++;
+        let label4 = `L${label}`;
+        label++;
+        
+        code.push(`${temp1} = ${value};`);
+        code.push(`${temp2} = 0;`)
+        code.push(`${label1}:`)
+        code.push(`${temp3} = heap[${temp1}];`)
+        code.push(`if (${temp3} == 0) goto ${label2};`)
+        code.push(`${temp2} = ${temp2} + 1;`);
+        code.push(`${temp1} = ${temp1} + 1;`);
+        code.push(`goto ${label1};`);
+        code.push(`${label2}:`);
+        code.push(`${init} = h;`);
+        code.push(`heap[h] = ${temp2};`)
+        code.push(`h = h + 1;`);
+        code.push(`${temp4} = ${value};`)
+        code.push(`${label3}:`);
+        code.push(`${temp5} = heap[${temp4}];`);
+        code.push(`if (${temp5} == 0) goto ${label4};`);
+        code.push(`heap[h] = ${temp5};`);
+        code.push(`h = h + 1;`);
+        code.push(`${temp4} = ${temp4} + 1;`);
+        code.push(`goto ${label3};`)
+        code.push(`${label4}:`);
+        return {
+            code: code.join('\n'),
+            temp: temp,
+            label: label, 
+            value: init
+        }
+    }
+
+    strLength(label, temp, value) {
+        let code = [];
+        let temp1 = `t${temp}`;
+        temp++;
+        let temp2 = `t${temp}`;;
+        temp++;
+        let temp3 = `t${temp}`;
+        temp++;
+        let label1 = `L${label}`;
+        label++;
+        let label2 = `L${label}`;
+        label++;
+        
+        code.push(`${temp1} = ${value};`);
+        code.push(`${temp2} = 0;`)
+        code.push(`${label1}:`)
+        code.push(`${temp3} = heap[${temp1}];`)
+        code.push(`if (${temp3} == 0) goto ${label2};`)
+        code.push(`${temp2} = ${temp2} + 1;`);
+        code.push(`${temp1} = ${temp1} + 1;`);
+        code.push(`goto ${label1};`);
+        code.push(`${label2}:`);
+
+        return {
+            label: label,
+            temp: temp,
+            code: code.join('\n'),
+            value: temp2
+        }
+    }
+
+    characterAt(label, temp, value, position) {
+        let code = [];
+        let temp1 = `t${temp}`;
+        temp++;
+        let temp2 = `t${temp}`;;
+        temp++;
+        let temp3 = `t${temp}`;
+        temp++;
+        let label1 = `L${label}`;
+        label++;
+        let label2 = `L${label}`;
+        label++;
+        
+        code.push(`${temp1} = ${value};`)
+        code.push(`${temp2} = 0;`)
+        code.push(`${label1}:`)
+        code.push(`${temp3} = heap[${temp1}];`)
+        code.push(`if (${temp2} == ${position}) goto ${label2};`)
+        code.push(`${temp1} = ${temp1} + 1;`);
+        code.push(`goto ${label1};`);
+        code.push(`${label2}:`);
+
+        return {
+            label: label,
+            temp: temp,
+            code: code.join('\n'),
+            value: temp2
+        }
+    }
+
+    upper(label, temp, value) {
+        let code = [];
+        let init = `t${temp}`;
+        temp++;
+        let temp4 = `t${temp}`;
+        temp++;
+        let temp5 = `t${temp}`;
+        temp++;
+        let init = `t${temp}`;
+        temp++;
+        let label1 = `L${label}`;
+        label++;
+        let label2 = `L${label}`;
+        label++;
+        let label3 = `L${label}`;
+        label++;
+        let label4 = `L${label}`;
+        label++;
+        
+        code.push(`${init} = h;`);
+        code.push(`${temp4} = ${value};`)
+        code.push(`${label1}:`);
+        code.push(`${temp5} = heap[${temp4}];`);
+        code.push(`if (${temp5} == 0) goto ${label2};`);
+        code.push(`if (${temp5} < 97) goto ${label3};`);
+        code.push(`if (${temp5} > 122) goto ${label3};`);
+        code.push(`if (${temp5} == 164) goto ${label4};`);
+        code.push(`${temp5} = ${temp5} - 32;`)
+        code.push(`goto ${label3};`)
+        code.push(`${label4}:`)
+        code.push(`${temp5} = 165;`);
+        code.push(`${label3}:`);
+        code.push(`heap[h] = ${temp5};`);
+        code.push(`h = h + 1;`);
+        code.push(`${temp4} = ${temp4} + 1;`);
+        code.push(`goto ${label1};`)
+        code.push(`${label2}:`);
+        return {
+            code: code.join('\n'),
+            temp: temp,
+            label: label, 
+            value: init
+        }
+    }
+
+    lower(label, temp, value) {
+        let code = [];
+        let init = `t${temp}`;
+        temp++;
+        let temp4 = `t${temp}`;
+        temp++;
+        let temp5 = `t${temp}`;
+        temp++;
+        let init = `t${temp}`;
+        temp++;
+        let label1 = `L${label}`;
+        label++;
+        let label2 = `L${label}`;
+        label++;
+        let label3 = `L${label}`;
+        label++;
+        let label4 = `L${label}`;
+        label++;
+        
+        code.push(`${init} = h;`);
+        code.push(`${temp4} = ${value};`)
+        code.push(`${label1}:`);
+        code.push(`${temp5} = heap[${temp4}];`);
+        code.push(`if (${temp5} == 0) goto ${label2};`);
+        code.push(`if (${temp5} < 65) goto ${label3};`);
+        code.push(`if (${temp5} > 90) goto ${label3};`);
+        code.push(`if (${temp5} == 165) goto ${label4};`);
+        code.push(`${temp5} = ${temp5} + 32;`)
+        code.push(`goto ${label3};`)
+        code.push(`${label4}:`)
+        code.push(`${temp5} = 164;`);
+        code.push(`${label3}:`);
+        code.push(`heap[h] = ${temp5};`);
+        code.push(`h = h + 1;`);
+        code.push(`${temp4} = ${temp4} + 1;`);
+        code.push(`goto ${label1};`)
+        code.push(`${label2}:`);
+        return {
+            code: code.join('\n'),
+            temp: temp,
+            label: label, 
+            value: init
+        }
+    }
+
+    linealize(label, temp, value) {
+        let code = [];
+        let temp4 = `t${temp}`;
+        temp++;
+        let temp5 = `t${temp}`;
+        temp++;
+        let init = `t${temp}`;
+        temp++;
+        let label3 = `L${label}`;
+        label++;
+        let label4 = `L${label}`;
+        label++;
+        
+        code.push(`${init} = h;`);
+        code.push(`${temp4} = ${value};`)
+        code.push(`${temp5} = heap[${temp4}];`);
+        code.push(`heap[h] = ${temp5};`);
+        code.push('h + h + 1;');
+        code.push(`${temp4} = ${temp4} + 1;`);
+        code.push(`${label3}:`);
+        code.push(`${temp5} = heap[${temp4}];`);
+        code.push(`if (${temp5} == 0) goto ${label4};`);
+        code.push(`heap[h] = ${temp5};`);
+        code.push(`h = h + 1;`);
+        code.push(`${temp4} = ${temp4} + 1;`);
+        code.push(`goto ${label3};`)
+        code.push(`${label4}:`);
+        return {
+            code: code.join('\n'),
+            temp: temp,
+            label: label, 
+            value: init
+        }
     }
 }
 
