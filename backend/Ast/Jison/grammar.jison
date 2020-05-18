@@ -633,8 +633,8 @@ EXPRESSION
     $$ = new AccessExpression(new Identifier($1, @1.first_line, @1.first_column), new NodeList([new Access(3, $3, @2.first_line, @2.first_column)], 'ACCESS LIST'), @2.first_line, @2.first_column);
   }
   | id dot CALL ACCESS_LIST {
-    $5.unshift(new Access(3, $3, @2.first_line, @2.first_column));
-    $$ = new AccessExpression(new Identifier($1, @1.first_line, @1.first_column), new NodeList($5, 'ACCESS LIST'), @2.first_line, @2.first_column);
+    $4.unshift(new Access(3, $3, @2.first_line, @2.first_column));
+    $$ = new AccessExpression(new Identifier($1, @1.first_line, @1.first_column), new NodeList($4, 'ACCESS LIST'), @2.first_line, @2.first_column);
   }
   | CALL {
     $$ = $1;

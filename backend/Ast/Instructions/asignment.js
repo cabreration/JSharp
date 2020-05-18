@@ -216,7 +216,7 @@ class Asignment {
                     }
                 }
                 else if (access.type === 2) {
-                    if (!varType.includes('[]')) {
+                    if (!varType.includes('[]')  && varType != 'global') {
                         Singleton.insertError(new SharpError('Semantico', 'No es posible acceder a posiciones de un elemento que no es un arreglo', this.row, this.column));
                         return new Updater(env, label, temp, null);
                     }

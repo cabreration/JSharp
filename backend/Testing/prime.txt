@@ -1,390 +1,830 @@
-var t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19, t20, t21, t22, t23, t24, t25, t26, t27, t28, t29, t30, t31, t32, t33, t34, t35, t36, t37, t38, t39;
+var t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19, t20, t21, t22, t23, t24, t25, t26, t27, t28, t29, t30, t31, t32, t33, t34, t35, t36, t37, t38, t39, t40, t41, t42, t43, t44, t45, t46, t47, t48, t49, t50, t51, t52, t53, t54, t55, t56, t57, t58, t59, t60, t61, t62, t63, t64, t65, t66, t67, t68, t69, t70, t71, t72, t73, t74, t75, t76, t77, t78, t79, t80, t81, t82, t83, t84, t85, t86, t87, t88, t89, t90, t91, t92, t93, t94, t95, t96, t97, t98, t99, t100, t101, t102, t103, t104, t105, t106, t107, t108, t109, t110, t111, t112, t113, t114, t115, t116, t117, t118, t119, t120, t121, t122, t123, t124, t125, t126, t127, t128, t129, t130, t131, t132, t133, t134, t135, t136, t137, t138, t139, t140, t141, t142, t143, t144, t145, t146, t147, t148, t149, t150, t151, t152, t153, t154, t155, t156, t157, t158, t159, t160, t161, t162, t163, t164, t165, t166, t167, t168, t169, t170, t171, t172, t173, t174, t175, t176, t177, t178, t179, t180, t181, t182, t183, t184, t185, t186, t187, t188, t189, t190, t191, t192, t193, t194, t195, t196, t197, t198, t199, t200, t201, t202, t203, t204, t205, t206, t207, t208, t209, t210, t211, t212, t213, t214, t215, t216, t217, t218, t219, t220, t221, t222, t223, t224, t225, t226, t227, t228, t229, t230, t231, t232, t233, t234, t235, t236, t237, t238, t239, t240, t241, t242, t243, t244, t245, t246, t247, t248, t249, t250, t251, t252, t253, t254, t255, t256, t257, t258, t259, t260, t261, t262, t263, t264, t265, t266, t267, t268, t269, t270, t271, t272, t273, t274, t275, t276, t277, t278, t279, t280, t281, t282, t283, t284, t285, t286, t287, t288, t289, t290, t291, t292, t293, t294, t295, t296, t297, t298, t299, t300, t301, t302, t303, t304, t305, t306, t307, t308, t309, t310, t311, t312, t313, t314, t315, t316, t317, t318, t319, t320, t321, t322, t323, t324, t325, t326, t327, t328, t329, t330, t331, t332, t333, t334, t335, t336, t337, t338, t339, t340, t341, t342, t343, t344, t345, t346, t347, t348, t349, t350, t351, t352, t353, t354, t355, t356, t357, t358, t359, t360, t361, t362, t363, t364, t365, t366, t367, t368, t369, t370, t371, t372, t373;
 var p, h;
 var heap[];
 var stack[];
 p = 0;
 h = 1;
 heap[0] = 0;
-call principal_0_1;
-goto L38;
-proc principal_0_1 begin
+call principal_0_3;
+goto L87;
+proc principal_0_3 begin
+t2 = h + 1;
 t1 = h;
-heap[h] = 74;
+heap[h] = 10;
 h = h + 1;
-heap[h] = 97;
-h = h + 1;
-heap[h] = 118;
-h = h + 1;
-heap[h] = 105;
-h = h + 1;
-heap[h] = 101;
-h = h + 1;
-heap[h] = 114;
-h = h + 1;
-heap[h] = 0;
-h = h + 1;
-t2 = t1;
-t3 = p + 2;
-stack[t3] = t2;
-t4 = 24;
-t5 = p + 3;
-stack[t5] = t4;
-t6 = 97;
-t7 = p + 4;
+h = h + 10;
+heap[t2] = 365;
+t2 = t2 + 1;
+heap[t2] = 5842;
+t2 = t2 + 1;
+heap[t2] = 12;
+t2 = t2 + 1;
+heap[t2] = 6324;
+t2 = t2 + 1;
+heap[t2] = 0;
+t2 = t2 + 1;
+heap[t2] = 851;
+t2 = t2 + 1;
+heap[t2] = 56;
+t2 = t2 + 1;
+heap[t2] = 3;
+t2 = t2 + 1;
+heap[t2] = 7452;
+t2 = t2 + 1;
+heap[t2] = 654;
+t2 = t2 + 1;
+t3 = p + 1;
+stack[t3] = t1;
+t4 = p + 1;
+t5 = stack[t4];
+t6 = t5;
+t7 = p + 3;
 stack[t7] = t6;
-p = p + 1;
-call poli_3_5;
-p = p - 1;
+p = p + 2;
+call sort_1_8;
+p = p - 2;
 L1:
 end
-proc poli_3_5 begin
-t9 = h;
-heap[h] = 84;
+proc sort_1_8 begin
+t9 = p + 1;
+t10 = stack[t9];
+t11 = h;
+t12 = heap[t10];
+heap[h] = t12;
 h = h + 1;
-heap[h] = 117;
-h = h + 1;
-heap[h] = 32;
-h = h + 1;
-heap[h] = 110;
-h = h + 1;
-heap[h] = 111;
-h = h + 1;
-heap[h] = 109;
-h = h + 1;
-heap[h] = 98;
-h = h + 1;
-heap[h] = 114;
-h = h + 1;
-heap[h] = 101;
-h = h + 1;
-heap[h] = 32;
-h = h + 1;
-heap[h] = 101;
-h = h + 1;
-heap[h] = 115;
-h = h + 1;
-heap[h] = 32;
-h = h + 1;
-heap[h] = 0;
-h = h + 1;
-t10 = p + 1;
-t11 = stack[t10];
-t12 = h;
-t13 = heap[t9];
-if (t13 == 0) goto L4;
+t13 = 0;
+t14 = t10 + 1;
 L3:
-if (t13 == 0) goto L5;
-heap[h] = t13;
+t15 = heap[t14];
+if (t13 == t12) goto L4;
+heap[h] = t15;
 h = h + 1;
-t9 = t9 + 1;
-t13 = heap[t9];
+t14 = t14 + 1;
+t13 = t13 + 1;
 goto L3;
 L4:
-heap[h] = 110;
-h = h + 1;
-heap[h] = 117;
-h = h + 1;
-heap[h] = 108;
-h = h + 1;
-heap[h] = 108;
-h = h + 1;
+t16 = t11;
+t17 = p + 6;
+stack[t17] = t16;
+t18 = 1;
+t19 = p + 7;
+stack[t19] = t18;
+p = p + 5;
+call sort_2_26;
+t20 = stack[p];
+p = p - 5;
+t21 = p + 2;
+stack[t21] = t20;
+t22 = p + 1;
+t23 = stack[t22];
+t24 = 1;
+t25 = heap[t23];
+t25 = t25 + 1;
+print("%c", 91);
+print("%c", 32);
 L5:
-t14 = heap[t11];
-if (t14 == 0) goto L7;
+if (t24 == t25) goto L6;
+t26 = t23 + t24;
+t27 = heap[t26];
+print("%i", t27);
+print("%c", 32);
+t24 = t24 + 1;
+goto L5;
 L6:
-if (t14 == 0) goto L8;
-heap[h] = t14;
-h = h + 1;
-t11 = t11 + 1;
-t14 = heap[t11];
-goto L6;
-L7:
-heap[h] = 110;
-h = h + 1;
-heap[h] = 117;
-h = h + 1;
-heap[h] = 108;
-h = h + 1;
-heap[h] = 108;
-h = h + 1;
-L8:
-heap[h] = 0;
-h = h + 1;
-t15 = h;
-heap[h] = 44;
-h = h + 1;
-heap[h] = 32;
-h = h + 1;
-heap[h] = 116;
-h = h + 1;
-heap[h] = 117;
-h = h + 1;
-heap[h] = 32;
-h = h + 1;
-heap[h] = 101;
-h = h + 1;
-heap[h] = 100;
-h = h + 1;
-heap[h] = 97;
-h = h + 1;
-heap[h] = 100;
-h = h + 1;
-heap[h] = 32;
-h = h + 1;
-heap[h] = 101;
-h = h + 1;
-heap[h] = 115;
-h = h + 1;
-heap[h] = 32;
+print("%c", 93);
+t28 = h;
+heap[h] = 10;
 h = h + 1;
 heap[h] = 0;
 h = h + 1;
-t16 = h;
-t17 = heap[t12];
-if (t17 == 0) goto L10;
-L9:
-if (t17 == 0) goto L11;
-heap[h] = t17;
-h = h + 1;
-t12 = t12 + 1;
-t17 = heap[t12];
-goto L9;
-L10:
-heap[h] = 110;
-h = h + 1;
-heap[h] = 117;
-h = h + 1;
-heap[h] = 108;
-h = h + 1;
-heap[h] = 108;
-h = h + 1;
-L11:
-t18 = heap[t15];
-if (t18 == 0) goto L13;
-L12:
-if (t18 == 0) goto L14;
-heap[h] = t18;
-h = h + 1;
-t15 = t15 + 1;
-t18 = heap[t15];
-goto L12;
-L13:
-heap[h] = 110;
-h = h + 1;
-heap[h] = 117;
-h = h + 1;
-heap[h] = 108;
-h = h + 1;
-heap[h] = 108;
-h = h + 1;
-L14:
-heap[h] = 0;
-h = h + 1;
-t19 = p + 2;
-t20 = stack[t19];
-t21 = h;
-t22 = heap[t16];
-if (t22 == 0) goto L16;
-L15:
-if (t22 == 0) goto L17;
-heap[h] = t22;
-h = h + 1;
-t16 = t16 + 1;
-t22 = heap[t16];
-goto L15;
-L16:
-heap[h] = 110;
-h = h + 1;
-heap[h] = 117;
-h = h + 1;
-heap[h] = 108;
-h = h + 1;
-heap[h] = 108;
-h = h + 1;
-L17:
-t23 = t20;
-t27 = 0;
-if (t23 > 0) goto L24;
-t28 = 1;
-t23 = -1 * t23;
-goto L25;
-L24:
-t28 = 0;
-L25:
-if (t23 <> 0) goto L22;
-heap[h] = 48;
-h = h + 1;
-goto L23;
-L22:
-t26 = t23 % 10;
-if (t26 > 0) goto L21;
-t23 = t23 / 10;
-t27 = t27 + 1;
-goto L22;
-L21:
-t24 = 0;
-L18:
-if (t23 == 0) goto L19;
-t25 = t23 % 10;
-t23 = t23 - t25;
-t23 = t23 / 10;
-t24 = t24 * 10;
-t24 = t24 + t25;
-goto L18;
-L19:
-if (t28 == 0) goto L26;
-heap[h] = 45;
-h = h + 1;
-L26:
-if (t24 == 0) goto L20;
-t25 = t24 % 10;
-t24 = t24 - t25;
-t24 = t24 / 10;
-t25 = t25 + 48;
-heap[h] = t25;
-h = h + 1;
-goto L26;
-L20:
-if (t27 == 0) goto L23;
-heap[h] = 48;
-h = h + 1;
-t27 = t27 - 1;
-goto L20;
-L23:
-heap[h] = 0;
-h = h + 1;
-t29 = h;
-heap[h] = 32;
-h = h + 1;
-heap[h] = 121;
-h = h + 1;
-heap[h] = 32;
-h = h + 1;
-heap[h] = 116;
-h = h + 1;
-heap[h] = 117;
-h = h + 1;
-heap[h] = 32;
-h = h + 1;
-heap[h] = 108;
-h = h + 1;
-heap[h] = 101;
-h = h + 1;
-heap[h] = 116;
-h = h + 1;
-heap[h] = 114;
-h = h + 1;
-heap[h] = 97;
-h = h + 1;
-heap[h] = 32;
-h = h + 1;
-heap[h] = 102;
-h = h + 1;
-heap[h] = 97;
-h = h + 1;
-heap[h] = 118;
-h = h + 1;
-heap[h] = 111;
-h = h + 1;
-heap[h] = 114;
-h = h + 1;
-heap[h] = 105;
-h = h + 1;
-heap[h] = 116;
-h = h + 1;
-heap[h] = 97;
-h = h + 1;
-heap[h] = 32;
-h = h + 1;
-heap[h] = 101;
-h = h + 1;
-heap[h] = 115;
-h = h + 1;
-heap[h] = 32;
-h = h + 1;
-heap[h] = 0;
-h = h + 1;
-t30 = h;
-t31 = heap[t21];
-if (t31 == 0) goto L28;
-L27:
-if (t31 == 0) goto L29;
-heap[h] = t31;
-h = h + 1;
-t21 = t21 + 1;
-t31 = heap[t21];
-goto L27;
-L28:
-heap[h] = 110;
-h = h + 1;
-heap[h] = 117;
-h = h + 1;
-heap[h] = 108;
-h = h + 1;
-heap[h] = 108;
-h = h + 1;
-L29:
-t32 = heap[t29];
-if (t32 == 0) goto L31;
-L30:
-if (t32 == 0) goto L32;
-heap[h] = t32;
-h = h + 1;
-t29 = t29 + 1;
-t32 = heap[t29];
-goto L30;
-L31:
-heap[h] = 110;
-h = h + 1;
-heap[h] = 117;
-h = h + 1;
-heap[h] = 108;
-h = h + 1;
-heap[h] = 108;
-h = h + 1;
-L32:
-heap[h] = 0;
-h = h + 1;
-t33 = p + 3;
-t34 = stack[t33];
-t35 = h;
-t36 = heap[t30];
-if (t36 == 0) goto L34;
-L33:
-if (t36 == 0) goto L35;
-heap[h] = t36;
-h = h + 1;
-t30 = t30 + 1;
-t36 = heap[t30];
-goto L33;
-L34:
-heap[h] = 110;
-h = h + 1;
-heap[h] = 117;
-h = h + 1;
-heap[h] = 108;
-h = h + 1;
-heap[h] = 108;
-h = h + 1;
-L35:
-heap[h] = t34;
-h = h + 1;
-heap[h] = 0;
-h = h + 1;
-t37 = t35;
-if (t37 > 0) goto L36;
+t29 = t28;
+if (t29 > 0) goto L7;
 print("%c", 110);
 print("%c", 117);
 print("%c", 108);
 print("%c", 108);
-goto L37;
-L36:
-t38 = heap[t37];
-if (t38 == 0) goto L37;
-print("%c", t38);
-t37 = t37 + 1;
-goto L36;
-L37:
+goto L8;
+L7:
+t30 = heap[t29];
+if (t30 == 0) goto L8;
+print("%c", t30);
+t29 = t29 + 1;
+goto L7;
+L8:
+t31 = p + 2;
+t32 = stack[t31];
+t33 = 1;
+t34 = heap[t32];
+t34 = t34 + 1;
+print("%c", 91);
+print("%c", 32);
+L9:
+if (t33 == t34) goto L10;
+t35 = t32 + t33;
+t36 = heap[t35];
+print("%i", t36);
+print("%c", 32);
+t33 = t33 + 1;
+goto L9;
+L10:
+print("%c", 93);
+t37 = h;
+heap[h] = 10;
+h = h + 1;
+heap[h] = 0;
+h = h + 1;
+t38 = t37;
+if (t38 > 0) goto L11;
+print("%c", 110);
+print("%c", 117);
+print("%c", 108);
+print("%c", 108);
+goto L12;
+L11:
+t39 = heap[t38];
+if (t39 == 0) goto L12;
+print("%c", t39);
+t38 = t38 + 1;
+goto L11;
+L12:
+t40 = p + 1;
+t41 = stack[t40];
+t42 = h;
+t43 = heap[t41];
+heap[h] = t43;
+h = h + 1;
+t44 = 0;
+t45 = t41 + 1;
+L13:
+t46 = heap[t45];
+if (t44 == t43) goto L14;
+heap[h] = t46;
+h = h + 1;
+t45 = t45 + 1;
+t44 = t44 + 1;
+goto L13;
+L14:
+t47 = t42;
+t48 = p + 6;
+stack[t48] = t47;
+t49 = 2;
+t50 = p + 7;
+stack[t50] = t49;
+p = p + 5;
+call sort_2_26;
+t51 = stack[p];
+p = p - 5;
+t52 = p + 3;
+stack[t52] = t51;
+t53 = p + 1;
+t54 = stack[t53];
+t55 = 1;
+t56 = heap[t54];
+t56 = t56 + 1;
+print("%c", 91);
+print("%c", 32);
+L15:
+if (t55 == t56) goto L16;
+t57 = t54 + t55;
+t58 = heap[t57];
+print("%i", t58);
+print("%c", 32);
+t55 = t55 + 1;
+goto L15;
+L16:
+print("%c", 93);
+t59 = h;
+heap[h] = 10;
+h = h + 1;
+heap[h] = 0;
+h = h + 1;
+t60 = t59;
+if (t60 > 0) goto L17;
+print("%c", 110);
+print("%c", 117);
+print("%c", 108);
+print("%c", 108);
+goto L18;
+L17:
+t61 = heap[t60];
+if (t61 == 0) goto L18;
+print("%c", t61);
+t60 = t60 + 1;
+goto L17;
+L18:
+t62 = p + 3;
+t63 = stack[t62];
+t64 = 1;
+t65 = heap[t63];
+t65 = t65 + 1;
+print("%c", 91);
+print("%c", 32);
+L19:
+if (t64 == t65) goto L20;
+t66 = t63 + t64;
+t67 = heap[t66];
+print("%i", t67);
+print("%c", 32);
+t64 = t64 + 1;
+goto L19;
+L20:
+print("%c", 93);
+t68 = h;
+heap[h] = 10;
+h = h + 1;
+heap[h] = 0;
+h = h + 1;
+t69 = t68;
+if (t69 > 0) goto L21;
+print("%c", 110);
+print("%c", 117);
+print("%c", 108);
+print("%c", 108);
+goto L22;
+L21:
+t70 = heap[t69];
+if (t70 == 0) goto L22;
+print("%c", t70);
+t69 = t69 + 1;
+goto L21;
+L22:
+t71 = p + 1;
+t72 = stack[t71];
+t73 = t72;
+t74 = p + 6;
+stack[t74] = t73;
+t75 = 3;
+t76 = p + 7;
+stack[t76] = t75;
+p = p + 5;
+call sort_2_26;
+t77 = stack[p];
+p = p - 5;
+t78 = p + 4;
+stack[t78] = t77;
+t79 = p + 1;
+t80 = stack[t79];
+t81 = 1;
+t82 = heap[t80];
+t82 = t82 + 1;
+print("%c", 91);
+print("%c", 32);
+L23:
+if (t81 == t82) goto L24;
+t83 = t80 + t81;
+t84 = heap[t83];
+print("%i", t84);
+print("%c", 32);
+t81 = t81 + 1;
+goto L23;
+L24:
+print("%c", 93);
+t85 = h;
+heap[h] = 10;
+h = h + 1;
+heap[h] = 0;
+h = h + 1;
+t86 = t85;
+if (t86 > 0) goto L25;
+print("%c", 110);
+print("%c", 117);
+print("%c", 108);
+print("%c", 108);
+goto L26;
+L25:
+t87 = heap[t86];
+if (t87 == 0) goto L26;
+print("%c", t87);
+t86 = t86 + 1;
+goto L25;
+L26:
+t88 = p + 4;
+t89 = stack[t88];
+t90 = 1;
+t91 = heap[t89];
+t91 = t91 + 1;
+print("%c", 91);
+print("%c", 32);
+L27:
+if (t90 == t91) goto L28;
+t92 = t89 + t90;
+t93 = heap[t92];
+print("%i", t93);
+print("%c", 32);
+t90 = t90 + 1;
+goto L27;
+L28:
+print("%c", 93);
+t94 = h;
+heap[h] = 10;
+h = h + 1;
+heap[h] = 0;
+h = h + 1;
+t95 = t94;
+if (t95 > 0) goto L29;
+print("%c", 110);
+print("%c", 117);
+print("%c", 108);
+print("%c", 108);
+goto L30;
+L29:
+t96 = heap[t95];
+if (t96 == 0) goto L30;
+print("%c", t96);
+t95 = t95 + 1;
+goto L29;
+L30:
 L2:
 end
+proc sort_2_26 begin
+t97 = p + 2;
+t98 = stack[t97];
+if (t98 == 1) goto L33;
+t99 = 0;
+goto L34;
+L33:
+t99 = 1;
+L34:
+t100 = t99;
+if (t100 == 0) goto L35;
+p = p + 3;
+t101 = p - 3;
+t102 = t101 + 1;
+t103 = stack[t102];
+t104 = t103;
+t105 = p + 1;
+stack[t105] = t104;
+
+call bubblesort_1_18;
+
+p = p - 3;
+goto L32;
+L35:
+t107 = p + 2;
+t108 = stack[t107];
+if (t108 == 2) goto L37;
+t109 = 0;
+goto L38;
+L37:
+t109 = 1;
 L38:
+t110 = t109;
+if (t110 == 0) goto L39;
+p = p + 3;
+t111 = p - 3;
+t112 = t111 + 1;
+t113 = stack[t112];
+t114 = t113;
+t115 = p + 1;
+stack[t115] = t114;
+
+call selectionsort_1_1;
+
+p = p - 3;
+goto L36;
+L39:
+p = p + 3;
+t117 = p - 3;
+t118 = t117 + 1;
+t119 = stack[t118];
+t120 = t119;
+t121 = p + 1;
+stack[t121] = t120;
+
+call insertsort_1_32;
+
+p = p - 3;
+L40:
+L36:
+L32:
+t123 = p + 1;
+t124 = stack[t123];
+t125 = p;
+stack[t125] = t124;
+L31:
+end
+proc selectionsort_1_1 begin
+t127 = p;
+t128 = t127 + 1;
+t126 = stack[t128];
+t129 = heap[t126];
+t126 = t129;
+t130 = p + 2;
+stack[t130] = t126;
+p = p + 3;
+t131 = p;
+stack[t131] = 0;
+L42:
+t132 = p;
+t133 = stack[t132];
+t135 = p - 3;
+t136 = t135 + 1;
+t134 = stack[t136];
+t137 = heap[t134];
+t134 = t137;
+t138 = t134 - 1;
+if (t133 < t138) goto L45;
+t139 = 0;
+goto L46;
+L45:
+t139 = 1;
+L46:
+t140 = t139;
+if (t140 == 0) goto L43;
+t141 = p;
+t142 = stack[t141];
+t143 = p + 1;
+stack[t143] = t142;
+p = p + 3;
+t144 = p - 3;
+t145 = t144;
+t146 = stack[t145];
+t147 = t146 + 1;
+t148 = p;
+stack[t148] = t147;
+L47:
+t149 = p;
+t150 = stack[t149];
+t151 = p - 6;
+t152 = t151 + 2;
+t153 = stack[t152];
+if (t150 < t153) goto L50;
+t154 = 0;
+goto L51;
+L50:
+t154 = 1;
+L51:
+t155 = t154;
+if (t155 == 0) goto L48;
+t157 = p - 6;
+t158 = t157 + 1;
+t156 = stack[t158];
+t159 = p;
+t160 = stack[t159];
+t161 = t160 + 1;
+t156 = t156 + t161;
+t156 = heap[t156];
+t163 = p - 6;
+t164 = t163 + 1;
+t162 = stack[t164];
+t165 = p - 3;
+t166 = t165 + 1;
+t167 = stack[t166];
+t168 = t167 + 1;
+t162 = t162 + t168;
+t162 = heap[t162];
+if (t156 < t162) goto L53;
+t169 = 0;
+goto L54;
+L53:
+t169 = 1;
+L54:
+t170 = t169;
+if (t170 == 0) goto L55;
+p = p + 1;
+t171 = p - 1;
+t172 = t171;
+t173 = stack[t172];
+t174 = p - 4;
+t175 = t174 + 1;
+stack[t175] = t173;
+p = p - 1;
+goto L52;
+L55:
+L52:
+L49:
+t176 = p;
+t178 = p;
+t179 = t178;
+t180 = stack[t179];
+t180 = t180 + 1;
+stack[t179] = t180;
+t180 = t180 - 1;
+goto L47;
+L48:
+p = p - 3;
+t182 = p - 3;
+t183 = t182 + 1;
+t181 = stack[t183];
+t184 = p + 1;
+t185 = stack[t184];
+t186 = t185 + 1;
+t181 = t181 + t186;
+t181 = heap[t181];
+t187 = p + 2;
+stack[t187] = t181;
+t189 = p - 3;
+t190 = t189 + 1;
+t188 = stack[t190];
+t191 = p + 1;
+t192 = stack[t191];
+t193 = t192 + 1;
+t188 = t188 + t193;
+t195 = p - 3;
+t196 = t195 + 1;
+t194 = stack[t196];
+t197 = p;
+t198 = stack[t197];
+t199 = t198 + 1;
+t194 = t194 + t199;
+t194 = heap[t194];
+heap[t188] = t194;
+t201 = p - 3;
+t202 = t201 + 1;
+t200 = stack[t202];
+t203 = p;
+t204 = stack[t203];
+t205 = t204 + 1;
+t200 = t200 + t205;
+t206 = p + 2;
+t207 = stack[t206];
+heap[t200] = t207;
+L44:
+t208 = p;
+t210 = p;
+t211 = t210;
+t212 = stack[t211];
+t212 = t212 + 1;
+stack[t211] = t212;
+t212 = t212 - 1;
+goto L42;
+L43:
+p = p - 3;
+L41:
+end
+proc bubblesort_1_18 begin
+t214 = p;
+t215 = t214 + 1;
+t213 = stack[t215];
+t216 = heap[t213];
+t213 = t216;
+t217 = p + 2;
+stack[t217] = t213;
+p = p + 3;
+t218 = p;
+stack[t218] = 0;
+L57:
+t219 = p;
+t220 = stack[t219];
+t221 = p - 3;
+t222 = t221 + 2;
+t223 = stack[t222];
+t224 = t223 - 1;
+if (t220 < t224) goto L60;
+t225 = 0;
+goto L61;
+L60:
+t225 = 1;
+L61:
+t226 = t225;
+if (t226 == 0) goto L58;
+p = p + 1;
+t227 = p;
+stack[t227] = 0;
+L62:
+t228 = p;
+t229 = stack[t228];
+t230 = p - 4;
+t231 = t230 + 2;
+t232 = stack[t231];
+t233 = p - 1;
+t234 = t233;
+t235 = stack[t234];
+t236 = t232 - t235;
+t237 = t236 - 1;
+if (t229 < t237) goto L65;
+t238 = 0;
+goto L66;
+L65:
+t238 = 1;
+L66:
+t239 = t238;
+if (t239 == 0) goto L63;
+t241 = p - 4;
+t242 = t241 + 1;
+t240 = stack[t242];
+t243 = p;
+t244 = stack[t243];
+t245 = t244 + 1;
+t240 = t240 + t245;
+t240 = heap[t240];
+t247 = p - 4;
+t248 = t247 + 1;
+t246 = stack[t248];
+t249 = p;
+t250 = stack[t249];
+t251 = t250 + 1;
+t252 = t251 + 1;
+t246 = t246 + t252;
+t246 = heap[t246];
+if (t240 > t246) goto L68;
+t253 = 0;
+goto L69;
+L68:
+t253 = 1;
+L69:
+t254 = t253;
+if (t254 == 0) goto L70;
+p = p + 1;
+t256 = p - 5;
+t257 = t256 + 1;
+t255 = stack[t257];
+t258 = p - 1;
+t259 = t258;
+t260 = stack[t259];
+t261 = t260 + 1;
+t255 = t255 + t261;
+t255 = heap[t255];
+t262 = p;
+stack[t262] = t255;
+t264 = p - 5;
+t265 = t264 + 1;
+t263 = stack[t265];
+t266 = p - 1;
+t267 = t266;
+t268 = stack[t267];
+t269 = t268 + 1;
+t263 = t263 + t269;
+t271 = p - 5;
+t272 = t271 + 1;
+t270 = stack[t272];
+t273 = p - 1;
+t274 = t273;
+t275 = stack[t274];
+t276 = t275 + 1;
+t277 = t276 + 1;
+t270 = t270 + t277;
+t270 = heap[t270];
+heap[t263] = t270;
+t279 = p - 5;
+t280 = t279 + 1;
+t278 = stack[t280];
+t281 = p - 1;
+t282 = t281;
+t283 = stack[t282];
+t284 = t283 + 1;
+t285 = t284 + 1;
+t278 = t278 + t285;
+t286 = p;
+t287 = stack[t286];
+heap[t278] = t287;
+p = p - 1;
+goto L67;
+L70:
+L67:
+L64:
+t288 = p;
+t290 = p;
+t291 = t290;
+t292 = stack[t291];
+t292 = t292 + 1;
+stack[t291] = t292;
+t292 = t292 - 1;
+goto L62;
+L63:
+p = p - 1;
+t293 = p;
+t295 = p;
+t296 = t295;
+t297 = stack[t296];
+t297 = t297 + 1;
+stack[t296] = t297;
+t297 = t297 - 1;
+L59:
+goto L57;
+L58:
+p = p - 3;
+L56:
+end
+proc insertsort_1_32 begin
+t299 = p;
+t300 = t299 + 1;
+t298 = stack[t300];
+t301 = heap[t298];
+t298 = t301;
+t302 = p + 2;
+stack[t302] = t298;
+p = p + 3;
+t303 = p;
+stack[t303] = 1;
+L72:
+t304 = p;
+t305 = stack[t304];
+t306 = p - 3;
+t307 = t306 + 2;
+t308 = stack[t307];
+if (t305 < t308) goto L75;
+t309 = 0;
+goto L76;
+L75:
+t309 = 1;
+L76:
+t310 = t309;
+if (t310 == 0) goto L73;
+t312 = p - 3;
+t313 = t312 + 1;
+t311 = stack[t313];
+t314 = p;
+t315 = stack[t314];
+t316 = t315 + 1;
+t311 = t311 + t316;
+t311 = heap[t311];
+t317 = p + 1;
+stack[t317] = t311;
+t318 = p;
+t319 = stack[t318];
+t320 = t319 - 1;
+t321 = p + 2;
+stack[t321] = t320;
+L77:
+t322 = p + 2;
+t323 = stack[t322];
+if (t323 >= 0) goto L78;
+t324 = 0;
+goto L79;
+L78:
+t324 = 1;
+L79:
+t326 = p - 3;
+t327 = t326 + 1;
+t325 = stack[t327];
+t328 = p + 2;
+t329 = stack[t328];
+t330 = t329 + 1;
+t325 = t325 + t330;
+t325 = heap[t325];
+t331 = p + 1;
+t332 = stack[t331];
+if (t325 > t332) goto L80;
+t333 = 0;
+goto L81;
+L80:
+t333 = 1;
+L81:
+t334 = t324;
+t335 = t333;
+if (t334 <> 1) goto L83;
+if (t335 == 1) goto L84;
+L83:
+t336 = 0;
+goto L85;
+L84:
+t336 = 1;
+L85:
+t337 = t336;
+if (t337 == 0) goto L86;
+p = p + 3;
+t339 = p - 6;
+t340 = t339 + 1;
+t338 = stack[t340];
+t341 = p - 3;
+t342 = t341 + 2;
+t343 = stack[t342];
+t344 = t343 + 1;
+t345 = t344 + 1;
+t338 = t338 + t345;
+t347 = p - 6;
+t348 = t347 + 1;
+t346 = stack[t348];
+t349 = p - 3;
+t350 = t349 + 2;
+t351 = stack[t350];
+t352 = t351 + 1;
+t346 = t346 + t352;
+t346 = heap[t346];
+heap[t338] = t346;
+t353 = p - 3;
+t354 = t353 + 2;
+t355 = stack[t354];
+t356 = t355 - 1;
+t357 = p - 3;
+t358 = t357 + 2;
+stack[t358] = t356;
+p = p - 3;
+goto L77;
+L86:
+t360 = p - 3;
+t361 = t360 + 1;
+t359 = stack[t361];
+t362 = p + 2;
+t363 = stack[t362];
+t364 = t363 + 1;
+t365 = t364 + 1;
+t359 = t359 + t365;
+t366 = p + 1;
+t367 = stack[t366];
+heap[t359] = t367;
+L74:
+t368 = p;
+t370 = p;
+t371 = t370;
+t372 = stack[t371];
+t372 = t372 + 1;
+stack[t371] = t372;
+t372 = t372 - 1;
+goto L72;
+L73:
+p = p - 3;
+L71:
+end
+L87:

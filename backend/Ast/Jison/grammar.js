@@ -642,8 +642,8 @@ case 109:
 break;
 case 110:
 
-    $$[$01].unshift(new Access(3, $$[$0-1], _$[$0-2].first_line, _$[$0-2].first_column));
-    this.$ = new AccessExpression(new Identifier($$[$0-3], _$[$0-3].first_line, _$[$0-3].first_column), new NodeList($$[$01], 'ACCESS LIST'), _$[$0-2].first_line, _$[$0-2].first_column);
+    $$[$0].unshift(new Access(3, $$[$0-1], _$[$0-2].first_line, _$[$0-2].first_column));
+    this.$ = new AccessExpression(new Identifier($$[$0-3], _$[$0-3].first_line, _$[$0-3].first_column), new NodeList($$[$0], 'ACCESS LIST'), _$[$0-2].first_line, _$[$0-2].first_column);
   
 break;
 case 112:

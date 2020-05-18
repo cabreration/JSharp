@@ -73,35 +73,45 @@ class AccessExpression {
             else if (access.type === 2) {
                 if (varType.includes('[]'))
                     varType = varType.replace('[]', '');
-                else 
+                else if (varType != 'global')
                     return new SharpError('Semantico', `El acceso por indices no puede usarse sobre valores de tipo ${varType}`, this.row, this.column);
             }
             else {
                 switch (access.lead.id.id) {
                     case 'tochararray':
-                        if (varType === 'string')
-                            return 'char[]';
+                        if (varType === 'string') {
+                            varType = 'char[]';
+                            break;
+                        }    
                         else 
                             return new SharpError('Semantico', `La funcion toCharArray no puede usarse sobre valores de tipo ${varType}`, this.row, this.column);
                     case 'charat':
-                        if (varType === 'string')
-                            return 'char'
+                        if (varType === 'string') {
+                            varType = 'char'
+                            break
+                        }
                         else 
                             return new SharpError('Semantico', `La funcion charAt no puede usarse sobre valores de tipo ${varType}`, this.row, this.column);
                     case 'length':
-                        if (varType === 'string')
-                            return 'int';
+                        if (varType === 'string') {
+                            varType = 'int';
+                            break
+                        } 
                         else 
                             return new SharpError('Semantico', `La funcion length no puede usarse sobre valores de tipo ${varType}`, this.row, this.column);
                     case 'touppercase':
                     case 'tolowercase':
-                        if (varType === 'string') 
-                            return 'string'
+                        if (varType === 'string') {
+                            varType = 'string'
+                            break
+                        }
                         else 
                             return new SharpError('Semantico', `La funcion ${access.lead.id.id} no puede usarse sobre valores de tipo ${varType}`, this.row, this.column);
                     case 'linealize':
-                        if (varType.includes('[]'))
-                            return varType;
+                        if (varType.includes('[]')) {
+                            varType = varType;
+                            break
+                        }
                         else 
                             return new SharpError('Semantico', `La funcion linealiza no puede usarse sobre valores de tipo ${varType}`, this.row, this.column);
                 }
@@ -195,17 +205,17 @@ class AccessExpression {
                     }
 
                     code.push(`${absolute} = ${absolute} + ${obj.value};`);
-                    if (varType != 'int' && varType != 'double' && varType != 'boolean' && varType != 'char') {
-                        let y = this.access_list.getChildren().length;
+                    //if (varType != 'int' && varType != 'double' && varType != 'boolean' && varType != 'char') {
+                        //let y = this.access_list.getChildren().length;
                         //if (i + 1 < this.access_list.getChildren().length) {
                             code.push(`${absolute} = heap[${absolute}];`);
                         //}
                         
-                    }
+                    //}
                 }
             }
             else if (access.type === 2) {
-                if (!varType.includes('[]')) {
+                if (!varType.includes('[]')  && varType != 'global') {
                     Singleton.insertError(new SharpError('Semantico', 'No es posible acceder a posiciones de un elemento que no es un arreglo', this.row, this.column));
                     return new Updater(env, label, temp, null);
                 }
@@ -226,12 +236,12 @@ class AccessExpression {
                     temp++;
                     code.push(`${t} = ${ar.value} + 1;`);
                     code.push(`${absolute} = ${absolute} + ${t};`);
-                    if (varType != 'int' && varType != 'double' && varType != 'boolean' && varType != 'char') {
+                    //if (varType != 'int' && varType != 'double' && varType != 'boolean' && varType != 'char') {
                         //if (i + 1 < this.access_list.getChildren().length) {
                             code.push(`${absolute} = heap[${absolute}];`);
                         //}
                         
-                    }
+                    //}
                 }
             }
             else {

@@ -98,19 +98,35 @@ class Binary {
 
     validateEqualsOrNot(type1, type2) {
         if (type1 === 'null') {
-            if (type2 === 'string') {
+            if (type2 === 'string' || type2.includes('[]')) {
                 return 'boolean';
             }
             else {
-                return new SharpError('Semantico', 'Operacion invalida: No es posible aplicar el operando ' + this.operator.op + ' entre valores de tipo ' + type1 + ' y ' + type2, this.operator.row, this.operator.column);
+                switch(type2) {
+                    case 'int':
+                    case 'double':
+                    case 'boolean':
+                    case 'char':
+                        return new SharpError('Semantico', 'Operacion invalida: No es posible aplicar el operando ' + this.operator.op + ' entre valores de tipo ' + type1 + ' y ' + type2, this.operator.row, this.operator.column);
+                    default:
+                        return 'boolean'
+                }
             }
         }
         else if (type2 === 'null') {
-            if (type1 === 'string') {
+            if (type1 === 'string' || type1.includes('[]')) {
                 return 'boolean';
             }
             else {
-                return new SharpError('Semantico', 'Operacion invalida: No es posible aplicar el operando ' + this.operator.op + ' entre valores de tipo ' + type1 + ' y ' + type2, this.operator.row, this.operator.column);
+                switch(type2) {
+                    case 'int':
+                    case 'double':
+                    case 'boolean':
+                    case 'char':
+                        return new SharpError('Semantico', 'Operacion invalida: No es posible aplicar el operando ' + this.operator.op + ' entre valores de tipo ' + type1 + ' y ' + type2, this.operator.row, this.operator.column);
+                    default:
+                        return 'boolean'
+                }
             }
         }
         if (type1 === 'int' || type1 === 'double' || type1 === 'char') {
@@ -646,9 +662,9 @@ class Binary {
     generateString3DC(val, label, temp) {
         let code = [];
         code.push(`t${temp} = heap[${val}];`); // first char
-        code.push(`if (t${temp} == 0) goto L${label + 1};`)
         code.push(`L${label}:`);
-        code.push(`if (t${temp} == 0) goto L${label + 2};`);
+        code.push(`if (t${temp} == 0) goto L${label + 1};`)
+        //code.push(`if (t${temp} == 0) goto L${label + 2};`);
         code.push(`heap[h] = t${temp};`);
         code.push('h = h + 1;');
         code.push(`${val} = ${val} + 1;`);
@@ -656,9 +672,9 @@ class Binary {
         code.push(`goto L${label};`);
         label++;
         code.push(`L${label}:`);
-        label++;
+        //label++;
         // Print null here
-        code.push(`heap[h] = 110;`);
+        /*code.push(`heap[h] = 110;`);
         code.push('h = h + 1;')
         code.push('heap[h] = 117;');
         code.push('h = h + 1;')
@@ -666,7 +682,7 @@ class Binary {
         code.push('h = h + 1;')
         code.push('heap[h] = 108;');
         code.push('h = h + 1;');
-        code.push(`L${label}:`);
+        code.push(`L${label}:`);*/
         label++;
         temp++;
         return {
