@@ -5,6 +5,7 @@ import 'brace/mode/csharp';
 import { AceConfigInterface } from 'ngx-ace-wrapper';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { TreeComponent } from '../tree/tree.component';
+import { saveAs } from 'file-saver';
 
 const httpOptions = {
   headers : new HttpHeaders({
@@ -97,6 +98,11 @@ export class EditorComponent implements OnInit {
         }
       });
     }
+  }
+
+  save() {
+    var data = new Blob([this.currentText], { type: 'text/plain;charset=utf-8' });
+    saveAs(data, 'tdc.txt');
   }
 
   BrowseFile(): void {

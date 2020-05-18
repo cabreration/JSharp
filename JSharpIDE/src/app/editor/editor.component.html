@@ -27,7 +27,7 @@
             <button class="btn btn-sm btn-outline-secondary mr-2" (click)="CreateNewTab('', 'new file')">New File</button>
             <button class="btn btn-sm btn-outline-secondary mr-2" (click)="BrowseFile()">Open File</button>
             <input #browse type="file" hidden (change)="FileUpload($event)">
-            <button class="btn btn-sm btn-outline-secondary mr-2">Save File</button>
+            <button class="btn btn-sm btn-outline-secondary mr-2" (click)="save()">Save File</button>
             <button class="btn btn-sm btn-outline-secondary mr-2" (click)="DeleteTab()">Close File</button>
             <button class="btn btn-sm btn-outline-secondary mr-2" (click)="Compile()">Compile</button>
             <button class="btn btn-sm btn-outline-secondary mr-2" (click)="Optimize()">Optimize</button>

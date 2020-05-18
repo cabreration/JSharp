@@ -22,8 +22,9 @@
     "@angular/router": "~9.1.2",
     "@ng-bootstrap/ng-bootstrap": "^6.0.3",
     "bootstrap": "^4.4.1",
-    "ngx-ace-wrapper": "^9.0.1",
     "d3-graphviz": "^2.6.1",
+    "file-saver": "^2.0.2",
+    "ngx-ace-wrapper": "^9.0.1",
     "rxjs": "~6.5.5",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"
