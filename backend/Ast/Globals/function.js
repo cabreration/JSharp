@@ -30,6 +30,7 @@ class Function {
         label++;
         let instructions = this.sentences.getChildren();
         for (let i = 0; i < instructions.length; i++) {
+            // CADA INSTRUCCION VA A GENERAR TEMPORALES, SI ENCUENTRO UNA LLAMADA TENDRIA QUE GUARDAR LOS TEMPORALES NO UTILIZADOS
             let ins = instructions[i];
             let updater = ins.getTDC(env, label, temp);
             label = updater.label;

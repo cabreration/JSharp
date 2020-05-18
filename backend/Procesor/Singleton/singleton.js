@@ -10,6 +10,8 @@ class Singleton {
         choose: false, 
         arrow: 'void'
     }
+
+    static temporals = [];
     
     static insertError(error) {
         Singleton.sharpErrors.push(error);

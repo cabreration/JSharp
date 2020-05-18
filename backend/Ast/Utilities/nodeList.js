@@ -1,3 +1,5 @@
+const Updater = require('./updater').Updater;
+
 class NodeList {
     constructor(children, name) {
         this.children = children; // [ Whatever node ]
@@ -14,6 +16,10 @@ class NodeList {
 
     getTypeOf() {
         return 'nodelist';
+    }
+
+    getTDC(env, label, temp) {
+        return new Updater(env, label, temp, null);
     }
 }
 

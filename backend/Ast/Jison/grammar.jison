@@ -272,6 +272,10 @@ DECL_OPT
     global_strcs.push($1);
     $$ = $1;
   }
+  | error semicolon {
+    Singleton.insertError(new SharpError("Sintactico", $1, @1.first_line, @1.first_column));
+    $$ = new NodeList([], "ERROR");
+  }
 ;
 
 FUNCTION_DECL 
@@ -764,6 +768,10 @@ SENTENCE
     $$ = new Unary(new Operator('decrement', $2, @2.first_line, @2.first_column),
       new Identifier($1.toLowerCase(), @1.first_line, @1.first_column));
   }
+  | error rightS {
+    Singleton.insertError(new SharpError("Sintactico", $1, @1.first_line, @1.first_column));
+    $$ = new NodeList([], "ERROR");
+  }
 ;
 
 ASIGNMENT 
@@ -786,6 +794,10 @@ ASIGNMENT
   }
   | id dot CALL asignment EXPRESSION
   | id dot CALL ACCESS_LIST asignment EXPRESSION
+  | error semicolon {
+    Singleton.insertError(new SharpError("Sintactico", $1, @1.first_line, @1.first_column));
+    $$ = new NodeList([], "ERROR");
+  }
 ;
 
 ACCESS_LIST 

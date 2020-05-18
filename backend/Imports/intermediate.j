@@ -3,11 +3,13 @@ import sorting.j
 void principal() {
   integer[] array = {365, 5842, 12, 6324, 0, 851, 56, 3, 7452, 654}
   sort(array)
-  print("El primer element de burbuja es: " + bubble[0])
   string nombre = "Javier"
   integer pos = 1;
   integer res = ascii(nombre, pos);
   print("El ascii de la posicion " + pos + " de " + nombre + " es " + res);
+  string unordered = "zxCvAnmFsdfgTjGlqPertyuiopp"
+  unordered = ordenarCadena(underdered);
+  print(unordered);
 }
 
 void sort(integer[] array) {
